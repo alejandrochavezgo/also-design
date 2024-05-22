@@ -1,0 +1,15 @@
+﻿.mb-0 {
+    margin-bottom: 0;
+}
+
+.cursor-not-allowed {
+    cursor: not-allowed;
+}
+
+.color-red {
+    color: red;
+}
+
+.display-none {
+    display: none;
+}

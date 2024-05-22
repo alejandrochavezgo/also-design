@@ -1,0 +1,11 @@
+C:\Users\achavez\Documents\cbx-development\deploys\api-tico-v2\cbx.entities.dll
+C:\Users\achavez\Documents\cbx-development\deploys\api-tico-v2\cbx.entities.deps.json
+C:\Users\achavez\Documents\cbx-development\deploys\api-tico-v2\cbx.entities.pdb
+C:\Users\achavez\Documents\cbx-development\deploys\api-tico-v2\Microsoft.Build.Framework.dll
+C:\Users\achavez\Documents\cbx-development\deploys\api-tico-v2\Microsoft.Win32.SystemEvents.dll
+C:\Users\achavez\Documents\cbx-development\deploys\api-tico-v2\System.Drawing.Common.dll
+C:\Users\achavez\Documents\cbx-development\deploys\api-tico-v2\System.Security.Permissions.dll
+C:\Users\achavez\Documents\cbx-development\deploys\api-tico-v2\System.Windows.Extensions.dll
+C:\Users\achavez\Documents\cbx-development\deploys\api-tico-v2\runtimes\win\lib\net7.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\achavez\Documents\cbx-development\deploys\api-tico-v2\runtimes\win\lib\net7.0\System.Drawing.Common.dll
+C:\Users\achavez\Documents\cbx-development\deploys\api-tico-v2\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
