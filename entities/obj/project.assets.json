@@ -260,32 +260,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\achavez\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/Users/alejandrochavezgomez/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\achavez\\Desktop\\test-03\\entities\\entities.csproj",
+      "projectUniqueName": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj",
       "projectName": "entities",
-      "projectPath": "C:\\Users\\achavez\\Desktop\\test-03\\entities\\entities.csproj",
-      "packagesPath": "C:\\Users\\achavez\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\achavez\\Desktop\\test-03\\entities\\obj\\",
+      "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj",
+      "packagesPath": "/Users/alejandrochavezgomez/.nuget/packages/",
+      "outputPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\achavez\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/alejandrochavezgomez/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
-        "C:\\ArgusSDK\\nu-package": {},
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -298,6 +290,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -325,7 +322,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.300/RuntimeIdentifierGraph.json"
       }
     }
   }

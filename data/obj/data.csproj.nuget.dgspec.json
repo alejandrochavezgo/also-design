@@ -1,40 +1,33 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\achavez\\Desktop\\test-03\\data\\data.csproj": {}
+    "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/data/data.csproj": {}
   },
   "projects": {
-    "C:\\Users\\achavez\\Desktop\\test-03\\common\\common.csproj": {
+    "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\achavez\\Desktop\\test-03\\common\\common.csproj",
+        "projectUniqueName": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/common.csproj",
         "projectName": "common",
-        "projectPath": "C:\\Users\\achavez\\Desktop\\test-03\\common\\common.csproj",
-        "packagesPath": "C:\\Users\\achavez\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\achavez\\Desktop\\test-03\\common\\obj\\",
+        "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/common.csproj",
+        "packagesPath": "/Users/alejandrochavezgomez/.nuget/packages/",
+        "outputPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\achavez\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/alejandrochavezgomez/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
         ],
         "sources": {
-          "C:\\ArgusSDK\\nu-package": {},
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\achavez\\Desktop\\test-03\\entities\\entities.csproj": {
-                "projectPath": "C:\\Users\\achavez\\Desktop\\test-03\\entities\\entities.csproj"
+              "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj": {
+                "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj"
               }
             }
           }
@@ -43,6 +36,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -90,41 +88,34 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.300/RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\achavez\\Desktop\\test-03\\data\\data.csproj": {
+    "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/data/data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\achavez\\Desktop\\test-03\\data\\data.csproj",
+        "projectUniqueName": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/data/data.csproj",
         "projectName": "data",
-        "projectPath": "C:\\Users\\achavez\\Desktop\\test-03\\data\\data.csproj",
-        "packagesPath": "C:\\Users\\achavez\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\achavez\\Desktop\\test-03\\data\\obj\\",
+        "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/data/data.csproj",
+        "packagesPath": "/Users/alejandrochavezgomez/.nuget/packages/",
+        "outputPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/data/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\achavez\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/alejandrochavezgomez/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
         ],
         "sources": {
-          "C:\\ArgusSDK\\nu-package": {},
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\achavez\\Desktop\\test-03\\common\\common.csproj": {
-                "projectPath": "C:\\Users\\achavez\\Desktop\\test-03\\common\\common.csproj"
+              "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/common.csproj": {
+                "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/common.csproj"
               }
             }
           }
@@ -133,6 +124,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -164,33 +160,26 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.300/RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\achavez\\Desktop\\test-03\\entities\\entities.csproj": {
+    "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\achavez\\Desktop\\test-03\\entities\\entities.csproj",
+        "projectUniqueName": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj",
         "projectName": "entities",
-        "projectPath": "C:\\Users\\achavez\\Desktop\\test-03\\entities\\entities.csproj",
-        "packagesPath": "C:\\Users\\achavez\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\achavez\\Desktop\\test-03\\entities\\obj\\",
+        "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj",
+        "packagesPath": "/Users/alejandrochavezgomez/.nuget/packages/",
+        "outputPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\achavez\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/alejandrochavezgomez/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
         ],
         "sources": {
-          "C:\\ArgusSDK\\nu-package": {},
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -203,6 +192,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -230,7 +224,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.300/RuntimeIdentifierGraph.json"
         }
       }
     }
