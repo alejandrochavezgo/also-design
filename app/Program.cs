@@ -23,5 +23,5 @@ app.UseStaticFiles();
 app.UseRouting();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Login}/{action=Login}/{id?}");
+    pattern: "{controller=login}/{action=login}/{id?}");
 app.Run();

@@ -2,9 +2,9 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-public class DashboardController : Controller
+public class dashboardController : Controller
 {
-    public IActionResult Index()
+    public IActionResult index()
     {
         
 

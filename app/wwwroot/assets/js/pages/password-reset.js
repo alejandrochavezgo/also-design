@@ -21,53 +21,58 @@ $(document).ready(function () {
         try {
             event.preventDefault();
             $(this).prop('disabled', true);
-            $("#submitText").html('Validating...');
-            $("#submitStatus").removeClass('display-none');
             clearValidationsSummary();
 
-            if ($("#username").val() == '' || $("#username").val() == null || $("#username").val() == undefined) {
+            if ($("#email").val() == '' || $("#email").val() == null || $("#email").val() == undefined) {
+                restartSignInProcess();
+                addValidationMessage("* You forgot to put the email above.");   
+                return;           
+            }
+
+            if ($("#email").val() == '' || $("#email").val() == null || $("#email").val() == undefined) {
                 restartSignInProcess();
                 addValidationMessage("* You forgot to put the username above.");   
                 return;           
             }
 
-            if ($("#password").val() == '' || $("#password").val() == null || $("#password").val() == undefined) {
+            if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/).test($("#email").val())) {
                 restartSignInProcess();
-                addValidationMessage("* You forgot to put the password above.");
+                addValidationMessage("* The email has an invalid format.");   
                 return;
             }
 
-            var payload = {
-                username: $("#username").val(),
-                password: $("#password").val(),
-            };
+            $(this).prop('disabled', false);
 
-            fetch("Login/Login", {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (!data.isSuccess) {
-                    Swal.fire({
-                        title: 'Oops!',
-                        icon: 'error',
-                        html: 'An unexpected error has ocurred :(<br>' + data.message,
-                    });
-                }
-            })
-            .catch(exception => {
-                console.log("catch");
-                console.log(exception);
-                Swal.fire({
-                    title: 'Oops!',
-                    icon: 'error',
-                    html: 'An unexpected error has ocurred :(<br>Please refresh this page and try again.',
-                });
-            });
+            // var payload = {
+            //     email: $("#email").val(),
+            // };
+
+            // fetch("login/passwordReset", {
+            //     method: 'post',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify(payload),
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     if (!data.isSuccess) {
+            //         Swal.fire({
+            //             title: 'Oops!',
+            //             icon: 'error',
+            //             html: 'An unexpected error has ocurred :(<br>' + data.message,
+            //         });
+            //     }
+            // })
+            // .catch(exception => {
+            //     console.log("catch");
+            //     console.log(exception);
+            //     Swal.fire({
+            //         title: 'Oops!',
+            //         icon: 'error',
+            //         html: 'An unexpected error has ocurred :(<br>Please refresh this page and try again.',
+            //     });
+            // });
         }
         catch(exception) {
             console.log(exception);
@@ -79,7 +84,7 @@ $(document).ready(function () {
         } 
     });
 
-    $("#password").keypress(function (event) {
+    $("#email").keypress(function (event) {
         if (event.keyCode == 13) {
             $("#btnSubmit").click();
         }
@@ -124,26 +129,6 @@ $(document).ready(function () {
                 $("#validationsSummary").addClass("display-none");
             $("#itemsSummary").text('');
         } catch (exception) {
-            console.log(exception);
-            Swal.fire({
-                title: 'Oops!',
-                icon: 'error',
-                html: 'An unexpected error has ocurred :(<br>Please refresh this page and try again.',
-            });
-        }
-    }
-
-    function revealPassword() {
-        try {
-            if ($('#password').prop('type') == 'text') {
-                $("#password").prop('type', 'password');
-            }
-            else {
-                $("#password").prop('type', 'text');
-            }
-        }
-        catch(exception)
-        {
             console.log(exception);
             Swal.fire({
                 title: 'Oops!',

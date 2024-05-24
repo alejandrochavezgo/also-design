@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "cbx.api": {
+    "api": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

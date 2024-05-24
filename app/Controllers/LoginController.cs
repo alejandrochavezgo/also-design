@@ -10,14 +10,14 @@ using System.Text;
 using Newtonsoft.Json;
 using System.Globalization;
 
-public class LoginController : Controller
+public class loginController : Controller
 {
-    private readonly ILogger<LoginController> _logger;
+    private readonly ILogger<loginController> _logger;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IHttpClientFactory _clientFactory;
 
-    public LoginController(ILogger<LoginController> logger, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IHttpClientFactory clientFactory)
+    public loginController(ILogger<loginController> logger, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IHttpClientFactory clientFactory)
     {
         _logger = logger;
         _userManager = userManager;
@@ -136,4 +136,10 @@ public class LoginController : Controller
             });
         }
     }
+
+    [HttpGet]
+    public IActionResult passwordReset()
+    {
+        return View();
+    } 
 }

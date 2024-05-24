@@ -12,8 +12,5 @@ namespace entities.models
         [Required]
         [DisplayName("Password")]
         public string? password { get; set; }
-
-        [DisplayName("Remember Me")]
-        public bool rememberMe { get; set; }
     }
 }
