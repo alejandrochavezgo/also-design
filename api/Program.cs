@@ -1,38 +1,88 @@
-﻿using api.services;
-using api.authorization;
+﻿using api.authorization;
+using api.services;
+using common.logging;
 using providerData.helpers;
+using Microsoft.Extensions.Logging.Console;
+using NLog;
+using NLog.Web;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// add services to DI container
+using var loggerFactory = LoggerFactory.Create(builder =>
 {
-    var services = builder.Services;
-    services.AddCors();
-    services.AddControllers();
+    builder.AddSimpleConsole(i => {
+        i.ColorBehavior = LoggerColorBehavior.Enabled;
+        i.IncludeScopes = true;
+        i.SingleLine = true;
+        i.TimestampFormat = "yyyy-MM-dd hh:mm:ss ";
+        i.UseUtcTimestamp = true;
+    }).SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+});
+var _logT = loggerFactory.CreateLogger<Log>();
+var _logF = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
-    // configure strongly typed settings object
-    services.Configure<AppSettingsHelper>(builder.Configuration.GetSection("jwt"));
+var log = new Log(_logT, _logF);
+var trackId = Guid.NewGuid().ToString();
+log.logDebug("[ALSO DESIGN SYSTEM] Starting up the Also Design System...");
 
-    // configure DI for application services
-    services.AddScoped<IJwtUtils, JwtUtils>();
-    services.AddScoped<IUserService, UserService>();
-}
-
-var app = builder.Build();
-
-// configure HTTP request pipeline
+try
 {
-    // global cors policy
-    app.UseCors(x => x
-        .AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader());
+    log.logDebug("[ALSO DESIGN SYSTEM] Creating builder...");
+    var builder = WebApplication.CreateBuilder(args);
+    builder.Logging.ClearProviders();
+    builder.Host.UseNLog();
 
-    // custom jwt auth middleware
-    app.UseMiddleware<JwtMiddleware>();
+    log.logDebug("[ALSO DESIGN SYSTEM] Adding services...");
+    log.logDebug("\t[+] MVC services...");
+    builder.Services.AddControllers();
+    builder.Services.AddEndpointsApiExplorer();
 
-    app.MapControllers();
+    //Add services to DI container.
+    {
+        var services = builder.Services;
+        services.AddCors();
+        services.AddControllers();
+
+        //Configure strongly typed settings object.
+        services.Configure<AppSettingsHelper>(builder.Configuration.GetSection("jwt"));
+
+        //Configure DI for application services.
+        services.AddScoped<IJwtUtils, JwtUtils>();
+        services.AddScoped<IUserService, UserService>();
+
+
+        var a = common.configurations.ConfigurationManager.AppSettings["providers:alsoProviderName"];
+        
+
+        #region ::services - provider for sql server
+        log.logDebug("\t[+] SQL Server provider service...");
+        System.Data.Common.DbProviderFactories.RegisterFactory(common.configurations.ConfigurationManager.AppSettings["providers:alsoProviderName"], System.Data.SqlClient.SqlClientFactory.Instance);
+        #endregion
+    }
+
+    var app = builder.Build();
+
+    //Configure HTTP request pipeline.
+    {
+        //Global cors policy.
+        app.UseCors(x => x
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+
+        //Custom jwt auth middleware.
+        app.UseMiddleware<JwtMiddleware>();
+        app.MapControllers();
+    }
+
+    app.Run();
 }
-
-// app.Run("http://localhost:4000");
-app.Run();
+catch (Exception e)
+{
+    log.logError($"[ALSO DESIGN SYSTEM] Error in the Also Design System project:");
+    throw;
+}
+finally 
+{
+    log.logDebug("[ALSO DESIGN SYSTEM] Flushing and stoping internal timers/threads before application-exit...");
+    NLog.LogManager.Shutdown();
+    log.logDebug("[ALSO DESIGN SYSTEM] Shutting down the Also Design System...");
+}

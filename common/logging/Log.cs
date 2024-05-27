@@ -1,20 +1,45 @@
 using common.configurations;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using NLog.Fluent;
 
 namespace common.logging
 {
     public class Log
     {
-        private readonly ILogger? _loggerT;                                         
-        private readonly NLog.Logger _loggerF;                                     
+        private readonly ILogger? _loggerT;
+        private readonly NLog.Logger _loggerF;
 
         public Log(ILogger<Log>? logT = null)
         {
             _loggerT = logT;
             _loggerF = NLog.LogManager.GetCurrentClassLogger();
         }
-        
+        public Log(ILogger<Log> logT, NLog.Logger logF)
+        {
+            _loggerT = logT;
+            _loggerF = logF;
+        }
+
+        public void logDebug(string message)
+        {
+            try
+            {
+                message = $"{ConfigurationManager.AppSettings["system:version"]} :: {message}";
+
+                if (_loggerT is not null)
+                    _loggerT.LogDebug($"{message}");
+                else
+                    System.Diagnostics.Debug.WriteLine($"{message}");
+                _loggerF.Debug($"{message}");
+            }
+            catch (Exception e)
+            {
+                var exception = $"{JsonConvert.SerializeObject(e, Formatting.Indented)}";
+                logFatal($"General exception: At manage the service request.\nData: {message}\nException caught:\n{exception}");
+            }
+        }
+
         public void logInfo(string message)
         {
             try
@@ -35,7 +60,7 @@ namespace common.logging
         }
 
        public void logError(string message)
-        {
+       {
             try
             {
                 message = $"{ConfigurationManager.AppSettings["system:version"]} :: {message}";

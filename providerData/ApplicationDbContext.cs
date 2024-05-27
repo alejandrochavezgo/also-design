@@ -1,4 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/*
+ * Copyright© 2024 Ideti Web
+ * All rights reserved.
+ * Total or partial distribution is prohibited.
+*/
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
@@ -21,15 +27,15 @@ namespace providerData
     {
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-            builder.ToTable("ENUSERS");
+            builder.ToTable("USERS");
+            builder.Property(e => e.Id).HasColumnName("IDUSER");
             builder.Property(e => e.NormalizedId).HasColumnName("IDUSER");
-            builder.Property(e => e.Password).HasColumnName("DSPASSWORD");
-            builder.Property(e => e.NormalizedEmail).HasColumnName("DSMAIL");
-            builder.Property(e => e.NormalizedUserName).HasColumnName("DSUSERNAME");
-            builder.Property(e => e.IsActive).HasColumnName("BOACTIVE");
-            builder.Property(e => e.IsLocked).HasColumnName("BOLOCKED");
-            builder.Property(e => e.AccessFailedCount).HasColumnName("NUFAILCOUNT");
-            builder.Property(e => e.IsPermanentlyDeleted).HasColumnName("BODELETED");
+            builder.Property(e => e.Password).HasColumnName("PASSWORD");
+            builder.Property(e => e.NormalizedEmail).HasColumnName("EMAIL");
+            builder.Property(e => e.NormalizedUserName).HasColumnName("USERNAME");
+            builder.Property(e => e.IsActive).HasColumnName("ACTIVE");
+            builder.Property(e => e.IsLocked).HasColumnName("LOCKED");
+            builder.Property(e => e.AccessFailedCount).HasColumnName("FAILCOUNT");
             builder.Ignore(e => e.UserName);
             builder.Ignore(e => e.EmailConfirmed);
             builder.Ignore(e => e.Email);

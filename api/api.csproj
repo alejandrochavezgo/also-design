@@ -12,5 +12,6 @@
     <ItemGroup>
       <ProjectReference Include="..\entities\entities.csproj" />
       <ProjectReference Include="..\providerData\providerData.csproj" />
+      <ProjectReference Include="..\business\business.csproj" />
     </ItemGroup>
 </Project>

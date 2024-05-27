@@ -18,7 +18,7 @@ namespace common.configurations
             {
                 try
                 {
-                    return AppSettings["ConnectionStrings:cbsdbConnection"];
+                    return AppSettings["connectionStrings:alsoConnection"];
                 }
                 catch (NullReferenceException)
                 {
@@ -33,7 +33,7 @@ namespace common.configurations
             {
                 try
                 {
-                    return AppSettings["providers:cbsdbProviderName"];
+                    return AppSettings["providers:alsoProviderName"];
                 }
                 catch (NullReferenceException)
                 {
@@ -48,7 +48,7 @@ namespace common.configurations
             {
                 try
                 {
-                    return AppSettings["ConnectionStrings:cbsdbConnection_readonly"];
+                    return AppSettings["connectionStrings:alsoConnection_readonly"];
                 }
                 catch (NullReferenceException)
                 {
@@ -63,7 +63,7 @@ namespace common.configurations
             {
                 try
                 {
-                    return AppSettings["providers:cbsdbProviderName"];
+                    return AppSettings["providers:alsoProviderName"];
                 }
                 catch (NullReferenceException)
                 {

@@ -9,7 +9,7 @@ namespace providerData
                                           IUserRoleStore<ApplicationUser>
     {
 
-        private Log? logger;
+        private Log? logger = new Log();
         private readonly ApplicationDbContext _dbContext;
 
         public ApplicationUserManager(ApplicationDbContext dbContext)

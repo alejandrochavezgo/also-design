@@ -19,9 +19,9 @@ public class UsersController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("authenticate")]
-    public IActionResult Authenticate(AuthenticateRequest model)
+    public IActionResult authenticate(AuthenticateRequest model)
     {
-        var response = _userService.Authenticate(model);
+        var response = _userService.authenticate(model);
 
         if (response == null)
             return BadRequest(new { message = "Username or password is incorrect" });
@@ -30,9 +30,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetAll()
+    public IActionResult getAll()
     {
-        var users = _userService.GetAll();
+        var users = _userService.getAll();
         return Ok(users);
     }
 }

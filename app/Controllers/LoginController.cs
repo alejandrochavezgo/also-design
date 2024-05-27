@@ -4,20 +4,19 @@ using providerData;
 using entities.models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
 using providerData.helpers;
 using System.Text;
 using Newtonsoft.Json;
-using System.Globalization;
+using common.configurations;
 
-public class loginController : Controller
+public class LoginController : Controller
 {
-    private readonly ILogger<loginController> _logger;
+    private readonly ILogger<LoginController> _logger;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IHttpClientFactory _clientFactory;
 
-    public loginController(ILogger<loginController> logger, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IHttpClientFactory clientFactory)
+    public LoginController(ILogger<LoginController> logger, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IHttpClientFactory clientFactory)
     {
         _logger = logger;
         _userManager = userManager;
@@ -45,7 +44,7 @@ public class loginController : Controller
                 });
 
             var userIdentity = await _signInManager.UserManager.FindByNameAsync(login.username);
-            if (userIdentity is null || string.IsNullOrEmpty(userIdentity.NormalizedUserName) || userIdentity.IsPermanentlyDeleted)
+            if (userIdentity is null || string.IsNullOrEmpty(userIdentity.NormalizedUserName))
             {
                 return Json(new LoginResultModel
                 {
@@ -92,24 +91,19 @@ public class loginController : Controller
                 });
             }
 
-            //get roles to pass into json
-
             var expirationDate = DateTime.Now.AddDays(7);
-            var json = JsonConvert.SerializeObject(new
+            
+            var client = _clientFactory.CreateClient();
+            var responsePost = await client.PostAsync(ConfigurationManager.AppSettings["api:routes:login:authenticate"], new StringContent(JsonConvert.SerializeObject(new
             {
                 id = userIdentity.NormalizedId,
                 username = userIdentity.NormalizedUserName,
-                email = userIdentity.NormalizedEmail,
                 expirationDate,
-                roles = ""
-            });
-
-            //var payload = new StringContent(json, Encoding.UTF8, "application/json");
-            //var client = _clientFactory.CreateClient();
-            //var responsePost = await client.PostAsync("http://localhost:4000/users/authenticate", payload);
-            //var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
-            //var responsePostAsModel = JsonConvert.DeserializeObject<UserTestModel>(responsePostAsJson);
-            //client.Dispose();
+            }), Encoding.UTF8, "application/json"));
+            
+            var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
+            // var responsePostAsModel = JsonConvert.DeserializeObject<UserTestModel>(responsePostAsJson);
+            client.Dispose();
 
             ////Validating token...
             //client = _clientFactory.CreateClient();

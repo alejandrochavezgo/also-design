@@ -1,4 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿/*
+ * Copyright© 2024 Ideti Web
+ * All rights reserved.
+ * Total or partial distribution is prohibited.
+*/
+
+using Microsoft.AspNetCore.Identity;
 
 namespace providerData;
 
@@ -23,5 +29,4 @@ public class ApplicationUser : IdentityUser
     public bool TwoFactorEnabled { get; set; }
     public bool IsActive { get; set; }
     public bool IsLocked { get; set; }
-    public bool IsPermanentlyDeleted { get; set; }
 }

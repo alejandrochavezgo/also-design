@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(common.configurations.ConfigurationManager.AppSettings["connectionStrings:cbsdb"]));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(common.configurations.ConfigurationManager.AppSettings["connectionStrings:also"]));
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddUserStore<ApplicationUserManager>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();

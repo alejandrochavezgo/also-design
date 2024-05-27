@@ -2,17 +2,17 @@ namespace api.services;
 
 using authorization;
 using providerData.entities;
+using business.facade;
 
 public interface IUserService
 {
-    AuthenticateResponse? Authenticate(AuthenticateRequest model);
-    IEnumerable<User> GetAll();
-    User? GetById(int id);
+    AuthenticateResponse? authenticate(AuthenticateRequest model);
+    IEnumerable<User> getAll();
+    User? getById(int id);
 }
 
 public class UserService : IUserService
 {
-    // users hardcoded for simplicity, store in a db with hashed passwords in production applications
     private List<User> _users = new List<User>
     {
         new User { Id = 1, FirstName = "Test", LastName = "User", Username = "test", Password = "test" }
@@ -25,25 +25,26 @@ public class UserService : IUserService
         _jwtUtils = jwtUtils;
     }
 
-    public AuthenticateResponse? Authenticate(AuthenticateRequest model)
+    public AuthenticateResponse? authenticate(AuthenticateRequest model)
     {
         var user = _users.SingleOrDefault(x => x.Username == model.Username && x.Password == model.Password);
 
-        // return null if user not found
         if (user == null) return null;
 
-        // authentication successful so generate jwt token
-        var token = _jwtUtils.GenerateJwtToken(user);
+        var token = _jwtUtils.generateJwtToken(user);
+
+
+        var temp = new FacadeUser().getUserByIdUser(1);
 
         return new AuthenticateResponse(user, token);
     }
 
-    public IEnumerable<User> GetAll()
+    public IEnumerable<User> getAll()
     {
         return _users;
     }
 
-    public User? GetById(int id)
+    public User? getById(int id)
     {
         return _users.FirstOrDefault(x => x.Id == id);
     }

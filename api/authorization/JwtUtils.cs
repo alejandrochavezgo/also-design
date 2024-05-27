@@ -10,8 +10,8 @@ using System.Text;
 
 public interface IJwtUtils
 {
-    public string GenerateJwtToken(User user);
-    public int? ValidateJwtToken(string? token);
+    public string generateJwtToken(User user);
+    public int? validateJwtToken(string? token);
 }
 
 public class JwtUtils : IJwtUtils
@@ -26,7 +26,7 @@ public class JwtUtils : IJwtUtils
             throw new Exception("JWT secret not configured");
     }
 
-    public string GenerateJwtToken(User user)
+    public string generateJwtToken(User user)
     {
         // generate token that is valid for 7 days
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -44,7 +44,7 @@ public class JwtUtils : IJwtUtils
         return tokenHandler.WriteToken(token);
     }
 
-    public int? ValidateJwtToken(string? token)
+    public int? validateJwtToken(string? token)
     {
         if (token == null)
             return null;
