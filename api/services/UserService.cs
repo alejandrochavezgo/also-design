@@ -3,21 +3,15 @@ namespace api.services;
 using authorization;
 using providerData.entities;
 using business.facade;
+using entities.models;
 
 public interface IUserService
 {
     AuthenticateResponse? authenticate(AuthenticateRequest model);
-    IEnumerable<User> getAll();
-    User? getById(int id);
 }
 
 public class UserService : IUserService
 {
-    private List<User> _users = new List<User>
-    {
-        new User { Id = 1, FirstName = "Test", LastName = "User", Username = "test", Password = "test" }
-    };
-
     private readonly IJwtUtils _jwtUtils;
 
     public UserService(IJwtUtils jwtUtils)
@@ -27,25 +21,18 @@ public class UserService : IUserService
 
     public AuthenticateResponse? authenticate(AuthenticateRequest model)
     {
-        var user = _users.SingleOrDefault(x => x.Username == model.Username && x.Password == model.Password);
+        var user = new FacadeUser("${Guid.NewGuid()}").getUserByIdUser(model.id);
+        if (user == null)
+            return null;
 
-        if (user == null) return null;
-
-        var token = _jwtUtils.generateJwtToken(user);
-
-
-        var temp = new FacadeUser().getUserByIdUser(1);
+        var token = _jwtUtils.generateJwtToken(new UserModel {
+            id = user.id,
+            username = user.username,
+            firstname = user.firstname,
+            lastname = user.lastname,
+            expirationDate = model.expirationDate
+        });
 
         return new AuthenticateResponse(user, token);
-    }
-
-    public IEnumerable<User> getAll()
-    {
-        return _users;
-    }
-
-    public User? getById(int id)
-    {
-        return _users.FirstOrDefault(x => x.Id == id);
     }
 }

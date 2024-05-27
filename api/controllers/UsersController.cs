@@ -28,11 +28,4 @@ public class UsersController : ControllerBase
 
         return Ok(response);
     }
-
-    [HttpGet]
-    public IActionResult getAll()
-    {
-        var users = _userService.getAll();
-        return Ok(users);
-    }
 }

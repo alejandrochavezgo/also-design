@@ -7,11 +7,16 @@ using entities.models;
 public class FacadeUser {
 
     private Log _logger;
-    private string? _logTraceId;
-    
-    public List<UserModel> getUserByIdUser(int idUser) 
+    public string? _logTraceId;
+
+    public FacadeUser(string? logTraceId)
     {
-        try 
+        _logTraceId = logTraceId;
+    }
+
+    public UserModel getUserByIdUser(int idUser)
+    {
+        try
         {
             return new RepositoryUser().getUserByIdUser(idUser);
         }

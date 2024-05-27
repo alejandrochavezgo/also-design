@@ -5,8 +5,11 @@ using System.ComponentModel.DataAnnotations;
 public class AuthenticateRequest
 {
     [Required]
-    public string? Username { get; set; }
-
+    public int id { get; set; }
     [Required]
-    public string? Password { get; set; }
+    public string? username { get; set; }
+    [Required]
+    public string? logTraceId { get; set; }
+    [Required]
+    public DateTime expirationDate { get; set; }
 }

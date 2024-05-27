@@ -1,16 +1,16 @@
 namespace api.authorization;
 
-using providerData.entities;
 using providerData.helpers;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using entities.models;
 
 public interface IJwtUtils
 {
-    public string generateJwtToken(User user);
+    public string generateJwtToken(UserModel user);
     public int? validateJwtToken(string? token);
 }
 
@@ -26,18 +26,19 @@ public class JwtUtils : IJwtUtils
             throw new Exception("JWT secret not configured");
     }
 
-    public string generateJwtToken(User user)
+    public string generateJwtToken(UserModel user)
     {
-        // generate token that is valid for 7 days
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_appSettings.Secret!);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[] { 
-                new Claim("id", user.Id.ToString()),
-                new Claim("roles", "{roleX, RoleY, RoleZ}")
+            Subject = new ClaimsIdentity(new[] {
+                new Claim("id", $"{user.id}"),
+                new Claim("username", $"{user.username}"),
+                new Claim("firstname", $"{user.firstname}"),
+                new Claim("lastname", $"{user.lastname}"),
             }),
-            Expires = DateTime.UtcNow.AddDays(7),
+            Expires = user.expirationDate,
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -59,19 +60,14 @@ public class JwtUtils : IJwtUtils
                 IssuerSigningKey = new SymmetricSecurityKey(key),
                 ValidateIssuer = false,
                 ValidateAudience = false,
-                // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
                 ClockSkew = TimeSpan.Zero
             }, out SecurityToken validatedToken);
 
             var jwtToken = (JwtSecurityToken)validatedToken;
-            var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
-
-            // return user id from JWT token if validation successful
-            return userId;
+            return int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
         }
         catch
         {
-            // return null if validation fails
             return null;
         }
     }

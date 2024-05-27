@@ -44,6 +44,7 @@ public class LoginController : Controller
                 });
 
             var userIdentity = await _signInManager.UserManager.FindByNameAsync(login.username);
+            
             if (userIdentity is null || string.IsNullOrEmpty(userIdentity.NormalizedUserName))
             {
                 return Json(new LoginResultModel
@@ -91,18 +92,19 @@ public class LoginController : Controller
                 });
             }
 
+            var logTraceId = "${Guid.NewGuid()}";
             var expirationDate = DateTime.Now.AddDays(7);
-            
             var client = _clientFactory.CreateClient();
             var responsePost = await client.PostAsync(ConfigurationManager.AppSettings["api:routes:login:authenticate"], new StringContent(JsonConvert.SerializeObject(new
             {
                 id = userIdentity.NormalizedId,
                 username = userIdentity.NormalizedUserName,
                 expirationDate,
+                logTraceId
             }), Encoding.UTF8, "application/json"));
             
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
-            // var responsePostAsModel = JsonConvert.DeserializeObject<UserTestModel>(responsePostAsJson);
+            var responsePostAsModel = JsonConvert.DeserializeObject<UserModel>(responsePostAsJson);
             client.Dispose();
 
             ////Validating token...
