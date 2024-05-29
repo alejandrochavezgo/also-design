@@ -9,11 +9,9 @@ $(document).ready(function () {
             }
         }
         catch(exception) {
-            Swal.fire(
-                'Oops!',
-                'An error has ocurred when revealing the password.',
-                'error'
-              );
+            restartSignInProcess();
+            addValidationMessage("An unexpected error has ocurred :(<br>Please refresh this page and try again.");
+            return;
         }
     });
 
@@ -27,13 +25,13 @@ $(document).ready(function () {
 
             if ($("#username").val() == '' || $("#username").val() == null || $("#username").val() == undefined) {
                 restartSignInProcess();
-                addValidationMessage("* You forgot to put the username above.");   
-                return;           
+                addValidationMessage("You forgot to put the username above.");
+                return;
             }
 
             if ($("#password").val() == '' || $("#password").val() == null || $("#password").val() == undefined) {
                 restartSignInProcess();
-                addValidationMessage("* You forgot to put the password above.");
+                addValidationMessage("You forgot to put the password above.");
                 return;
             }
 
@@ -42,7 +40,7 @@ $(document).ready(function () {
                 password: $("#password").val(),
             };
 
-            fetch("Login/Login", {
+            fetch("login/login", {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json',
@@ -52,31 +50,22 @@ $(document).ready(function () {
             .then(response => response.json())
             .then(data => {
                 if (!data.isSuccess) {
-                    Swal.fire({
-                        title: 'Oops!',
-                        icon: 'error',
-                        html: 'An unexpected error has ocurred :(<br>' + data.message,
-                    });
+                    restartSignInProcess();
+                    addValidationMessage(data.message);
+                    return;
                 }
+
+                window.location.href = data.url;
             })
             .catch(exception => {
-                console.log("catch");
-                console.log(exception);
-                Swal.fire({
-                    title: 'Oops!',
-                    icon: 'error',
-                    html: 'An unexpected error has ocurred :(<br>Please refresh this page and try again.',
-                });
+                restartSignInProcess();
+                addValidationMessage("An unexpected error has ocurred :(<br>Please refresh this page and try again.");
             });
         }
         catch(exception) {
-            console.log(exception);
-                Swal.fire({
-                    title: 'Oops!',
-                    icon: 'error',
-                    html: 'An unexpected error has ocurred :(<br>Please refresh this page and try again.',
-                });
-        } 
+            restartSignInProcess();
+            addValidationMessage("An unexpected error has ocurred :(<br>Please refresh this page and try again.");
+        }
     });
 
     $("#password").keypress(function (event) {
@@ -94,12 +83,8 @@ $(document).ready(function () {
             else
                 $("#itemsSummary").html($("#itemsSummary").html() + '<br><muted>' + msg + '</muted>');
         } catch (exception) {
-            console.log(exception);
-            Swal.fire({
-                title: 'Oops!',
-                icon: 'error',
-                html: 'An unexpected error has ocurred :(<br>Please refresh this page and try again.',
-            });
+            restartSignInProcess();
+            addValidationMessage("An unexpected error has ocurred :(<br>Please refresh this page and try again.");
         }
     }
 
@@ -109,12 +94,8 @@ $(document).ready(function () {
             $("#submitText").html('Sign In');
             $("#submitStatus").addClass('display-none');
         } catch (exception) {
-            console.log(exception);
-            Swal.fire({
-                title: 'Oops!',
-                icon: 'error',
-                html: 'An unexpected error has ocurred :(<br>Please refresh this page and try again.',
-            });
+            restartSignInProcess();
+            addValidationMessage("An unexpected error has ocurred :(<br>Please refresh this page and try again.");
         }
     }
 
@@ -124,12 +105,8 @@ $(document).ready(function () {
                 $("#validationsSummary").addClass("display-none");
             $("#itemsSummary").text('');
         } catch (exception) {
-            console.log(exception);
-            Swal.fire({
-                title: 'Oops!',
-                icon: 'error',
-                html: 'An unexpected error has ocurred :(<br>Please refresh this page and try again.',
-            });
+            restartSignInProcess();
+            addValidationMessage("An unexpected error has ocurred :(<br>Please refresh this page and try again.");
         }
     }
 
@@ -144,12 +121,8 @@ $(document).ready(function () {
         }
         catch(exception)
         {
-            console.log(exception);
-            Swal.fire({
-                title: 'Oops!',
-                icon: 'error',
-                html: 'An unexpected error has ocurred :(<br>Please refresh this page and try again.',
-            });
+            restartSignInProcess();
+            addValidationMessage("An unexpected error has ocurred :(<br>Please refresh this page and try again.");
         }
     }
 });

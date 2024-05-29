@@ -1,0 +1,306 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/business/business.csproj": {}
+  },
+  "projects": {
+    "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/business/business.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/business/business.csproj",
+        "projectName": "business",
+        "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/business/business.csproj",
+        "packagesPath": "/Users/alejandrochavezgomez/.nuget/packages/",
+        "outputPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/business/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/alejandrochavezgomez/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/common.csproj": {
+                "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/common.csproj"
+              },
+              "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/data/data.csproj": {
+                "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/data/data.csproj"
+              },
+              "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj": {
+                "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.300/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/common.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/common.csproj",
+        "projectName": "common",
+        "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/common.csproj",
+        "packagesPath": "/Users/alejandrochavezgomez/.nuget/packages/",
+        "outputPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/alejandrochavezgomez/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj": {
+                "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.Extensions.Logging": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "NLog": {
+              "target": "Package",
+              "version": "[5.2.4, )"
+            },
+            "NLog.Web.AspNetCore": {
+              "target": "Package",
+              "version": "[5.3.4, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.5, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.300/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/data/data.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/data/data.csproj",
+        "projectName": "data",
+        "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/data/data.csproj",
+        "packagesPath": "/Users/alejandrochavezgomez/.nuget/packages/",
+        "outputPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/data/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/alejandrochavezgomez/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/common.csproj": {
+                "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/common.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.11, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.5, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.300/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj",
+        "projectName": "entities",
+        "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj",
+        "packagesPath": "/Users/alejandrochavezgomez/.nuget/packages/",
+        "outputPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/alejandrochavezgomez/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.Build.Framework": {
+              "target": "Package",
+              "version": "[17.7.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.300/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

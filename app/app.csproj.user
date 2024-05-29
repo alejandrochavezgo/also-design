@@ -10,4 +10,8 @@
     <_SelectedScaffolderCategoryPath>root/Identity</_SelectedScaffolderCategoryPath>
     <WebStackScaffolding_ViewDialogWidth>650</WebStackScaffolding_ViewDialogWidth>
   </PropertyGroup>
+  <ItemGroup>
+      <ProjectReference Include="..\entities\entities.csproj" />
+      <ProjectReference Include="..\common\common.csproj" />
+    </ItemGroup>
 </Project>

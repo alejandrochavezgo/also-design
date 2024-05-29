@@ -37,9 +37,10 @@ public class LoginController : Controller
         try
         {
             if (!ModelState.IsValid)
-                return Json(new LoginResultModel
+                return Json(new
                 {
                     isSuccess = false,
+                    url = string.Empty,
                     message = "The information is not valid, please refresh the page and try again."
                 });
 
@@ -47,27 +48,30 @@ public class LoginController : Controller
             
             if (userIdentity is null || string.IsNullOrEmpty(userIdentity.NormalizedUserName))
             {
-                return Json(new LoginResultModel
+                return Json(new
                 {
                     isSuccess = false,
+                    url = string.Empty,
                     message = "I can't find this username. Check it and try again please."
                 });
             }
 
             if (!userIdentity.IsActive)
             {
-                return Json(new LoginResultModel
+                return Json(new
                 {
                     isSuccess = false,
+                    url = string.Empty,
                     message = "This user is deactivated."
                 });
             }
 
             if (userIdentity.IsLocked)
             {
-                return Json(new LoginResultModel
+                return Json(new
                 {
                     isSuccess = false,
+                    url = string.Empty,
                     message = "This user is locked."
                 });
             }
@@ -75,9 +79,10 @@ public class LoginController : Controller
             userIdentity.PasswordHash = UserSecurityHelper.evaluateHash(_userManager, userIdentity, login.password);
             if (string.IsNullOrEmpty(userIdentity.PasswordHash))
             {
-                return Json(new LoginResultModel
+                return Json(new
                 {
                     isSuccess = false,
+                    url = string.Empty,
                     message = "Password incorrect, check it and try again please."
                 });
             }
@@ -85,11 +90,28 @@ public class LoginController : Controller
             var paswordHash = _userManager.PasswordHasher.VerifyHashedPassword(userIdentity, userIdentity.PasswordHash, login.password);
             if (paswordHash != PasswordVerificationResult.Success)
             {
-                return Json(new LoginResultModel
+                return Json(new
                 {
                     isSuccess = false,
+                    url = string.Empty,
                     message = "Password incorrect, check it and try again please."
                 });
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(login.username, login.password, false, lockoutOnFailure: false);
+            if (result.Succeeded)
+            {
+                // Autenticación exitosa, genera el token de autenticación
+                // var token = GenerateAuthenticationToken(model.Username);
+
+                // Almacena el token en una cookie o en el almacenamiento local del navegador
+                // Response.Cookies.Append("token", token);
+
+                // return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Error de inicio de sesión. Verifica tus credenciales.");
             }
 
             var logTraceId = "${Guid.NewGuid()}";
@@ -104,30 +126,38 @@ public class LoginController : Controller
             }), Encoding.UTF8, "application/json"));
             
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
-            var responsePostAsModel = JsonConvert.DeserializeObject<UserModel>(responsePostAsJson);
+            var user = JsonConvert.DeserializeObject<UserModel>(responsePostAsJson);
             client.Dispose();
 
-            ////Validating token...
-            //client = _clientFactory.CreateClient();
-            //client.DefaultRequestHeaders.Add("Authorization", $"{responsePostAsModel.Token}");
-            //var response = await client.GetAsync("http://localhost:4000/users/");
-            //var responseJson = await response.Content.ReadAsStringAsync();
-            //client.Dispose();
-            ////////////////
+            Response.Cookies.Append("userCookie",
+            JsonConvert.SerializeObject(new
+            {
+                id = user.id,
+                username = user.username,
+                firstname = user.firstname,
+                lastname = user.lastname,
+                token = user.token
+            }), 
+            new CookieOptions {
+                Expires = expirationDate,
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict
+            });
 
-            //Response.Cookies.Append("token", responsePostAsModel.Token);
-
-            return Json(new LoginResultModel
+            return Json(new
             {
                 isSuccess = true,
+                url = "/dashboard/dashboard",
                 message = "Ok."
             });
         }
         catch (Exception e)
         {
-            return Json(new ExceptionResultModel
+            return Json(new
             {
                 isSuccess = false,
+                url = string.Empty,
                 message = $"Unexpected error has ocurred: {e.Message}.\nPlease refresh the page and try again."
             });
         }

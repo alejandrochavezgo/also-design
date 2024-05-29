@@ -628,7 +628,7 @@
           }
         }
       },
-      "cbx.common/1.0.0": {
+      "common/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
@@ -638,41 +638,41 @@
           "Newtonsoft.Json": "13.0.3",
           "System.Data.SqlClient": "4.8.5",
           "System.Drawing.Common": "7.0.0",
-          "cbx.entities": "1.0.0"
+          "entities": "1.0.0"
         },
         "compile": {
-          "bin/placeholder/cbx.common.dll": {}
+          "bin/placeholder/common.dll": {}
         },
         "runtime": {
-          "bin/placeholder/cbx.common.dll": {}
+          "bin/placeholder/common.dll": {}
         }
       },
-      "cbx.data/1.0.0": {
+      "data/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "7.0.11",
           "System.Data.SqlClient": "4.8.5",
-          "cbx.common": "1.0.0"
+          "common": "1.0.0"
         },
         "compile": {
-          "bin/placeholder/cbx.data.dll": {}
+          "bin/placeholder/data.dll": {}
         },
         "runtime": {
-          "bin/placeholder/cbx.data.dll": {}
+          "bin/placeholder/data.dll": {}
         }
       },
-      "cbx.entities/1.0.0": {
+      "entities/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
           "Microsoft.Build.Framework": "17.7.2"
         },
         "compile": {
-          "bin/placeholder/cbx.entities.dll": {}
+          "bin/placeholder/entities.dll": {}
         },
         "runtime": {
-          "bin/placeholder/cbx.entities.dll": {}
+          "bin/placeholder/entities.dll": {}
         }
       }
     }
@@ -1679,71 +1679,63 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "cbx.common/1.0.0": {
+    "common/1.0.0": {
       "type": "project",
-      "path": "../cbx.common/cbx.common.csproj",
-      "msbuildProject": "../cbx.common/cbx.common.csproj"
+      "path": "../common/common.csproj",
+      "msbuildProject": "../common/common.csproj"
     },
-    "cbx.data/1.0.0": {
+    "data/1.0.0": {
       "type": "project",
-      "path": "../cbx.data/cbx.data.csproj",
-      "msbuildProject": "../cbx.data/cbx.data.csproj"
+      "path": "../data/data.csproj",
+      "msbuildProject": "../data/data.csproj"
     },
-    "cbx.entities/1.0.0": {
+    "entities/1.0.0": {
       "type": "project",
-      "path": "../cbx.entities/cbx.entities.csproj",
-      "msbuildProject": "../cbx.entities/cbx.entities.csproj"
+      "path": "../entities/entities.csproj",
+      "msbuildProject": "../entities/entities.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net7.0": [
       "Newtonsoft.Json >= 13.0.3",
-      "cbx.common >= 1.0.0",
-      "cbx.data >= 1.0.0",
-      "cbx.entities >= 1.0.0"
+      "common >= 1.0.0",
+      "data >= 1.0.0",
+      "entities >= 1.0.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\achavez\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/Users/alejandrochavezgomez/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\achavez\\Documents\\cbx-development\\developments\\tix-1.0\\cbx-tico-v2\\cbx.business\\cbx.business.csproj",
-      "projectName": "cbx.business",
-      "projectPath": "C:\\Users\\achavez\\Documents\\cbx-development\\developments\\tix-1.0\\cbx-tico-v2\\cbx.business\\cbx.business.csproj",
-      "packagesPath": "C:\\Users\\achavez\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\achavez\\Documents\\cbx-development\\developments\\tix-1.0\\cbx-tico-v2\\cbx.business\\obj\\",
+      "projectUniqueName": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/business/business.csproj",
+      "projectName": "business",
+      "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/business/business.csproj",
+      "packagesPath": "/Users/alejandrochavezgomez/.nuget/packages/",
+      "outputPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/business/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\achavez\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/alejandrochavezgomez/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
-        "C:\\ArgusSDK\\nu-package": {},
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\achavez\\Documents\\cbx-development\\developments\\tix-1.0\\cbx-tico-v2\\cbx.common\\cbx.common.csproj": {
-              "projectPath": "C:\\Users\\achavez\\Documents\\cbx-development\\developments\\tix-1.0\\cbx-tico-v2\\cbx.common\\cbx.common.csproj"
+            "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/common.csproj": {
+              "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/common.csproj"
             },
-            "C:\\Users\\achavez\\Documents\\cbx-development\\developments\\tix-1.0\\cbx-tico-v2\\cbx.data\\cbx.data.csproj": {
-              "projectPath": "C:\\Users\\achavez\\Documents\\cbx-development\\developments\\tix-1.0\\cbx-tico-v2\\cbx.data\\cbx.data.csproj"
+            "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/data/data.csproj": {
+              "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/data/data.csproj"
             },
-            "C:\\Users\\achavez\\Documents\\cbx-development\\developments\\tix-1.0\\cbx-tico-v2\\cbx.entities\\cbx.entities.csproj": {
-              "projectPath": "C:\\Users\\achavez\\Documents\\cbx-development\\developments\\tix-1.0\\cbx-tico-v2\\cbx.entities\\cbx.entities.csproj"
+            "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj": {
+              "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj"
             }
           }
         }
@@ -1752,6 +1744,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -1779,7 +1776,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.300/RuntimeIdentifierGraph.json"
       }
     }
   }

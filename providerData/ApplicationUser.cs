@@ -4,6 +4,7 @@
  * Total or partial distribution is prohibited.
 */
 
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace providerData;

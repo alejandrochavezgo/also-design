@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using common.logging;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace providerData
 {
@@ -42,11 +43,11 @@ namespace providerData
             throw new NotImplementedException();
         }
 
-        public async Task<ApplicationUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        public Task<ApplicationUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
             try
             {
-                return _dbContext.Users.FirstOrDefault(x => x.NormalizedUserName == normalizedUserName);
+                return Task.FromResult(_dbContext.Users.FirstOrDefault(x => x.NormalizedUserName == normalizedUserName));
             }
             catch (Exception e)
             {
@@ -67,7 +68,7 @@ namespace providerData
 
         public Task<string> GetUserIdAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult($"{user.NormalizedId}");
         }
 
         public Task<string?> GetUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
@@ -98,7 +99,8 @@ namespace providerData
 
         public Task SetNormalizedUserNameAsync(ApplicationUser user, string? normalizedName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            user.NormalizedUserName = normalizedName;
+            return Task.CompletedTask;
         }
 
         public Task SetPasswordHashAsync(ApplicationUser user, string? passwordHash, CancellationToken cancellationToken)
@@ -114,12 +116,22 @@ namespace providerData
 
         public Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(IdentityResult.Success);
         }
 
         public Task<string?> GetPasswordHashAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return Task.FromResult(_dbContext.Users.Where(x => x.NormalizedId == user.NormalizedId)
+                                                   .Select(x => x.Password)
+                                                   .FirstOrDefault());
+            }
+            catch (Exception e)
+            {
+                logger.logError($"{JsonConvert.SerializeObject(e)}");
+                throw;
+            }
         }
     }
 }

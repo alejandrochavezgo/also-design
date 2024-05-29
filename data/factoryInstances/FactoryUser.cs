@@ -9,7 +9,10 @@ internal class FactoryGetUserByIdUser: BaseMethod<FactoryGetUserByIdUser, UserMo
     {
         return new UserModel {
             id = ConversionManager.ToInt(dr["IDUSER"]),
-            username = ConversionManager.ToString(dr["USERNAME"])
+            username = ConversionManager.ToString(dr["USERNAME"]),
+            firstname = ConversionManager.ToString(dr["FIRSTNAME"]),
+            lastname = ConversionManager.ToString(dr["LASTNAME"]),
+            email = ConversionManager.ToString(dr["EMAIL"])
         };
     }
 }

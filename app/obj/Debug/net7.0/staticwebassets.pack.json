@@ -73,6 +73,10 @@
       "PackagePath": "staticwebassets/assets/css/login.css"
     },
     {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/css/password-reset.css",
+      "PackagePath": "staticwebassets/assets/css/password-reset.css"
+    },
+    {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/favicon.ico",
       "PackagePath": "staticwebassets/assets/favicon.ico"
     },
@@ -273,6 +277,10 @@
       "PackagePath": "staticwebassets/assets/images/404-error.png"
     },
     {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/alsologo.png",
+      "PackagePath": "staticwebassets/assets/images/alsologo.png"
+    },
+    {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/auth-offline.gif",
       "PackagePath": "staticwebassets/assets/images/auth-offline.gif"
     },
@@ -311,26 +319,6 @@
     {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/brands/slack.png",
       "PackagePath": "staticwebassets/assets/images/brands/slack.png"
-    },
-    {
-      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/cbx-1280w-720h.jpg",
-      "PackagePath": "staticwebassets/assets/images/cbx-1280w-720h.jpg"
-    },
-    {
-      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/cbx-3000w-1326h-white-fonts.png",
-      "PackagePath": "staticwebassets/assets/images/cbx-3000w-1326h-white-fonts.png"
-    },
-    {
-      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/cbx-3000w-1326h.png",
-      "PackagePath": "staticwebassets/assets/images/cbx-3000w-1326h.png"
-    },
-    {
-      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/cbx-terminal-3000w-2002h.jpg",
-      "PackagePath": "staticwebassets/assets/images/cbx-terminal-3000w-2002h.jpg"
-    },
-    {
-      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/cbx-terminal-5100w-3404h.jpg",
-      "PackagePath": "staticwebassets/assets/images/cbx-terminal-5100w-3404h.jpg"
     },
     {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/chat-bg-pattern.png",
@@ -3127,6 +3115,10 @@
     {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/password-addon.init.js",
       "PackagePath": "staticwebassets/assets/js/pages/password-addon.init.js"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/password-reset.js",
+      "PackagePath": "staticwebassets/assets/js/pages/password-reset.js"
     },
     {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/plugins/jsonfull-emoji-list.json",

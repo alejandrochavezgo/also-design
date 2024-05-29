@@ -10,19 +10,19 @@ using entities.models;
 
 public class RepositoryUser : BaseRepository 
 {
-    public List<UserModel> getUserByIdUser(int idUser) 
+    public UserModel getUserByIdUser(int idUser)
     {
         try 
         {
-            return FactoryGetUserByIdUser.GetList((DbDataReader)_ProviderDB.GetDataReader("sp_getUserByIdUser", new DbParameter[] {
+            return FactoryGetUserByIdUser.Get((DbDataReader)_ProviderDB.GetDataReader("sp_getUserByIdUser", new DbParameter[] {
                 DataFactory.GetObjParameter(ConfigurationManager.ProviderDB, "@idUser", DbType.Int32, idUser)
             }));
         }
-        catch (SqlException SqlException) 
+        catch (SqlException SqlException)
         {
             throw SqlException;
         }
-        catch (Exception exception) 
+        catch (Exception exception)
         {
             throw exception;
         }
