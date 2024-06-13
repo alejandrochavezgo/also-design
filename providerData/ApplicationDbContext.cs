@@ -33,6 +33,8 @@ namespace providerData
             builder.Property(e => e.Password).HasColumnName("PASSWORD");
             builder.Property(e => e.NormalizedEmail).HasColumnName("EMAIL");
             builder.Property(e => e.NormalizedUserName).HasColumnName("USERNAME");
+            builder.Property(e => e.Firstname).HasColumnName("FIRSTNAME");
+            builder.Property(e => e.Lastname).HasColumnName("LASTNAME");
             builder.Property(e => e.IsActive).HasColumnName("ISACTIVE");
             builder.Property(e => e.IsLocked).HasColumnName("ISLOCKED");
             builder.Property(e => e.AccessFailedCount).HasColumnName("FAILCOUNT");

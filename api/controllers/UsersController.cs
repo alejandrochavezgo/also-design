@@ -21,11 +21,18 @@ public class UsersController : ControllerBase
     [HttpPost("authenticate")]
     public IActionResult authenticate(AuthenticateRequest model)
     {
-        var response = _userService.authenticate(model);
+        try
+        {
+            var response = _userService.authenticate(model);
 
-        if (response == null)
-            return BadRequest(new { message = "Username or password is incorrect" });
+            if(response == null)
+                return BadRequest(new { message = "Username or password is incorrect." });
 
-        return Ok(response);
+            return Ok(response);
+        }
+        catch (Exception exception)
+        {
+            return BadRequest(exception);
+        }
     }
 }

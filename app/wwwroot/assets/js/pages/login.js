@@ -54,7 +54,8 @@ $(document).ready(function () {
                     addValidationMessage(data.message);
                     return;
                 }
-
+                
+                console.log(data.url);
                 window.location.href = data.url;
             })
             .catch(exception => {
@@ -102,7 +103,7 @@ $(document).ready(function () {
     function clearValidationsSummary() {
         try {
             if(!$("#validationsSummary").hasClass('display-none')) 
-                $("#validationsSummary").addClass("display-none");
+                $("#validationsSummary").addClass('display-none');
             $("#itemsSummary").text('');
         } catch (exception) {
             restartSignInProcess();
@@ -113,10 +114,10 @@ $(document).ready(function () {
     function revealPassword() {
         try {
             if ($('#password').prop('type') == 'text') {
-                $("#password").prop('type', 'password');
+                $('#password').prop('type', 'password');
             }
             else {
-                $("#password").prop('type', 'text');
+                $('#password').prop('type', 'text');
             }
         }
         catch(exception)

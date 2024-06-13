@@ -9,7 +9,7 @@ public class AuthenticateRequest
     [Required]
     public string? username { get; set; }
     [Required]
-    public string? logTraceId { get; set; }
+    public string? email { get; set; }
     [Required]
     public DateTime expirationDate { get; set; }
 }

@@ -15544,3 +15544,29 @@ span.flatpickr-weekday {
 #explorecard-list .list-element:nth-child(-n+10) {
   display: block;
 }
+@media all and (max-width: 1024px) {
+  .hideMobileContent{
+    display: none;
+  }
+}
+.text-right{
+  text-align: right;
+}
+.text-left{
+  text-align: left;
+}
+.pl-0{
+  padding-left: 0;
+}
+.pr-0{
+  padding-right: 0;
+}
+.pr-4px{
+  padding-right: 4px;
+}
+.d-ruby{
+  display: ruby;
+}
+.font-size-15px{
+  font-size: 15px;
+}

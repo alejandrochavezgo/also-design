@@ -6,16 +6,16 @@ using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using entities.models;
 using Microsoft.AspNetCore.Authorization;
+using authorization;
 
-[Authorize]
-public class DashboardController : Controller
+public class dashboardController : Controller
 {
-   private readonly ILogger<DashboardController> _logger;
+    private readonly ILogger<dashboardController> _logger;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IHttpClientFactory _clientFactory;
 
-    public DashboardController(ILogger<DashboardController> logger, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IHttpClientFactory clientFactory)
+    public dashboardController(ILogger<dashboardController> logger, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IHttpClientFactory clientFactory)
     {
         _logger = logger;
         _userManager = userManager;
@@ -24,16 +24,9 @@ public class DashboardController : Controller
     }
 
     [HttpGet]
+    [authorization]
     public IActionResult dashboard()
     {
-        if (Request.Cookies.TryGetValue("userCookie", out var userCookie))
-        {
-            var userInfo = JsonConvert.DeserializeObject<UserModel>(userCookie);
-        }
-        else
-        {
-        }
-
         return View();
     }
 }

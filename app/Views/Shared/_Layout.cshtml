@@ -1,49 +1,265 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - cbx.app</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/app.styles.css" asp-append-version="true" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">cbx.app</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+﻿<!doctype html>
+<html lang="en" data-layout="horizontal" data-topbar="light" data-sidebar="light" data-sidebar-size="lg" data-sidebar-image="none">
+    <head>
+        <meta charset="utf-8" />
+        <title>@ViewData["Title"]</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Also Design - Machining industry-focused Enterprise Resource Planning (ERP)." name="description" />
+        <meta content="Ideti Company." name="author"/>
+        <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="../assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="../assets/css/app.min.css" rel="stylesheet" type="text/css" />
+        <link href="../assets/css/custom.min.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body class="hideMobileContent">
+        <header id="page-topbar">
+                <div class="layout-width">
+                    <div class="navbar-header">
+                        <div class="d-flex">
+                            <div class="navbar-brand-box horizontal-logo d-ruby">
+                                <a href="@Url.Action("dashboard", "dashboard")">
+                                    <span class="logo-sm">
+                                        <img width="70" src="../assets/images/alsologo.png"/>
+                                    </span>
+                                </a>
+                                <p class="font-size-15px">Also Design System</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="dropdown ms-1 topbar-head-dropdown header-item">
+                                <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
+                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <img id="header-lang-img" src="../assets/images/flags/us.svg" alt="Header Language" height="20" class="rounded">
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="javascript:void(0);" class="dropdown-item notify-item language py-2" data-lang="en" title="English">
+                                        <img src="../assets/images/flags/us.svg" alt="user-image" class="me-2 rounded" height="18">
+                                        <span class="align-middle">English</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="dropdown ms-sm-3 header-item topbar-user">
+                                <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                    <span class="d-flex align-items-center">
+                                        <img class="rounded-circle header-profile-user" src="../assets/images/account-circle-custom.png"
+                                            alt="Header Avatar">
+                                        <span class="text-start ms-xl-2">
+                                            <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">Alejandro Chavez</span>
+                                            <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">achavez</span>
+                                        </span>
+                                    </span>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <h6 class="dropdown-header">Welcome Alejandro</h6>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
+                                        <span class="align-middle">Profile</span>
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="mdi mdi-cog-outline text-muted fs-16 align-middle me-1"></i>
+                                        <span class="align-middle">Settings</span>
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i>
+                                        <span class="align-middle" data-key="t-logout">Logout</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="app-menu navbar-menu">
+                <div id="scrollbar">
+                    <div class="container-fluid">
+                        <div id="two-column-menu"></div>
+                        <ul class="navbar-nav" id="navbar-nav">
+                            <li class="menu-title"><span>Menu</span></li>
+                            <li class="nav-item">
+                                <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
+                                    <i class="ri-team-fill"></i> <span>Clients</span>
+                                </a>
+                                <div class="collapse menu-dropdown" id="sidebarApps">
+                                    <ul class="nav nav-sm flex-column">
+                                        <li class="nav-item">
+                                            <a href="apps-calendar.html" class="nav-link"> New Client </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="apps-chat.html" class="nav-link"> Client List </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="menu-title"><span>Menu</span></li>
+                            <li class="nav-item">
+                                <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
+                                    <i class="ri-file-list-line"></i> <span>Quotation</span>
+                                </a>
+                                <div class="collapse menu-dropdown" id="sidebarApps">
+                                    <ul class="nav nav-sm flex-column">
+                                        <li class="nav-item">
+                                            <a href="apps-calendar.html" class="nav-link"> New Quote </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="apps-chat.html" class="nav-link"> Quote List </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
+                                    <i class="ri-file-chart-line"></i> <span>Purchase Orders</span>
+                                </a>
+                                <div class="collapse menu-dropdown" id="sidebarApps">
+                                    <ul class="nav nav-sm flex-column">
+                                        <li class="nav-item">
+                                            <a href="apps-calendar.html" class="nav-link"> New Purchase Order </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="apps-chat.html" class="nav-link"> Purchase Order List </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
+                                    <i class="ri-file-word-line"></i> <span>Work Orders</span>
+                                </a>
+                                <div class="collapse menu-dropdown" id="sidebarApps">
+                                    <ul class="nav nav-sm flex-column">
+                                        <li class="nav-item">
+                                            <a href="apps-calendar.html" class="nav-link"> New Work Order </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="apps-chat.html" class="nav-link"> Work Order List </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
+                                    <i class="ri-apps-2-line"></i> <span>Administrative Actions</span>
+                                </a>
+                                <div class="collapse menu-dropdown" id="sidebarApps">
+                                    <ul class="nav nav-sm flex-column">
+                                        <li class="nav-item">
+                                            <a href="apps-calendar.html" class="nav-link"> Inventory </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="#sidebarEmail" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarEmail">
+                                                Users
+                                            </a>
+                                            <div class="collapse menu-dropdown" id="sidebarEmail">
+                                                <ul class="nav nav-sm flex-column">
+                                                    <li class="nav-item">
+                                                        <a href="apps-mailbox.html" class="nav-link"> New User </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="apps-mailbox.html" class="nav-link"> User List </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarEcommerce">
+                                                Workflow
+                                            </a>
+                                            <div class="collapse menu-dropdown" id="sidebarEcommerce">
+                                                <ul class="nav nav-sm flex-column">
+                                                    <li class="nav-item">
+                                                        <a href="apps-ecommerce-products.html" class="nav-link"> New Step </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="apps-ecommerce-product-details.html" class="nav-link"> Step List </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarProjects">
+                                                Status
+                                            </a>
+                                            <div class="collapse menu-dropdown" id="sidebarProjects">
+                                                <ul class="nav nav-sm flex-column">
+                                                    <li class="nav-item">
+                                                        <a href="apps-projects-list.html" class="nav-link"> New status </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="apps-projects-overview.html" class="nav-link"> Status List </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarTasks"> Machines </a>
+                                            <div class="collapse menu-dropdown" id="sidebarTasks">
+                                                <ul class="nav nav-sm flex-column">
+                                                    <li class="nav-item">
+                                                        <a href="apps-tasks-kanban.html" class="nav-link"> New Machine </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="apps-tasks-list-view.html" class="nav-link"> Machine List </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - cbx.app - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
+            <div class="main-content">
+                <div class="page-content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                                    <h4 class="mb-sm-0">Dashboards</h4>
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title mb-0">Dashboards</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        @RenderBody()
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-6 text-left">
+                                <script>document.write(new Date().getFullYear())</script> © Ideti.
+                            </div>
+                            <div class="col-6 text-right">
+                                Design & Develop by Ideti.
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        <script src="../assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="../assets/libs/simplebar/simplebar.min.js"></script>
+        <script src="../assets/libs/node-waves/waves.min.js"></script>
+        <script src="../assets/libs/feather-icons/feather.min.js"></script>
+        <script src="../assets/js/pages/plugins/lord-icon-2.1.0.js"></script>
+        <script src="../assets/js/plugins.js"></script>
+        <script src="../assets/js/app.js"></script>
+        @await RenderSectionAsync("Scripts", required: false)
+    </body>
 </html>

@@ -49,9 +49,9 @@ namespace providerData
             {
                 return Task.FromResult(_dbContext.Users.FirstOrDefault(x => x.NormalizedUserName == normalizedUserName));
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                logger.logError($"{JsonConvert.SerializeObject(e)}");
+                logger!.logError($"{JsonConvert.SerializeObject(exception)}");
                 throw;
             }
         }
@@ -123,13 +123,13 @@ namespace providerData
         {
             try
             {
-                return Task.FromResult(_dbContext.Users.Where(x => x.NormalizedId == user.NormalizedId)
-                                                   .Select(x => x.Password)
-                                                   .FirstOrDefault());
+                return Task.FromResult(_dbContext.Users.Where(x => x!.NormalizedId == user.NormalizedId)
+                                                       .Select(x => x!.Password)
+                                                       .FirstOrDefault());
             }
             catch (Exception e)
             {
-                logger.logError($"{JsonConvert.SerializeObject(e)}");
+                logger!.logError($"{JsonConvert.SerializeObject(e)}");
                 throw;
             }
         }

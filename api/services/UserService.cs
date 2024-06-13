@@ -21,18 +21,18 @@ public class UserService : IUserService
 
     public AuthenticateResponse? authenticate(AuthenticateRequest model)
     {
-        var user = new FacadeUser("${Guid.NewGuid()}").getUserByIdUser(model.id);
-        if (user == null)
-            return null;
-
-        var token = _jwtUtils.generateJwtToken(new UserModel {
-            id = user.id,
-            username = user.username,
-            firstname = user.firstname,
-            lastname = user.lastname,
-            expirationDate = model.expirationDate
-        });
-
-        return new AuthenticateResponse(user, token);
+        var roles = new facadeRole().getUserRolesByIdUser(model.id);
+        var menus = new facadeMenu().getUserMenusByIdUser(model.id);
+        var user = new UserModel()
+        {
+            id = model.id,
+            username = model.username,
+            expirationDate = model.expirationDate,
+            email = model.email,
+            roles = roles,
+            menus = menus,
+        };
+        user.token = _jwtUtils.generateJwtToken(user);
+        return new AuthenticateResponse(user);
     }
 }
