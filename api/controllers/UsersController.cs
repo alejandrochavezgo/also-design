@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using api.authorization;
 using api.services;
 using providerData.entities;
+using Newtonsoft.Json;
 
 [ApiController]
-[Authorize]
+// [Authorize]
 [Route("[controller]")]
 public class UsersController : ControllerBase
 {
@@ -33,6 +34,19 @@ public class UsersController : ControllerBase
         catch (Exception exception)
         {
             return BadRequest(exception);
+        }
+    }
+
+    [HttpGet]
+    public IActionResult getTest()
+    {
+        try
+        {
+            return Ok("I'm OK!");
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
         }
     }
 }
