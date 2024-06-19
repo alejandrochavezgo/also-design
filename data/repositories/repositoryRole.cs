@@ -10,22 +10,22 @@ using data.providerData;
 using entities.models;
 using Newtonsoft.Json;
 
-public class repositoryRole : BaseRepository
+public class repositoryRole : baseRepository
 {
-    private Log _logger;
+    private log _logger;
 
     public repositoryRole()
     {
-        _logger = new Log();
+        _logger = new log();
     }
 
     public List<roleModel> getUserRolesByIdUser(int idUser)
     {
         try
         {
-            return factoryGetUserRolesByIdUser.GetList((DbDataReader)_ProviderDB.GetDataReader("sp_getUserRolesByIdUser", new DbParameter[] 
+            return factoryGetUserRolesByIdUser.getList((DbDataReader)_providerDB.GetDataReader("sp_getUserRolesByIdUser", new DbParameter[] 
             {
-                DataFactory.GetObjParameter(ConfigurationManager.ProviderDB, "@idUser", DbType.Int32, idUser)
+                dataFactory.getObjParameter(configurationManager.providerDB, "@idUser", DbType.Int32, idUser)
             }));
         }
         catch (SqlException SqlException)

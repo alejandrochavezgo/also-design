@@ -1,18 +1,18 @@
+namespace data.factoryInstances;
+
 using System.Data;
 using common.conversions;
 using entities.models;
 
-namespace data.factoryInstances;
-
-internal class factoryGetUserMenusByIdUser: BaseMethod<factoryGetUserMenusByIdUser, menuModel>
+internal class factoryGetUserMenusByIdUser: baseMethod<factoryGetUserMenusByIdUser, menuModel>
 {
-    protected override menuModel _GetEntity(IDataReader dr)
+    protected override menuModel _getEntity(IDataReader dr)
     {
         return new menuModel
         {
-            id = ConversionManager.ToInt(dr["IDMENU"]),
-            description = ConversionManager.ToString(dr["DESCRIPTION"]),
-            path = ConversionManager.ToString(dr["PATH"])
+            id = conversionManager.toInt(dr["IDMENU"]),
+            description = conversionManager.toString(dr["DESCRIPTION"]),
+            path = conversionManager.toString(dr["PATH"])
         };
     }
 }

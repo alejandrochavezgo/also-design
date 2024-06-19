@@ -14,10 +14,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddAuthorization();
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(common.configurations.ConfigurationManager.AppSettings["connectionStrings:also"]));
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddUserStore<ApplicationUserManager>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddDbContext<applicationDbContext>(options => options.UseSqlServer(common.configurations.configurationManager.appSettings["connectionStrings:also"]));
+builder.Services.AddIdentity<applicationUser, IdentityRole>()
+                .AddUserStore<applicationUserManager>()
+                .AddEntityFrameworkStores<applicationDbContext>();
 builder.Services.AddHttpClient();
 builder.Services.Configure<PasswordHasherOptions>(options =>
     options.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV3

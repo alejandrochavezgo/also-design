@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 public class facadeMenu
 {
-    private Log _logger;
+    private log _logger;
     
     public List<menuModel> getUserMenusByIdUser(int idUser)
     {

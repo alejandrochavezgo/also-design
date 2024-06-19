@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 public class facadeRole
 {
-    private Log _logger;
+    private log _logger;
     
     public List<roleModel> getUserRolesByIdUser(int idUser)
     {

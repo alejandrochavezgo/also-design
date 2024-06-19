@@ -1,24 +1,23 @@
+namespace data;
+
 using data.providerData;
 using common.configurations;
 
-namespace data
+public class baseRepository
 {
-    public class BaseRepository
+    protected dataConsumer _providerDB;
+    protected dataConsumer _providerDB_ReadOnly;
+    protected baseRepository()
     {
-        protected DataConsumer _ProviderDB;
-        protected DataConsumer _ProviderDB_ReadOnly;
-        protected BaseRepository()
-        {
-            _ProviderDB = DataFactory.GetNewInstance(
-                                    ConfigurationManager.StringConectionDB,
-                                    ConfigurationManager.ProviderDB);
-            _ProviderDB.AutoOpenAndCloseConnectionForDataReader = true;
+        _providerDB = dataFactory.getNewInstance(
+                                configurationManager.stringConectionDB,
+                                configurationManager.providerDB);
+        _providerDB.autoOpenAndCloseConnectionForDataReader = true;
 
 
-            _ProviderDB_ReadOnly = DataFactory.GetNewInstance(
-                                   ConfigurationManager.StringConectionDB_ReadOnly,
-                                   ConfigurationManager.ProviderDB_ReadOnly);
-            _ProviderDB_ReadOnly.AutoOpenAndCloseConnectionForDataReader = true;
-        }
+        _providerDB_ReadOnly = dataFactory.getNewInstance(
+                                configurationManager.stringConectionDB_ReadOnly,
+                                configurationManager.providerDB_ReadOnly);
+        _providerDB_ReadOnly.autoOpenAndCloseConnectionForDataReader = true;
     }
 }

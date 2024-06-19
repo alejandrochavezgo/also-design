@@ -1,8 +1,8 @@
-﻿namespace providerData.entities;
+﻿namespace providerData.entitiesData;
 
 using System.ComponentModel.DataAnnotations;
 
-public class AuthenticateRequest
+public class authenticateRequest
 {
     [Required]
     public int id { get; set; }

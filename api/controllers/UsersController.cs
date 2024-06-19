@@ -3,24 +3,24 @@
 using Microsoft.AspNetCore.Mvc;
 using api.authorization;
 using api.services;
-using providerData.entities;
+using providerData.entitiesData;
 using Newtonsoft.Json;
 
 [ApiController]
-// [Authorize]
+[authorize]
 [Route("[controller]")]
-public class UsersController : ControllerBase
+public class usersController : ControllerBase
 {
     private IUserService _userService;
 
-    public UsersController(IUserService userService)
+    public usersController(IUserService userService)
     {
         _userService = userService;
     }
 
-    [AllowAnonymous]
+    [allowAnonymous]
     [HttpPost("authenticate")]
-    public IActionResult authenticate(AuthenticateRequest model)
+    public IActionResult authenticate(authenticateRequest model)
     {
         try
         {

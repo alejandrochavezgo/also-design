@@ -1,74 +1,74 @@
+namespace common.configurations;
+
 using Microsoft.Extensions.Configuration;
 
-namespace common.configurations
+public static class configurationManager
 {
-    public static class ConfigurationManager
+    public static IConfiguration appSettings { get; }
+
+    static configurationManager()
     {
-        public static IConfiguration AppSettings { get; }
-        static ConfigurationManager()
-        {
-            AppSettings = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
-                                                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                                                    .Build();
-        }
+        appSettings = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+                                                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                                                .Build();
+    }
 
-        public static string StringConectionDB
+    public static string stringConectionDB
+    {
+        get
         {
-            get
+            try
             {
-                try
-                {
-                    return AppSettings["connectionStrings:alsoConnection"];
-                }
-                catch (NullReferenceException)
-                {
-                    throw new Exception("Database Connection String not defined in configuration file.");
-                }
+                return appSettings["connectionStrings:alsoConnection"];
+            }
+            catch (NullReferenceException)
+            {
+                throw new Exception("Database Connection String not defined in configuration file.");
             }
         }
+    }
 
-        public static string ProviderDB
+    public static string providerDB
+    {
+        get
         {
-            get
+            try
             {
-                try
-                {
-                    return AppSettings["providers:alsoProviderName"];
-                }
-                catch (NullReferenceException)
-                {
-                    throw new Exception("Database Provider not defined in configuration file.");
-                }
+                return appSettings["providers:alsoProviderName"];
+            }
+            catch (NullReferenceException)
+            {
+                throw new Exception("Database Provider not defined in configuration file.");
             }
         }
+    }
 
-        public static string StringConectionDB_ReadOnly
+    public static string stringConectionDB_ReadOnly
+    {
+        get
         {
-            get
+            try
             {
-                try
-                {
-                    return AppSettings["connectionStrings:alsoConnection_readonly"];
-                }
-                catch (NullReferenceException)
-                {
-                    throw new Exception("Database Connection String not defined in configuration file.");
-                }
+                return appSettings["connectionStrings:alsoConnection_readonly"];
+            }
+            catch (NullReferenceException)
+            {
+                throw new Exception("Database Connection String not defined in configuration file.");
             }
         }
+    }
 
-        public static string ProviderDB_ReadOnly
+    public static string providerDB_ReadOnly
+    {
+        get
         {
-            get
+            try
             {
-                try
-                {
-                    return AppSettings["providers:alsoProviderName"];
-                }
-                catch (NullReferenceException)
-                {
-                    throw new Exception("Database Provider not defined in configuration file.");
-                }
+                return appSettings["providers:alsoProviderName"];
+            }
+            catch (NullReferenceException)
+            {
+                throw new Exception("Database Provider not defined in configuration file.");
             }
         }
     }

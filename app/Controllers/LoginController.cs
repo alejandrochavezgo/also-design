@@ -8,18 +8,16 @@ using providerData.helpers;
 using System.Text;
 using Newtonsoft.Json;
 using common.configurations;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using providerData.entitiesData;
 
 public class loginController : Controller
 {
     private readonly ILogger<loginController> _logger;
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<applicationUser> _userManager;
+    private readonly SignInManager<applicationUser> _signInManager;
     private readonly IHttpClientFactory _clientFactory;
 
-    public loginController(ILogger<loginController> logger, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IHttpClientFactory clientFactory)
+    public loginController(ILogger<loginController> logger, UserManager<applicationUser> userManager, SignInManager<applicationUser> signInManager, IHttpClientFactory clientFactory)
     {
         _logger = logger;
         _userManager = userManager;
@@ -33,19 +31,20 @@ public class loginController : Controller
         return View();
     }
 
-    
     [HttpPost]
-    public async Task<JsonResult> login([FromBody] LoginModel login)
+    public async Task<JsonResult> login([FromBody] loginModel login)
     {
         try
         {
             if (!ModelState.IsValid)
+            {
                 return Json(new
                 {
                     isSuccess = false,
                     url = string.Empty,
                     message = "The information is not valid, please refresh the page and try again."
                 });
+            }
 
             var userIdentity = await _signInManager.UserManager.FindByNameAsync(login.username!);
             if (userIdentity is null || string.IsNullOrEmpty(userIdentity.NormalizedUserName))
@@ -78,7 +77,7 @@ public class loginController : Controller
                 });
             }
 
-            userIdentity.PasswordHash = UserSecurityHelper.evaluateHash(_userManager, userIdentity, login.password!);
+            userIdentity.PasswordHash = userSecurityHelper.evaluateHash(_userManager, userIdentity, login.password!);
             if (string.IsNullOrEmpty(userIdentity.PasswordHash))
             {
                 return Json(new
@@ -102,7 +101,7 @@ public class loginController : Controller
 
             var expirationDate = DateTime.Now.AddDays(7);
             var client = _clientFactory.CreateClient();
-            var responsePost = await client.PostAsync(ConfigurationManager.AppSettings["api:routes:login:authenticate"], new StringContent(JsonConvert.SerializeObject(new
+            var responsePost = await client.PostAsync(configurationManager.appSettings["api:routes:login:authenticate"], new StringContent(JsonConvert.SerializeObject(new
             {
                 id = userIdentity.NormalizedId,
                 username = userIdentity.NormalizedUserName,
@@ -121,7 +120,7 @@ public class loginController : Controller
             }
 
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
-            var user = JsonConvert.DeserializeObject<UserModel>(responsePostAsJson);
+            var user = JsonConvert.DeserializeObject<userModel>(responsePostAsJson);
             user!.firstname = userIdentity.Firstname;
             user.lastname = userIdentity.Lastname;
             client.Dispose();

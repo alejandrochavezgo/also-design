@@ -1,137 +1,134 @@
-﻿using Newtonsoft.Json;
+﻿namespace providerData;
+
+using Newtonsoft.Json;
 using common.logging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace providerData
+public class applicationUserManager : IUserStore<applicationUser>, IUserPasswordStore<applicationUser>, IUserRoleStore<applicationUser>
 {
-    public class ApplicationUserManager : IUserStore<ApplicationUser>,
-                                          IUserPasswordStore<ApplicationUser>,
-                                          IUserRoleStore<ApplicationUser>
+
+    private log? logger = new log();
+    private readonly applicationDbContext _dbContext;
+
+    public applicationUserManager(applicationDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public Task AddToRoleAsync(applicationUser user, string roleName, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IdentityResult> CreateAsync(applicationUser user, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IdentityResult> DeleteAsync(applicationUser user, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Dispose()
+    {
+        // throw new NotImplementedException();
+    }
+
+    public Task<applicationUser?> FindByIdAsync(string userId, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<applicationUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return Task.FromResult(_dbContext.Users.FirstOrDefault(x => x.NormalizedUserName == normalizedUserName));
+        }
+        catch (Exception exception)
+        {
+            logger!.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw;
+        }
+    }
+
+    public Task<string?> GetNormalizedUserNameAsync(applicationUser user, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IList<string>> GetRolesAsync(applicationUser user, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<string> GetUserIdAsync(applicationUser user, CancellationToken cancellationToken)
+    {
+        return Task.FromResult($"{user.NormalizedId}");
+    }
+
+    public Task<string?> GetUserNameAsync(applicationUser user, CancellationToken cancellationToken)
     {
 
-        private Log? logger = new Log();
-        private readonly ApplicationDbContext _dbContext;
+        return Task.FromResult(user.NormalizedUserName);
+    }
 
-        public ApplicationUserManager(ApplicationDbContext dbContext)
+    public Task<IList<applicationUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> HasPasswordAsync(applicationUser user, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> IsInRoleAsync(applicationUser user, string roleName, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task RemoveFromRoleAsync(applicationUser user, string roleName, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task SetNormalizedUserNameAsync(applicationUser user, string? normalizedName, CancellationToken cancellationToken)
+    {
+        user.NormalizedUserName = normalizedName;
+        return Task.CompletedTask;
+    }
+
+    public Task SetPasswordHashAsync(applicationUser user, string? passwordHash, CancellationToken cancellationToken)
+    {
+        user.Password = passwordHash;
+        return Task.CompletedTask;
+    }
+
+    public Task SetUserNameAsync(applicationUser user, string? userName, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IdentityResult> UpdateAsync(applicationUser user, CancellationToken cancellationToken)
+    {
+        return Task.FromResult(IdentityResult.Success);
+    }
+
+    public Task<string?> GetPasswordHashAsync(applicationUser user, CancellationToken cancellationToken)
+    {
+        try
         {
-            _dbContext = dbContext;
+            return Task.FromResult(_dbContext.Users.Where(x => x!.NormalizedId == user.NormalizedId)
+                                                    .Select(x => x!.Password)
+                                                    .FirstOrDefault());
         }
-
-        public Task AddToRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken)
+        catch (Exception e)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IdentityResult> DeleteAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Dispose()
-        {
-            // throw new NotImplementedException();
-        }
-
-        public Task<ApplicationUser?> FindByIdAsync(string userId, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApplicationUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
-        {
-            try
-            {
-                return Task.FromResult(_dbContext.Users.FirstOrDefault(x => x.NormalizedUserName == normalizedUserName));
-            }
-            catch (Exception exception)
-            {
-                logger!.logError($"{JsonConvert.SerializeObject(exception)}");
-                throw;
-            }
-        }
-
-        public Task<string?> GetNormalizedUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IList<string>> GetRolesAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> GetUserIdAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
-            return Task.FromResult($"{user.NormalizedId}");
-        }
-
-        public Task<string?> GetUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
-
-            return Task.FromResult(user.NormalizedUserName);
-        }
-
-        public Task<IList<ApplicationUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> HasPasswordAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> IsInRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task RemoveFromRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task SetNormalizedUserNameAsync(ApplicationUser user, string? normalizedName, CancellationToken cancellationToken)
-        {
-            user.NormalizedUserName = normalizedName;
-            return Task.CompletedTask;
-        }
-
-        public Task SetPasswordHashAsync(ApplicationUser user, string? passwordHash, CancellationToken cancellationToken)
-        {
-            user.Password = passwordHash;
-            return Task.CompletedTask;
-        }
-
-        public Task SetUserNameAsync(ApplicationUser user, string? userName, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(IdentityResult.Success);
-        }
-
-        public Task<string?> GetPasswordHashAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
-            try
-            {
-                return Task.FromResult(_dbContext.Users.Where(x => x!.NormalizedId == user.NormalizedId)
-                                                       .Select(x => x!.Password)
-                                                       .FirstOrDefault());
-            }
-            catch (Exception e)
-            {
-                logger!.logError($"{JsonConvert.SerializeObject(e)}");
-                throw;
-            }
+            logger!.logError($"{JsonConvert.SerializeObject(e)}");
+            throw;
         }
     }
 }

@@ -1,6 +1,9 @@
-namespace entities.models;
+﻿namespace providerData.entitiesData;
 
-public class UserModel {
+using entities.models;
+
+public class userModel
+{
     public int id { get; set; }
     public string? username { get; set; }
     public string? email { get; set; }

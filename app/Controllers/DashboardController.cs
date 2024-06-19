@@ -1,4 +1,4 @@
-﻿namespace app.Controllers;
+﻿namespace app.controllers;
 
 using providerData;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +11,11 @@ using authorization;
 public class dashboardController : Controller
 {
     private readonly ILogger<dashboardController> _logger;
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<applicationUser> _userManager;
+    private readonly SignInManager<applicationUser> _signInManager;
     private readonly IHttpClientFactory _clientFactory;
 
-    public dashboardController(ILogger<dashboardController> logger, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IHttpClientFactory clientFactory)
+    public dashboardController(ILogger<dashboardController> logger, UserManager<applicationUser> userManager, SignInManager<applicationUser> signInManager, IHttpClientFactory clientFactory)
     {
         _logger = logger;
         _userManager = userManager;

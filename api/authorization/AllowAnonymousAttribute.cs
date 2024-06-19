@@ -1,5 +1,5 @@
 namespace api.authorization;
 
 [AttributeUsage(AttributeTargets.Method)]
-public class AllowAnonymousAttribute : Attribute
+public class allowAnonymousAttribute : Attribute
 { }

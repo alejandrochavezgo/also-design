@@ -1,3 +1,5 @@
+namespace app.authorization;
+
 using System.Text.RegularExpressions;
 using entities.models;
 using Microsoft.AspNetCore.Identity.UI.V4.Pages.Internal;
@@ -7,7 +9,6 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace app.authorization;
 
 public sealed class authorizationAttribute : Attribute, IAuthorizationFilter
 {

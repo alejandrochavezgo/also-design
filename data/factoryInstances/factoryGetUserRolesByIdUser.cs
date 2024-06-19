@@ -1,17 +1,17 @@
+namespace data.factoryInstances;
+
 using System.Data;
 using common.conversions;
 using entities.models;
 
-namespace data.factoryInstances;
-
-internal class factoryGetUserRolesByIdUser: BaseMethod<factoryGetUserRolesByIdUser, roleModel>
+internal class factoryGetUserRolesByIdUser: baseMethod<factoryGetUserRolesByIdUser, roleModel>
 {
-    protected override roleModel _GetEntity(IDataReader dr)
+    protected override roleModel _getEntity(IDataReader dr)
     {
         return new roleModel
         {
-            id = ConversionManager.ToInt(dr["IDROLE"]),
-            description = ConversionManager.ToString(dr["DESCRIPTION"])
+            id = conversionManager.toInt(dr["IDROLE"]),
+            description = conversionManager.toString(dr["DESCRIPTION"])
         };
     }
 }

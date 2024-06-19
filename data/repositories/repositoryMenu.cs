@@ -10,22 +10,22 @@ using data.providerData;
 using entities.models;
 using Newtonsoft.Json;
 
-public class repositoryMenu : BaseRepository
+public class repositoryMenu : baseRepository
 {
-    private Log _logger;
+    private log _logger;
 
     public repositoryMenu()
     {
-        _logger = new Log();
+        _logger = new log();
     }
 
     public List<menuModel> getUserMenusByIdUser(int idUser)
     {
         try
         {
-            return factoryGetUserMenusByIdUser.GetList((DbDataReader)_ProviderDB.GetDataReader("sp_getUserMenusByIdUser", new DbParameter[] 
+            return factoryGetUserMenusByIdUser.getList((DbDataReader)_providerDB.GetDataReader("sp_getUserMenusByIdUser", new DbParameter[] 
             {
-                DataFactory.GetObjParameter(ConfigurationManager.ProviderDB, "@idUser", DbType.Int32, idUser)
+                dataFactory.getObjParameter(configurationManager.providerDB, "@idUser", DbType.Int32, idUser)
             }));
         }
         catch (SqlException SqlException)

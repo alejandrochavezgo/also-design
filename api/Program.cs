@@ -16,10 +16,10 @@ using var loggerFactory = LoggerFactory.Create(builder =>
         i.UseUtcTimestamp = true;
     }).SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
 });
-var _logT = loggerFactory.CreateLogger<Log>();
+var _logT = loggerFactory.CreateLogger<log>();
 var _logF = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
-var log = new Log(_logT, _logF);
+var log = new log(_logT, _logF);
 var trackId = Guid.NewGuid().ToString();
 log.logDebug("[ALSO DESIGN SYSTEM] Starting up the Also Design System...");
 
@@ -42,19 +42,15 @@ try
         services.AddControllers();
 
         //Configure strongly typed settings object.
-        services.Configure<AppSettingsHelper>(builder.Configuration.GetSection("jwt"));
+        services.Configure<appSettingsHelper>(builder.Configuration.GetSection("jwt"));
 
         //Configure DI for application services.
-        services.AddScoped<IJwtUtils, JwtUtils>();
-        services.AddScoped<IUserService, UserService>();
-
-
-        var a = common.configurations.ConfigurationManager.AppSettings["providers:alsoProviderName"];
+        services.AddScoped<IJwtUtils, jwtUtils>();
+        services.AddScoped<IUserService, userService>();
         
-
         #region ::services - provider for sql server
         log.logDebug("\t[+] SQL Server provider service...");
-        System.Data.Common.DbProviderFactories.RegisterFactory(common.configurations.ConfigurationManager.AppSettings["providers:alsoProviderName"], System.Data.SqlClient.SqlClientFactory.Instance);
+        System.Data.Common.DbProviderFactories.RegisterFactory(common.configurations.configurationManager.appSettings["providers:alsoProviderName"]!, System.Data.SqlClient.SqlClientFactory.Instance);
         #endregion
     }
 
@@ -69,7 +65,7 @@ try
             .AllowAnyHeader());
 
         //Custom jwt auth middleware.
-        app.UseMiddleware<JwtMiddleware>();
+        app.UseMiddleware<jwtMiddleware>();
         app.MapControllers();
     }
 

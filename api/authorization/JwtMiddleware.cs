@@ -2,11 +2,11 @@ namespace api.authorization;
 
 using api.services;
 
-public class JwtMiddleware
+public class jwtMiddleware
 {
     private readonly RequestDelegate _next;
 
-    public JwtMiddleware(RequestDelegate next)
+    public jwtMiddleware(RequestDelegate next)
     {
         _next = next;
     }

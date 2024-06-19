@@ -1,86 +1,85 @@
+namespace common.logging;
+
 using common.configurations;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using NLog.Fluent;
 
-namespace common.logging
+public class log
 {
-    public class Log
+    private readonly ILogger? _loggerT;
+    private readonly NLog.Logger _loggerF;
+
+    public log(ILogger<log>? logT = null)
     {
-        private readonly ILogger? _loggerT;
-        private readonly NLog.Logger _loggerF;
+        _loggerT = logT;
+        _loggerF = NLog.LogManager.GetCurrentClassLogger();
+    }
+    public log(ILogger<log> logT, NLog.Logger logF)
+    {
+        _loggerT = logT;
+        _loggerF = logF;
+    }
 
-        public Log(ILogger<Log>? logT = null)
+    public void logDebug(string message)
+    {
+        try
         {
-            _loggerT = logT;
-            _loggerF = NLog.LogManager.GetCurrentClassLogger();
+            message = $"{configurationManager.appSettings["system:version"]} :: {message}";
+
+            if (_loggerT is not null)
+                _loggerT.LogDebug($"{message}");
+            else
+                System.Diagnostics.Debug.WriteLine($"{message}");
+            _loggerF.Debug($"{message}");
         }
-        public Log(ILogger<Log> logT, NLog.Logger logF)
+        catch (Exception e)
         {
-            _loggerT = logT;
-            _loggerF = logF;
+            var exception = $"{JsonConvert.SerializeObject(e, Formatting.Indented)}";
+            logFatal($"General exception: At manage the service request.\nData: {message}\nException caught:\n{exception}");
         }
+    }
 
-        public void logDebug(string message)
+    public void logInfo(string message)
+    {
+        try
         {
-            try
-            {
-                message = $"{ConfigurationManager.AppSettings["system:version"]} :: {message}";
+            message = $"{configurationManager.appSettings["system:version"]} :: {message}";
 
-                if (_loggerT is not null)
-                    _loggerT.LogDebug($"{message}");
-                else
-                    System.Diagnostics.Debug.WriteLine($"{message}");
-                _loggerF.Debug($"{message}");
-            }
-            catch (Exception e)
-            {
-                var exception = $"{JsonConvert.SerializeObject(e, Formatting.Indented)}";
-                logFatal($"General exception: At manage the service request.\nData: {message}\nException caught:\n{exception}");
-            }
+            if (_loggerT is not null)
+                _loggerT.LogInformation($"{message}");
+            else
+                System.Diagnostics.Debug.WriteLine($"{message}");
+            _loggerF.Info($"{message}");
         }
-
-        public void logInfo(string message)
+        catch (Exception e)
         {
-            try
-            {
-                message = $"{ConfigurationManager.AppSettings["system:version"]} :: {message}";
-
-                if (_loggerT is not null)
-                    _loggerT.LogInformation($"{message}");
-                else
-                    System.Diagnostics.Debug.WriteLine($"{message}");
-                _loggerF.Info($"{message}");
-            }
-            catch (Exception e)
-            {
-                var exception = $"{JsonConvert.SerializeObject(e, Formatting.Indented)}";
-                logFatal($"General exception: At manage the service request.\nData: {message}\nException caught:\n{exception}");
-            }
+            var exception = $"{JsonConvert.SerializeObject(e, Formatting.Indented)}";
+            logFatal($"General exception: At manage the service request.\nData: {message}\nException caught:\n{exception}");
         }
+    }
 
-       public void logError(string message)
-       {
-            try
-            {
-                message = $"{ConfigurationManager.AppSettings["system:version"]} :: {message}";
-
-                if (_loggerT is not null)
-                    _loggerT.LogError($"{message}");
-                else
-                    System.Diagnostics.Debug.WriteLine($"{message}");
-                _loggerF.Error($"{message}");
-            }
-            catch (Exception e)
-            {
-                var exception = $"{JsonConvert.SerializeObject(e, Formatting.Indented)}";
-                logFatal($"General exception: At manage the service request.\nData: {message}\nException caught:\n{exception}");
-            }
-        }
-
-        public void logFatal(string message)
+    public void logError(string message)
+    {
+        try
         {
-            _loggerF.Fatal(message);
+            message = $"{configurationManager.appSettings["system:version"]} :: {message}";
+
+            if (_loggerT is not null)
+                _loggerT.LogError($"{message}");
+            else
+                System.Diagnostics.Debug.WriteLine($"{message}");
+            _loggerF.Error($"{message}");
         }
+        catch (Exception e)
+        {
+            var exception = $"{JsonConvert.SerializeObject(e, Formatting.Indented)}";
+            logFatal($"General exception: At manage the service request.\nData: {message}\nException caught:\n{exception}");
+        }
+    }
+
+    public void logFatal(string message)
+    {
+        _loggerF.Fatal(message);
     }
 }

@@ -1,32 +1,32 @@
+namespace data.providerData.components;
+
 using data.providerData.providers;
 
-namespace data.providerData.components
+internal sealed class managerComponents
 {
-    internal sealed class ManagerComponents
+    #region Variable para objeto Singleton
+    public static commonConsumer genCon = null;
+    #endregion
+
+    #region Varibles para historico de url's de conexion
+    public static string olderUrlCommonConn = string.Empty;
+    #endregion
+
+    private managerComponents() {}
+
+    /// <summary>
+    /// Referencia a nulo de un componente Generico indicado por un Proveedor
+    /// </summary>
+    public static void disposeComponent()
     {
-        #region Variable para objeto Singleton
-        public static CommonConsumer GenCon = null;
-        #endregion
-
-        #region Varibles para historico de url's de conexion
-        public static string OlderUrlCommonConn = string.Empty;
-        #endregion
-
-        private ManagerComponents() {}
-
-        /// <summary>
-        /// Referencia a nulo de un componente Generico indicado por un Proveedor
-        /// </summary>
-        public static void DisposeComponent()
+        if (managerComponents.genCon != null)
         {
-            if (ManagerComponents.GenCon != null)
-            {
-                ManagerComponents.GenCon = null;
-                ManagerComponents.OlderUrlCommonConn = string.Empty;
-            }
-            else
-                throw new Exception("No se puede destruir el objeto \"DataConsumer\" ya que no se ha creado una instancia del mismo."
-                                    + " Y su estado estado actual es nulo.");
+            managerComponents.genCon = null;
+            managerComponents.olderUrlCommonConn = string.Empty;
+        }
+        else
+        {
+            throw new Exception("No se puede destruir el objeto \"DataConsumer\" ya que no se ha creado una instancia del mismo. Y su estado estado actual es nulo.");
         }
     }
 }

@@ -1,84 +1,77 @@
-/*
- * Copyright© 2017 Cross Border Xpress
- * All rights reserved.
- * Total or partial distribution is prohibited.
-*/
+namespace data;
 
-namespace data
+internal abstract class baseMethod<C, E> where C : baseMethod<C, E>, new()
 {
-     internal abstract class BaseMethod<C, E> where C : BaseMethod<C, E>, new()
+    private static C newObject;
+
+    private static object locker = new object();
+
+    private static void init()
     {
-        private static C NewObject;
-
-        private static object locker = new object();
-
-        private static void Init()
+        lock (locker)
         {
-            lock (locker)
-            {
-                if (NewObject == null)
-                    NewObject = new C();
-            }
+            if (newObject == null)
+                newObject = new C();
         }
+    }
 
-        public static E Get(System.Data.IDataReader dr)
+    public static E get(System.Data.IDataReader dr)
+    {
+        try
         {
-            try
-            {
-                E entity;
+            E entity;
 
-                if (!dr.Read())
-                    return default(E);
+            if (!dr.Read())
+                return default(E);
 
-                entity = GetNotClose(dr);
-
-                return entity;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                dr.Close();
-            }
-        }
-
-        public static E GetNotRead(System.Data.IDataReader dr)
-        {
-            try
-            {
-                E entity = GetNotClose(dr);
-
-                return entity;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public static List<E> GetList(System.Data.IDataReader dr)
-        {
-            List<E> list = new List<E>();
-
-            while (dr.Read())
-                list.Add(GetNotClose(dr));
-
-            dr.Close();
-
-            return list;
-        }
-
-        protected static E GetNotClose(System.Data.IDataReader dr)
-        {
-            Init();
-
-            E entity = NewObject._GetEntity(dr);
+            entity = getNotClose(dr);
 
             return entity;
         }
-
-        protected abstract E _GetEntity(System.Data.IDataReader dr);
+        catch (Exception)
+        {
+            throw;
+        }
+        finally
+        {
+            dr.Close();
+        }
     }
+
+    public static E getNotRead(System.Data.IDataReader dr)
+    {
+        try
+        {
+            E entity = getNotClose(dr);
+
+            return entity;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public static List<E> getList(System.Data.IDataReader dr)
+    {
+        List<E> list = new List<E>();
+
+        while (dr.Read())
+            list.Add(getNotClose(dr));
+
+        dr.Close();
+
+        return list;
+    }
+
+    protected static E getNotClose(System.Data.IDataReader dr)
+    {
+        init();
+
+        E entity = newObject._getEntity(dr);
+
+        return entity;
+    }
+
+    protected abstract E _getEntity(System.Data.IDataReader dr);
 }

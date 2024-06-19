@@ -1,6 +1,6 @@
 ﻿namespace providerData.helpers;
 
-public class AppSettingsHelper
+public class appSettingsHelper
 {
     public string? Secret { get; set; }
 }

@@ -4,12 +4,12 @@
  * Total or partial distribution is prohibited.
 */
 
+namespace providerData;
+
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
-namespace providerData;
-
-public class ApplicationUser : IdentityUser
+public class applicationUser : IdentityUser
 {
     public int Id { get; set; }
     public int NormalizedId { get; set; }

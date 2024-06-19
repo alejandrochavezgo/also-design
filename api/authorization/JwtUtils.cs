@@ -6,19 +6,18 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using entities.models;
-
+using providerData.entitiesData;
 public interface IJwtUtils
 {
-    public string generateJwtToken(UserModel user);
+    public string generateJwtToken(userModel user);
     public int? validateJwtToken(string? token);
 }
 
-public class JwtUtils : IJwtUtils
+public class jwtUtils : IJwtUtils
 {
-    private readonly AppSettingsHelper _appSettings;
+    private readonly appSettingsHelper _appSettings;
 
-    public JwtUtils(IOptions<AppSettingsHelper> appSettings)
+    public jwtUtils(IOptions<appSettingsHelper> appSettings)
     {
         _appSettings = appSettings.Value;
 
@@ -26,7 +25,7 @@ public class JwtUtils : IJwtUtils
             throw new Exception("JWT secret not configured");
     }
 
-    public string generateJwtToken(UserModel user)
+    public string generateJwtToken(userModel user)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_appSettings.Secret!);

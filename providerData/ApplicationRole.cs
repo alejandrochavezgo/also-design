@@ -2,4 +2,4 @@
 
 namespace providerData;
 
-public class ApplicationRole : IdentityRole {}
+public class applicationRole : IdentityRole {}

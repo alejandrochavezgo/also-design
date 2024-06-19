@@ -1,8 +1,8 @@
-﻿using entities.models;
+﻿namespace providerData.entitiesData;
 
-namespace providerData.entities;
+using entities.models;
 
-public class AuthenticateResponse
+public class authenticateResponse
 {
     public int id { get; set; }
     public string? username { get; set; }
@@ -12,8 +12,7 @@ public class AuthenticateResponse
     public List<roleModel> roles { get; set; }
     public List<menuModel> menus { get; set; }
 
-
-    public AuthenticateResponse(UserModel user)
+    public authenticateResponse(userModel user)
     {
         id = user.id;
         username = user.username;

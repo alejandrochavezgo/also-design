@@ -1,29 +1,28 @@
 namespace api.services;
 
 using authorization;
-using providerData.entities;
+using providerData.entitiesData;
 using business.facade;
-using entities.models;
 
 public interface IUserService
 {
-    AuthenticateResponse? authenticate(AuthenticateRequest model);
+    authenticateResponse? authenticate(authenticateRequest model);
 }
 
-public class UserService : IUserService
+public class userService : IUserService
 {
     private readonly IJwtUtils _jwtUtils;
 
-    public UserService(IJwtUtils jwtUtils)
+    public userService(IJwtUtils jwtUtils)
     {
         _jwtUtils = jwtUtils;
     }
 
-    public AuthenticateResponse? authenticate(AuthenticateRequest model)
+    public authenticateResponse? authenticate(authenticateRequest model)
     {
         var roles = new facadeRole().getUserRolesByIdUser(model.id);
         var menus = new facadeMenu().getUserMenusByIdUser(model.id);
-        var user = new UserModel()
+        var user = new userModel()
         {
             id = model.id,
             username = model.username,
@@ -33,6 +32,6 @@ public class UserService : IUserService
             menus = menus,
         };
         user.token = _jwtUtils.generateJwtToken(user);
-        return new AuthenticateResponse(user);
+        return new authenticateResponse(user);
     }
 }

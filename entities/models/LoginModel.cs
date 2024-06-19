@@ -1,16 +1,15 @@
-﻿using System.ComponentModel;
+﻿namespace entities.models;
+
+using System.ComponentModel;
 using Microsoft.Build.Framework;
 
-namespace entities.models
+public class loginModel
 {
-    public class LoginModel
-    {
-        [Required]
-        [DisplayName("Username")]
-        public string? username { get; set; }
-        
-        [Required]
-        [DisplayName("Password")]
-        public string? password { get; set; }
-    }
+    [Required]
+    [DisplayName("Username")]
+    public string? username { get; set; }
+    
+    [Required]
+    [DisplayName("Password")]
+    public string? password { get; set; }
 }
