@@ -7,7 +7,7 @@ using providerData.entitiesData;
 using Newtonsoft.Json;
 
 [ApiController]
-[authorize]
+// [authorize]
 [Route("[controller]")]
 public class usersController : ControllerBase
 {

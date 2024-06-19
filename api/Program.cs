@@ -69,6 +69,7 @@ try
         app.MapControllers();
     }
 
+    log.logDebug("[ALSO DESIGN SYSTEM] API is running...");
     app.Run();
 }
 catch (Exception e)
