@@ -1,0 +1,130 @@
+@{
+    ViewData["title"] = "User List | Also Design";
+}
+@section styles
+{
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+}
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">User List</h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item color-495057">User</li>
+                            <li class="breadcrumb-item color-495057">User List</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="alert-custom alert-success alert-borderless" role="alert">
+                            This module simplifies user administration through an intuitive and efficient interface, allowing for the easy viewing and management of all relevant user information.
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 ml-1remN">
+                                <div class="card ribbon-box shadow-none mb-lg-0">
+                                    <div class="card-body">
+                                        <div id="dvTotalUsers" class="ribbon ribbon-success round-shape">Total Users: 0</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-12">
+                                <table id="tbUsers" class="table table-bordered dt-responsive nowrap align-middle mdl-data-table" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>E-mail</th>
+                                            <th>Username</th>
+                                            <th>Firstname</th>
+                                            <th>Lastname</th>
+                                            <th>Status</th>
+                                            <th>Creation Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>E-mail</th>
+                                            <th>Username</th>
+                                            <th>Firstname</th>
+                                            <th>Lastname</th>
+                                            <th>Status</th>
+                                            <th>Creation Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            try {
+                //$('#loading').show();
+                $.ajax({
+                    url: '@Url.Action("getUsers", "user")',
+                    method: 'GET',
+                    success: function (data) {
+                        console.log(data);
+                        var tbody = $('#tbUsers tbody');
+                        tbody.empty();
+                        data.forEach(function (user) {
+                            var row =
+                                '<tr>' +
+                                    '<td>' + user.id + '</td>' +
+                                    '<td>' + user.email + '</td>' +
+                                    '<td>' + user.username + '</td>' +
+                                    '<td>' + user.firstname + '</td>' +
+                                    '<td>' + user.lastname + '</td>' +
+                                    '<td><span class="badge rounded-pill badge-soft-' + user.color + '">' + user.status + '</span></td>' +
+                                    '<td>' + user.creationDate + '</td>' +
+                                    '<td class="text-center">' +
+                                        '<button type="button" class="btn btn-info btn-icon waves-effect waves-light mx-1"><i class="ri-eye-fill"></i></button>' +
+                                        '<button type="button" class="btn btn-primary btn-icon waves-effect waves-light mx-1"><i class="ri-pencil-fill"></i></button>' +
+                                        '<button type="button" class="btn btn-danger btn-icon waves-effect waves-light mx-1"><i class="ri-delete-bin-fill"></i></button>' +
+                                    '</td>' +
+                                '</tr>';
+                            tbody.append(row);
+                        });
+                        $('#dvTotalUsers').html('Total users: ' + data.length);
+                        //$('#loading').hide();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error al obtener los datos: " + error);
+                        //$('#loading').hide();
+                    }
+                });
+            }
+            catch(exception) {
+                console.log(exception);
+            }
+        });
+    </script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+}

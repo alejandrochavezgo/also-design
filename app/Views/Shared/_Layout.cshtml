@@ -2,7 +2,7 @@
 <html lang="en" data-layout="horizontal" data-topbar="light" data-sidebar="light" data-sidebar-size="lg" data-sidebar-image="none">
     <head>
         <meta charset="utf-8" />
-        <title>@ViewData["Title"]</title>
+        <title>@ViewData["title"]</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Also Design - Machining industry-focused Enterprise Resource Planning (ERP)." name="description" />
         <meta content="Ideti Company." name="author"/>
@@ -10,10 +10,13 @@
         <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="../assets/css/icons.min.css" rel="stylesheet" type="text/css" />
         <link href="../assets/css/app.min.css" rel="stylesheet" type="text/css" />
+        <link href="../assets/css/app.css" rel="stylesheet" type="text/css" />
         <link href="../assets/css/custom.min.css" rel="stylesheet" type="text/css" />
+        @await RenderSectionAsync("styles", required: false)
     </head>
-    <body class="hideMobileContent">
-        <header id="page-topbar">
+    <body>
+        <div class="hideMobileContent">
+            <header id="page-topbar">
                 <div class="layout-width">
                     <div class="navbar-header">
                         <div class="d-flex">
@@ -148,16 +151,16 @@
                                             <a href="apps-calendar.html" class="nav-link"> Inventory </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="#sidebarEmail" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarEmail">
+                                            <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false">
                                                 Users
                                             </a>
-                                            <div class="collapse menu-dropdown" id="sidebarEmail">
+                                            <div class="collapse menu-dropdown">
                                                 <ul class="nav nav-sm flex-column">
                                                     <li class="nav-item">
                                                         <a href="apps-mailbox.html" class="nav-link"> New User </a>
                                                     </li>
                                                     <li class="nav-item">
-                                                        <a href="apps-mailbox.html" class="nav-link"> User List </a>
+                                                        <a href="@Url.Action("list", "user")" class="nav-link"> User List </a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -213,54 +216,32 @@
                 </div>
             </div>
             <div class="main-content">
-                <div class="page-content">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0">Dashboards</h4>
-                                    <div class="page-title-right">
-                                        <ol class="breadcrumb m-0">
-                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
-                                        </ol>
-                                    </div>
-                                </div>
-                            </div>
+                @RenderBody()
+            </div>
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-6 text-left">
+                            <script>document.write(new Date().getFullYear())</script> © Ideti.
                         </div>
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4 class="card-title mb-0">Dashboards</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        @RenderBody()
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="col-6 text-right">
+                            Design & Develop by Ideti.
                         </div>
                     </div>
                 </div>
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-6 text-left">
-                                <script>document.write(new Date().getFullYear())</script> © Ideti.
-                            </div>
-                            <div class="col-6 text-right">
-                                Design & Develop by Ideti.
-                            </div>
-                        </div>
-                    </div>
-                </footer>
-            </div>
-        <script src="../assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="../assets/libs/simplebar/simplebar.min.js"></script>
-        <script src="../assets/libs/node-waves/waves.min.js"></script>
-        <script src="../assets/libs/feather-icons/feather.min.js"></script>
-        <script src="../assets/js/pages/plugins/lord-icon-2.1.0.js"></script>
-        <script src="../assets/js/plugins.js"></script>
-        <script src="../assets/js/app.js"></script>
-        @await RenderSectionAsync("Scripts", required: false)
+            </footer>
+            <script src="../assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+            <script src="../assets/libs/simplebar/simplebar.min.js"></script>
+            <script src="../assets/libs/node-waves/waves.min.js"></script>
+            <script src="../assets/libs/feather-icons/feather.min.js"></script>
+            <script src="../assets/js/pages/plugins/lord-icon-2.1.0.js"></script>
+            <script src="../assets/js/plugins.js"></script>
+            <script src="../assets/js/app.js"></script>
+            <script src="../assets/libs/jquery/jquery-3.7.1.min.js"></script>
+            @await RenderSectionAsync("scripts", required: false)
+        </div>
+        <div class="no-support-screen">
+            <h1>THERE IS STILL NO SUPPORT FOR SMALL SCREENS</h1>
+        </div>
     </body>
 </html>

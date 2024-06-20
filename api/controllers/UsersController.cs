@@ -7,7 +7,7 @@ using providerData.entitiesData;
 using Newtonsoft.Json;
 
 [ApiController]
-// [authorize]
+[authorize]
 [Route("[controller]")]
 public class usersController : ControllerBase
 {
@@ -37,6 +37,7 @@ public class usersController : ControllerBase
         }
     }
 
+    [allowAnonymous]
     [HttpGet]
     public IActionResult getTest()
     {
