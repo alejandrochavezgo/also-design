@@ -7,10 +7,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using providerData.entitiesData;
+using Newtonsoft.Json;
+
 public interface IJwtUtils
 {
     public string generateJwtToken(userModel user);
-    public int? validateJwtToken(string? token);
+    public userModel? validateJwtToken(string? token);
 }
 
 public class jwtUtils : IJwtUtils
@@ -44,7 +46,7 @@ public class jwtUtils : IJwtUtils
         return tokenHandler.WriteToken(token);
     }
 
-    public int? validateJwtToken(string? token)
+    public userModel? validateJwtToken(string? token)
     {
         if (token == null)
             return null;
@@ -63,7 +65,11 @@ public class jwtUtils : IJwtUtils
             }, out SecurityToken validatedToken);
 
             var jwtToken = (JwtSecurityToken)validatedToken;
-            return int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
+            var user = new userModel {
+                id = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value)
+            };
+            
+            return user;
         }
         catch
         {

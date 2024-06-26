@@ -17,7 +17,7 @@ public class jwtMiddleware
         var userId = jwtUtils.validateJwtToken(token);
         if (userId != null)
         {
-            context.Items["User"] = userId;
+            context.Items["user"] = userId;
         }
 
         await _next(context);

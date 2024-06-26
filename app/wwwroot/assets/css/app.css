@@ -72,3 +72,12 @@
 .w-100per {
   width: 100%;
 }
+.mt-18px {
+  margin-top: 18px;
+}
+.ml-13px {
+  margin-left: 13px;
+}
+.pr-0 {
+  padding-right: 0;
+}

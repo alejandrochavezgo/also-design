@@ -54,24 +54,22 @@ $(document).ready(function () {
                     addValidationMessage(data.message);
                     return;
                 }
-                
-                console.log(data.url);
                 window.location.href = data.url;
             })
             .catch(exception => {
                 restartSignInProcess();
-                addValidationMessage("An unexpected error has ocurred :(<br>Please refresh this page and try again.");
+                addValidationMessage('An unexpected error has ocurred :(<br>Please refresh this page and try again.');
             });
         }
         catch(exception) {
             restartSignInProcess();
-            addValidationMessage("An unexpected error has ocurred :(<br>Please refresh this page and try again.");
+            addValidationMessage('An unexpected error has ocurred :(<br>Please refresh this page and try again.');
         }
     });
 
     $("#password").keypress(function (event) {
         if (event.keyCode == 13) {
-            $("#btnSubmit").click();
+            $('#btnSubmit').click();
         }
     });
 

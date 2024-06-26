@@ -120,7 +120,7 @@ public class loginController : Controller
             }
 
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
-            var user = JsonConvert.DeserializeObject<userModel>(responsePostAsJson);
+            var user = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(responsePostAsJson);
             user!.firstname = userIdentity.Firstname;
             user.lastname = userIdentity.Lastname;
             client.Dispose();
