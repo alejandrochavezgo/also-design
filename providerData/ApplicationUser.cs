@@ -8,10 +8,11 @@ namespace providerData;
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Query;
 
 public class applicationUser : IdentityUser
 {
-    public int Id { get; set; }
+    // public int Id { get; set; }
     public int NormalizedId { get; set; }
     public int AccessFailedCount { get; set; } 
     public string? UserName { get; set; }

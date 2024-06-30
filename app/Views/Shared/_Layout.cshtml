@@ -1,4 +1,14 @@
-﻿<!doctype html>
+﻿@using Newtonsoft.Json;
+@using System.Globalization;
+
+@{
+    var user = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Context.Request.Cookies["userCookie"]);
+    var textInfo = new CultureInfo("en-US", false).TextInfo;
+    user.firstname = textInfo.ToTitleCase(user.firstname.ToLower());
+    user.lastname = textInfo.ToTitleCase(user.lastname.ToLower());
+}
+
+<!doctype html>
 <html lang="en" data-layout="horizontal" data-topbar="light" data-sidebar="light" data-sidebar-size="lg" data-sidebar-image="none">
     <head>
         <meta charset="utf-8" />
@@ -50,8 +60,8 @@
                                         <img class="rounded-circle header-profile-user" src="../assets/images/account-circle-custom.png"
                                             alt="Header Avatar">
                                         <span class="text-start ms-xl-2">
-                                            <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">Alejandro Chavez</span>
-                                            <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">achavez</span>
+                                            <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">@user.firstname @user.lastname</span>
+                                            <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">@user.username.ToLower()</span>
                                         </span>
                                     </span>
                                 </button>
@@ -158,7 +168,7 @@
                                             <div class="collapse menu-dropdown">
                                                 <ul class="nav nav-sm flex-column">
                                                     <li class="nav-item">
-                                                        <a href="apps-mailbox.html" class="nav-link"> New User </a>
+                                                        <a href="@Url.Action("add", "user")"" class="nav-link"> New User </a>
                                                     </li>
                                                     <li class="nav-item">
                                                         <a href="@Url.Action("list", "user")" class="nav-link"> User List </a>

@@ -1,10 +1,25 @@
 ﻿namespace providerData.helpers;
 
+using common.logging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Newtonsoft.Json;
 
 public static class userSecurityHelper
 {
+    public static string? generateHash(UserManager<applicationUser> userManager, applicationUser user, string password)
+    {
+        try
+        {
+            return userManager.PasswordHasher.HashPassword(user, password);
+        }
+        catch (Exception exception)
+        {
+            new log().logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public static string? evaluateHash(UserManager<applicationUser> userManager, applicationUser user, string providedPassword)
     {
         var decodedHashedPassword = Convert.FromBase64String(user.Password);

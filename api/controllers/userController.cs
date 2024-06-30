@@ -70,6 +70,25 @@ public class userController : ControllerBase
         }
     }
 
+    [HttpPost("addUser")]
+    public IActionResult addUser(entities.models.userModel user)
+    {
+        try
+        {
+            if(user == null)
+                return BadRequest("The user was not modified.");
+
+            if (!new facadeUser().addUser(user))
+                return BadRequest("User not mo.");
+
+            return Ok();
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
     [allowAnonymous]
     [HttpGet("getTest")]
     public IActionResult getTest()

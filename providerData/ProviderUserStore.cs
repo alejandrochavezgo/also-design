@@ -23,7 +23,17 @@ public class applicationUserManager : IUserStore<applicationUser>, IUserPassword
 
     public Task<IdentityResult> CreateAsync(applicationUser user, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        try
+        {
+            _dbContext.users.Add(user);
+            _dbContext.SaveChanges();
+            return Task.FromResult(IdentityResult.Success);
+        }
+        catch (Exception exception)
+        {
+            logger!.logError($"{JsonConvert.SerializeObject(exception)}");
+            return Task.FromResult(IdentityResult.Failed(new IdentityError { Description = $"Could not insert user {user.UserName}." }));
+        }
     }
 
     public Task<IdentityResult> DeleteAsync(applicationUser user, CancellationToken cancellationToken)
@@ -125,9 +135,9 @@ public class applicationUserManager : IUserStore<applicationUser>, IUserPassword
                                                     .Select(x => x!.Password)
                                                     .FirstOrDefault());
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            logger!.logError($"{JsonConvert.SerializeObject(e)}");
+            logger!.logError($"{JsonConvert.SerializeObject(exception)}");
             throw;
         }
     }

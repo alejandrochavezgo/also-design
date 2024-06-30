@@ -1,33 +1,44 @@
 <div class="row g-3">
-    <input type="text" class="form-control" id="inUserId" value="@ViewData["userId"]" hidden>
     <div class="col-10">
         <div>
             <label for="email" class="form-label">Email</label>
-            <input type="text" class="form-control uppercase-input" id="inEmail" placeholder="Enter email" value="@ViewData["email"]">
+            <input type="text" class="form-control uppercase-input" id="inEmail" placeholder="Enter email">
         </div>
     </div>
     <div class="col-2">
         <div>
             <label class="form-check-label" for="isActive">Active</label>
-            <input class="form-check-input d-block mt-18px ml-13px" type="checkbox" id="inIsActive" @(Convert.ToBoolean(ViewData["isActive"]) ? "checked" : "")>
+            <input class="form-check-input d-block mt-18px ml-13px" type="checkbox" id="inIsActive">
         </div>
     </div>
     <div class="col-6">
         <div>
             <label for="firstname" class="form-label">First Name</label>
-            <input type="text" class="form-control uppercase-input" id="inFirstname" placeholder="Enter firstname" value="@ViewData["firstname"]">
+            <input type="text" class="form-control uppercase-input" id="inFirstname" placeholder="Enter firstname">
         </div>
     </div>
     <div class="col-6">
         <div>
-            <label for="lastName" class="form-label">Last Name</label>
-            <input type="text" class="form-control uppercase-input" id="inLastname" placeholder="Enter lastname" value="@ViewData["lastname"]">
+            <label for="lastname" class="form-label">Last Name</label>
+            <input type="text" class="form-control uppercase-input" id="inLastname" placeholder="Enter lastname">
+        </div>
+    </div>
+    <div class="col-6">
+        <div>
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control uppercase-input" id="inUsername" placeholder="Enter username">
+        </div>
+    </div>
+    <div class="col-6">
+        <div>
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="inPassword" placeholder="Enter password">
         </div>
     </div>
     <div class="col-12">
         <div class="hstack gap-2 justify-content-end">
             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-success" onclick="updateUser()">Update</button>
+            <button type="button" class="btn btn-success" onclick="addUser()">Add</button>
         </div>
     </div>
 </div>
@@ -38,19 +49,20 @@
         });
     });
 
-    function updateUser() {
+    function addUser() {
         try {
-            fetch('/updateUser', {
+            fetch('/addUser', {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    id: $('#inUserId').val(),
                     email: $('#inEmail').val(),
                     firstname: $('#inFirstname').val(),
                     lastname: $('#inLastname').val(),
-                    isActive: $('#inIsActive').prop('checked')
+                    isActive: $('#inIsActive').prop('checked'),
+                    username: $('#inUsername').val(),
+                    password: $('#inPassword').val()
                 })
             })
             .then(response => {

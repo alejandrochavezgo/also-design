@@ -9,6 +9,7 @@ using authorization;
 using System.Net.Http.Headers;
 using common.configurations;
 using System.Text;
+using providerData.helpers;
 
 [authorization]
 public class userController : Controller
@@ -32,50 +33,150 @@ public class userController : Controller
         return View();
     }
 
+    [HttpGet("add")]
+    public IActionResult add()
+    {
+        return View();
+    }
+
     [HttpGet("updateUserPartial")]
     public IActionResult updateUserPartial(int userId, string email, string firstname, string lastname, bool isActive)
     {
-        ViewData["userId"] = userId;
-        ViewData["email"] = email;
-        ViewData["firstname"] = firstname;
-        ViewData["lastname"] = lastname;
-        ViewData["isActive"] = isActive;
+        try
+        {
+            ViewData["userId"] = userId;
+            ViewData["email"] = email;
+            ViewData["firstname"] = firstname;
+            ViewData["lastname"] = lastname;
+            ViewData["isActive"] = isActive;
 
-        return PartialView("_updateUserPartial");
+            return PartialView("_updateUserPartial");
+        }
+        catch(Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
+    [HttpGet("addUserPartial")]
+    public IActionResult addUserPartial()
+    {
+        try 
+        {
+            return PartialView("_addUserPartial");
+        }
+        catch(Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
     }
 
     [HttpPost("updateUser")]
     public async Task<JsonResult> updateUser([FromBody] userModel model)
     {
-        if (!ModelState.IsValid)
+        try
         {
+            if (!ModelState.IsValid)
+                {
+                    return Json(new
+                    { 
+                        isSuccess = true,
+                        message = "Invalid data."
+                    });
+                }
+
+            var client = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responsePost = await client.PostAsync(configurationManager.appSettings["api:routes:user:updateUser"], new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{responsePost.ReasonPhrase}"
+                });
+            }
+            client.Dispose();
+
             return Json(new
             { 
                 isSuccess = true,
-                message = "Invalid data."
+                message = "User updated successfully."
             });
         }
-
-        var client = _clientFactory.CreateClient();
-        var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
-        var responsePost = await client.PostAsync(configurationManager.appSettings["api:routes:user:updateUser"], new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
-
-        if(!responsePost.IsSuccessStatusCode)
+        catch (Exception exception)
         {
             return Json(new
             {
                 isSuccess = false,
-                message = $"{responsePost.ReasonPhrase}"
+                message = $"{exception.Message}"
             });
         }
-        client.Dispose();
+    }
 
-        return Json(new 
-        { 
-            isSuccess = true,
-            message = "User updated successfully."
-        });
+    [HttpPost("addUser")]
+    public async Task<JsonResult> addUser([FromBody] userModel user)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+                {
+                    return Json(new
+                    { 
+                        isSuccess = true,
+                        message = "Invalid data."
+                    });
+                }
+
+            user.passwordHash = userSecurityHelper.generateHash(_userManager,
+            new applicationUser(){
+                UserName = user.username,
+                NormalizedUserName = user.username,
+                Password = user.password,
+                Email = user.email,
+                NormalizedEmail = user.email
+            },
+            user.password!);
+
+            var client = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responsePost = await client.PostAsync(configurationManager.appSettings["api:routes:user:addUser"], new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
+
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{responsePost.ReasonPhrase}"
+                });
+            }
+            client.Dispose();
+
+            return Json(new
+            { 
+                isSuccess = true,
+                message = "User added successfully."
+            });
+        }
+        catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
     }
 
     [HttpGet("getUsers")]

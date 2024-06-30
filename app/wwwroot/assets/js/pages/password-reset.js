@@ -1,4 +1,10 @@
 $(document).ready(function () {
+    document.querySelectorAll('.uppercase-input').forEach(input => {
+        input.addEventListener('input', function() {
+            this.value = this.value.toUpperCase();
+        });
+    });
+    
     $("#password-addon").click(function () {
         try {
             if ($('#password').prop('type') == 'text') {
@@ -13,7 +19,7 @@ $(document).ready(function () {
                 'Oops!',
                 'An error has ocurred when revealing the password.',
                 'error'
-              );
+            );
         }
     });
 
