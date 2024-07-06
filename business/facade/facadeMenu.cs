@@ -8,12 +8,19 @@ using Newtonsoft.Json;
 public class facadeMenu
 {
     private log _logger;
-    
-    public List<menuModel> getUserMenusByIdUser(int idUser)
+    private repositoryMenu _repositoryMenu;
+
+    public facadeMenu()
+    {
+        _logger = new log();
+        _repositoryMenu = new repositoryMenu();
+    }
+
+    public List<menuModel> getUserMenusByUserId(int idUser)
     {
         try
         {
-            return new repositoryMenu().getUserMenusByIdUser(idUser);
+            return _repositoryMenu.getUserMenusByUserId(idUser);
         }
         catch (Exception exception)
         {

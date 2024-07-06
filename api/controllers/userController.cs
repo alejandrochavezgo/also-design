@@ -13,10 +13,12 @@ using Newtonsoft.Json;
 public class userController : ControllerBase
 {
     private IUserService _userService;
+    private facadeUser _facadeUser;
 
     public userController(IUserService userService)
     {
         _userService = userService;
+        _facadeUser = new facadeUser();
     }
 
     [allowAnonymous]
@@ -43,7 +45,7 @@ public class userController : ControllerBase
     {
         try
         {
-            return Ok(new facadeUser().getUsers());
+            return Ok(_facadeUser.getUsers());
         }
         catch(Exception e)
         {
@@ -59,8 +61,8 @@ public class userController : ControllerBase
             if(user == null)
                 return BadRequest("The user was not modified.");
 
-            if (!new facadeUser().updateUser(user))
-                return BadRequest("User not mo.");
+            if (!_facadeUser.updateUser(user))
+                return BadRequest("User not updated.");
 
             return Ok();
         }
@@ -78,7 +80,7 @@ public class userController : ControllerBase
             if(user == null)
                 return BadRequest("The user was not modified.");
 
-            if (!new facadeUser().addUser(user))
+            if (!_facadeUser.addUser(user))
                 return BadRequest("User not mo.");
 
             return Ok();

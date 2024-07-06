@@ -1,5 +1,5 @@
 <div class="row g-3">
-    <input type="text" class="form-control" id="inUserId" value="@ViewData["userId"]" hidden>
+    <input type="text" class="form-control" id="inId" value="@ViewData["id"]" hidden>
     <div class="col-10">
         <div>
             <label for="email" class="form-label">Email</label>
@@ -40,13 +40,13 @@
 
     function updateUser() {
         try {
-            fetch('/updateUser', {
+            fetch('updateUser', {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    id: $('#inUserId').val(),
+                    id: $('#inId').val(),
                     email: $('#inEmail').val(),
                     firstname: $('#inFirstname').val(),
                     lastname: $('#inLastname').val(),

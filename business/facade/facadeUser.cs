@@ -7,13 +7,20 @@ using Newtonsoft.Json;
 
 public class facadeUser
 {
-    private log _logger = new log();
+    private log _logger;
+    private repositoryUser _repositoryUser;
+
+    public facadeUser()
+    {
+        _logger = new log();
+        _repositoryUser = new repositoryUser();
+    }
 
     public List<userModel> getUsers()
     {
         try
         {
-            return new repositoryUser().getUsers();
+            return _repositoryUser.getUsers();
         }
         catch (Exception exception)
         {
@@ -30,7 +37,7 @@ public class facadeUser
             user.firstname = user.firstname.Trim().ToUpper();
             user.lastname = user.lastname.Trim().ToUpper();
             user.modificationDate = DateTime.Now;
-            return new repositoryUser().updateUser(user);
+            return _repositoryUser.updateUser(user);
         }
         catch (Exception exception)
         {
@@ -50,7 +57,7 @@ public class facadeUser
             user.email = user.email.Trim().ToUpper();
             user.isLocked = false;
             user.failCount = 0;
-            return new repositoryUser().addUser(user);
+            return _repositoryUser.addUser(user);
         }
         catch (Exception exception)
         {

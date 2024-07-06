@@ -19,11 +19,11 @@ public class repositoryMenu : baseRepository
         _logger = new log();
     }
 
-    public List<menuModel> getUserMenusByIdUser(int idUser)
+    public List<menuModel> getUserMenusByUserId(int idUser)
     {
         try
         {
-            return factoryGetUserMenusByIdUser.getList((DbDataReader)_providerDB.GetDataReader("sp_getUserMenusByIdUser", new DbParameter[] 
+            return factoryGetUserMenusByUserId.getList((DbDataReader)_providerDB.GetDataReader("sp_getUserMenusByUserId", new DbParameter[] 
             {
                 dataFactory.getObjParameter(configurationManager.providerDB, "@idUser", DbType.Int32, idUser)
             }));

@@ -8,12 +8,19 @@ using Newtonsoft.Json;
 public class facadeRole
 {
     private log _logger;
-    
-    public List<roleModel> getUserRolesByIdUser(int idUser)
+    private repositoryRole _repositoryRole;
+
+    public facadeRole()
+    {
+        _logger = new log();
+        _repositoryRole = new repositoryRole();
+    }
+
+    public List<roleModel> getUserRolesByUserId(int idUser)
     {
         try
         {
-            return new repositoryRole().getUserRolesByIdUser(idUser);
+            return _repositoryRole.getUserRolesByUserId(idUser);
         }
         catch (Exception exception)
         {

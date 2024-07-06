@@ -1,7 +1,7 @@
 $(document).ready(function () {
     try {
         $.ajax({
-            url: '/getUsers',
+            url: 'getUsers',
             method: 'GET',
             success: function (data) {
                 if(!data.isSuccess) {
@@ -63,10 +63,10 @@ $(document).ready(function () {
     }
 });
 
-function showUpdateModal(userId, email, firstname, lastname, isActive) {
+function showUpdateModal(id, email, firstname, lastname, isActive) {
     try {
-        const url = new URL('/updateUserPartial', window.location.origin);
-        url.searchParams.append('userId', userId);
+        const url = new URL('user/updateUserPartial', window.location.origin);
+        url.searchParams.append('id', id);
         url.searchParams.append('email', email);
         url.searchParams.append('firstname', firstname);
         url.searchParams.append('lastname', lastname);
@@ -119,7 +119,7 @@ function showUpdateModal(userId, email, firstname, lastname, isActive) {
 
 function showAddModal() {
     try {
-        fetch(new URL('/addUserPartial', window.location.origin))
+        fetch(new URL('user/addUserPartial', window.location.origin))
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');

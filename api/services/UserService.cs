@@ -20,8 +20,8 @@ public class userService : IUserService
 
     public authenticateResponse? authenticate(authenticateRequest model)
     {
-        var roles = new facadeRole().getUserRolesByIdUser(model.id);
-        var menus = new facadeMenu().getUserMenusByIdUser(model.id);
+        var roles = new facadeRole().getUserRolesByUserId(model.id);
+        var menus = new facadeMenu().getUserMenusByUserId(model.id);
         var user = new userModel()
         {
             id = model.id,

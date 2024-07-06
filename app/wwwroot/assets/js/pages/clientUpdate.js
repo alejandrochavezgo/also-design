@@ -4,48 +4,32 @@ document.querySelectorAll('.uppercase-input').forEach(input => {
     });
 });
 
-function reset() {
+function updateClient() {
     try {
-        $('#inEmail').val('');
-        $('#inFirstname').val('');
-        $('#inLastname').val('');
-        $('#inUsername').val('');
-        $('#inPassword').val('');
-        $('#inIsActive').prop('checked', false);
-    } catch (exception) {
-        Swal.fire({
-            title: 'Error!!',
-            html: exception,
-            icon: 'error',
-            confirmButtonClass: 'btn btn-danger w-xs mt-2',
-            buttonsStyling: !1,
-            footer: '',
-            showCloseButton:!1
-        });
-    }
-}
-
-function addUser() {
-    try {
-        fetch('addUser', {
+        fetch('updateClient', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                email: $('#inEmail').val(),
-                firstname: $('#inFirstname').val(),
-                lastname: $('#inLastname').val(),
-                isActive: $('#inIsActive').prop('checked'),
-                username: $('#inUsername').val(),
-                password: $('#inPassword').val()
+                id: $('#inId').val(),
+                businessName: $('#inBusinessName').val(),
+                rfc: $('#inRfc').val(),
+                address: $('#inAddress').val(),
+                zipCode: $('#inZipCode').val(),
+                city: $('#inCity').val(),
+                state: $('#inState').val(),
+                country: $('#inCountry').val(),
+                contactEmails: $('#inContactEmails').val().split(','),
+                contactPhones: $('#inContactPhones').val().split(','),
+                isActive: $('#inIsActive').prop('checked')
             })
         })
         .then(response => {
             return response.json();
         })
         .then(data => {
-            if(!data.isSuccess) {
+            if (!data.isSuccess) {
                 Swal.fire({
                     title: 'Error!!',
                     html: data.message,
@@ -53,22 +37,21 @@ function addUser() {
                     confirmButtonClass: 'btn btn-danger w-xs mt-2',
                     buttonsStyling: !1,
                     footer: '',
-                    showCloseButton:!1
+                    showCloseButton: !1
                 });
                 return;
             }
 
             Swal.fire({
-                title: 'Succcess',
+                title: 'Success',
                 html: data.message,
                 icon: 'success',
                 confirmButtonClass: 'btn btn-success w-xs mt-2',
                 buttonsStyling: !1,
                 footer: '',
-                showCloseButton:!1
-            }).then(function(t) {
-                $('#mdUpdateUser').modal('hide');
-                location.reload();
+                showCloseButton: !1
+            }).then(function (t) {
+                location.reload(true);
             });
         })
         .catch(error => {
@@ -79,11 +62,11 @@ function addUser() {
                 confirmButtonClass: 'btn btn-danger w-xs mt-2',
                 buttonsStyling: !1,
                 footer: '',
-                showCloseButton:!1
+                showCloseButton: !1
             });
         });
     }
-    catch(exception) {
+    catch (exception) {
         Swal.fire({
             title: 'Error!!',
             html: exception,
@@ -91,7 +74,7 @@ function addUser() {
             confirmButtonClass: 'btn btn-danger w-xs mt-2',
             buttonsStyling: !1,
             footer: '',
-            showCloseButton:!1
+            showCloseButton: !1
         });
     }
 }

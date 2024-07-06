@@ -2,10 +2,10 @@
 @using System.Globalization;
 
 @{
-    var user = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Context.Request.Cookies["userCookie"]);
+    var user = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Context.Request.Cookies["userCookie"]!);
     var textInfo = new CultureInfo("en-US", false).TextInfo;
-    user.firstname = textInfo.ToTitleCase(user.firstname.ToLower());
-    user.lastname = textInfo.ToTitleCase(user.lastname.ToLower());
+    user!.firstname = textInfo.ToTitleCase(user.firstname!.ToLower());
+    user!.lastname = textInfo.ToTitleCase(user.lastname!.ToLower());
 }
 
 <!doctype html>
@@ -61,7 +61,7 @@
                                             alt="Header Avatar">
                                         <span class="text-start ms-xl-2">
                                             <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">@user.firstname @user.lastname</span>
-                                            <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">@user.username.ToLower()</span>
+                                            <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">@user.username!.ToLower()</span>
                                         </span>
                                     </span>
                                 </button>
@@ -98,10 +98,10 @@
                                 <div class="collapse menu-dropdown" id="sidebarApps">
                                     <ul class="nav nav-sm flex-column">
                                         <li class="nav-item">
-                                            <a href="apps-calendar.html" class="nav-link"> New Client </a>
+                                            <a href="@Url.Action("add", "client")" class="nav-link"> Add Client </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="apps-chat.html" class="nav-link"> Client List </a>
+                                            <a href="@Url.Action("list", "client")" class="nav-link"> Client List </a>
                                         </li>
                                     </ul>
                                 </div>
@@ -114,7 +114,7 @@
                                 <div class="collapse menu-dropdown" id="sidebarApps">
                                     <ul class="nav nav-sm flex-column">
                                         <li class="nav-item">
-                                            <a href="apps-calendar.html" class="nav-link"> New Quote </a>
+                                            <a href="apps-calendar.html" class="nav-link"> Add Quote </a>
                                         </li>
                                         <li class="nav-item">
                                             <a href="apps-chat.html" class="nav-link"> Quote List </a>
@@ -129,7 +129,7 @@
                                 <div class="collapse menu-dropdown" id="sidebarApps">
                                     <ul class="nav nav-sm flex-column">
                                         <li class="nav-item">
-                                            <a href="apps-calendar.html" class="nav-link"> New Purchase Order </a>
+                                            <a href="apps-calendar.html" class="nav-link"> Add Purchase Order </a>
                                         </li>
                                         <li class="nav-item">
                                             <a href="apps-chat.html" class="nav-link"> Purchase Order List </a>
@@ -144,7 +144,7 @@
                                 <div class="collapse menu-dropdown" id="sidebarApps">
                                     <ul class="nav nav-sm flex-column">
                                         <li class="nav-item">
-                                            <a href="apps-calendar.html" class="nav-link"> New Work Order </a>
+                                            <a href="apps-calendar.html" class="nav-link"> Add Work Order </a>
                                         </li>
                                         <li class="nav-item">
                                             <a href="apps-chat.html" class="nav-link"> Work Order List </a>
@@ -168,7 +168,7 @@
                                             <div class="collapse menu-dropdown">
                                                 <ul class="nav nav-sm flex-column">
                                                     <li class="nav-item">
-                                                        <a href="@Url.Action("add", "user")"" class="nav-link"> New User </a>
+                                                        <a href="@Url.Action("add", "user")"" class="nav-link"> Add User </a>
                                                     </li>
                                                     <li class="nav-item">
                                                         <a href="@Url.Action("list", "user")" class="nav-link"> User List </a>
@@ -183,7 +183,7 @@
                                             <div class="collapse menu-dropdown" id="sidebarEcommerce">
                                                 <ul class="nav nav-sm flex-column">
                                                     <li class="nav-item">
-                                                        <a href="apps-ecommerce-products.html" class="nav-link"> New Step </a>
+                                                        <a href="apps-ecommerce-products.html" class="nav-link"> Add Step </a>
                                                     </li>
                                                     <li class="nav-item">
                                                         <a href="apps-ecommerce-product-details.html" class="nav-link"> Step List </a>
@@ -198,7 +198,7 @@
                                             <div class="collapse menu-dropdown" id="sidebarProjects">
                                                 <ul class="nav nav-sm flex-column">
                                                     <li class="nav-item">
-                                                        <a href="apps-projects-list.html" class="nav-link"> New status </a>
+                                                        <a href="apps-projects-list.html" class="nav-link"> Add status </a>
                                                     </li>
                                                     <li class="nav-item">
                                                         <a href="apps-projects-overview.html" class="nav-link"> Status List </a>
@@ -211,7 +211,7 @@
                                             <div class="collapse menu-dropdown" id="sidebarTasks">
                                                 <ul class="nav nav-sm flex-column">
                                                     <li class="nav-item">
-                                                        <a href="apps-tasks-kanban.html" class="nav-link"> New Machine </a>
+                                                        <a href="apps-tasks-kanban.html" class="nav-link"> Add Machine </a>
                                                     </li>
                                                     <li class="nav-item">
                                                         <a href="apps-tasks-list-view.html" class="nav-link"> Machine List </a>

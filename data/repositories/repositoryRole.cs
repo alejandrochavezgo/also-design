@@ -19,11 +19,11 @@ public class repositoryRole : baseRepository
         _logger = new log();
     }
 
-    public List<roleModel> getUserRolesByIdUser(int idUser)
+    public List<roleModel> getUserRolesByUserId(int idUser)
     {
         try
         {
-            return factoryGetUserRolesByIdUser.getList((DbDataReader)_providerDB.GetDataReader("sp_getUserRolesByIdUser", new DbParameter[] 
+            return factoryGetUserRolesByUserId.getList((DbDataReader)_providerDB.GetDataReader("sp_getUserRolesByUserId", new DbParameter[] 
             {
                 dataFactory.getObjParameter(configurationManager.providerDB, "@idUser", DbType.Int32, idUser)
             }));
