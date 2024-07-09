@@ -1,4 +1,4 @@
-﻿namespace app.controllers;
+namespace app.controllers;
 
 using providerData;
 using Microsoft.AspNetCore.Mvc;
@@ -9,14 +9,14 @@ using Microsoft.AspNetCore.Authorization;
 using authorization;
 
 [authorization]
-public class dashboardController : Controller
+public class quotationController : Controller
 {
-    private readonly ILogger<dashboardController> _logger;
+    private readonly ILogger<quotationController> _logger;
     private readonly UserManager<applicationUser> _userManager;
     private readonly SignInManager<applicationUser> _signInManager;
     private readonly IHttpClientFactory _clientFactory;
 
-    public dashboardController(ILogger<dashboardController> logger, UserManager<applicationUser> userManager, SignInManager<applicationUser> signInManager, IHttpClientFactory clientFactory)
+    public quotationController(ILogger<quotationController> logger, UserManager<applicationUser> userManager, SignInManager<applicationUser> signInManager, IHttpClientFactory clientFactory)
     {
         _logger = logger;
         _userManager = userManager;
@@ -25,7 +25,7 @@ public class dashboardController : Controller
     }
 
     [HttpGet]
-    public IActionResult dashboard()
+    public IActionResult list()
     {
         return View();
     }

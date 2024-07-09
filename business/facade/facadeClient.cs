@@ -23,6 +23,7 @@ public class facadeClient
             var clients = _repositoryClient.getClients();
             foreach(var client in clients)
             {
+                client.contactNames = _repositoryClient.getContactNamesByclientId(client.id);
                 client.contactEmails = _repositoryClient.getContactEmailsByclientId(client.id);
                 client.contactPhones = _repositoryClient.getContactPhonesByClientId(client.id);
             }
@@ -41,6 +42,7 @@ public class facadeClient
         try
         {
             var client = _repositoryClient.getClientById(clientId);
+            client.contactNames = _repositoryClient.getContactNamesByclientId(client.id);
             client.contactEmails = _repositoryClient.getContactEmailsByclientId(client.id);
             client.contactPhones = _repositoryClient.getContactPhonesByClientId(client.id);
             return client;
@@ -59,13 +61,20 @@ public class facadeClient
             client.creationDate = DateTime.Now;
             var clientIdAdded = _repositoryClient.addClient(client);
 
+            if (client.contactNames.Count > 0)
+                foreach(var name in client.contactNames)
+                    if(!string.IsNullOrEmpty(name))
+                        _repositoryClient.addContactName(clientIdAdded, name);
+
             if (client.contactEmails.Count > 0)
                 foreach(var email in client.contactEmails)
-                    _repositoryClient.addContactEmail(clientIdAdded, email);
+                    if(!string.IsNullOrEmpty(email))
+                        _repositoryClient.addContactEmail(clientIdAdded, email);
 
             if (client.contactPhones.Count > 0)
                 foreach(var phone in client.contactPhones)
-                    _repositoryClient.addContactPhone(clientIdAdded, phone);
+                    if(!string.IsNullOrEmpty(phone))
+                        _repositoryClient.addContactPhone(clientIdAdded, phone);
 
             return clientIdAdded > 0;
         }
@@ -81,7 +90,11 @@ public class facadeClient
         try
         {
             client.modificationDate = DateTime.Now;
-            _repositoryClient.removeContactEmailsAndPhonesByClientId(client.id);
+            _repositoryClient.removeContactNamesEmailsAndPhonesByClientId(client.id);
+
+            foreach(var name in client.contactNames)
+                if(!string.IsNullOrEmpty(name))
+                    _repositoryClient.addContactName(client.id, name);
 
             foreach(var email in client.contactEmails)
                 if(!string.IsNullOrEmpty(email))

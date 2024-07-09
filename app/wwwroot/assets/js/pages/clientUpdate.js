@@ -20,6 +20,7 @@ function updateClient() {
                 city: $('#inCity').val(),
                 state: $('#inState').val(),
                 country: $('#inCountry').val(),
+                contactNames: $('#inContactNames').val().split(','),
                 contactEmails: $('#inContactEmails').val().split(','),
                 contactPhones: $('#inContactPhones').val().split(','),
                 isActive: $('#inIsActive').prop('checked')

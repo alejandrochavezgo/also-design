@@ -15,6 +15,7 @@ function reset() {
         $('#inCountry').val('');
         $('#inContactEmails').val('');
         $('#inContactPhones').val('');
+        $('#inContactNames').val('');
         $('#inIsActive').prop('checked', false);
     } catch (exception) {
         Swal.fire({
@@ -44,6 +45,7 @@ function addClient() {
                 city: $('#inCity').val(),
                 state: $('#inState').val(),
                 country: $('#inCountry').val(),
+                contactNames: $('#inContactNames').val().split(','),
                 contactEmails: $('#inContactEmails').val().split(','),
                 contactPhones: $('#inContactPhones').val().split(','),
                 isActive: $('#inIsActive').prop('checked')

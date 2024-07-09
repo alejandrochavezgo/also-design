@@ -84,6 +84,7 @@ public class clientController : Controller
             ViewData["isActive"] = result!.isActive;
             ViewData["contactEmails"] = result!.contactEmails;
             ViewData["contactPhones"] = result!.contactPhones;
+            ViewData["contactNames"] = result!.contactNames;
 
             return View();
         }

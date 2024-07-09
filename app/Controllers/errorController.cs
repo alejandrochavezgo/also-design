@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using authorization;
 using Microsoft.AspNetCore.Identity.UI.V4.Pages.Internal;
 
+[authorization]
 public class errorController : Controller
 {
     private readonly ILogger<errorController> _logger;
@@ -25,7 +26,6 @@ public class errorController : Controller
     }
 
     [HttpGet]
-    [authorization]
     public IActionResult error(int errorCode, string errorMessage)
     {
         try

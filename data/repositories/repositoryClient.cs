@@ -57,6 +57,26 @@ public class repositoryClient : baseRepository
         }
     }
 
+    public List<string> getContactNamesByclientId(int clientId)
+    {
+        try
+        {
+            return factoryGetClientContactNamesByClientId.getList((DbDataReader)_providerDB.GetDataReader("sp_getContactNamesByClientId", new DbParameter[] {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, clientId),
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public List<string> getContactEmailsByclientId(int clientId)
     {
         try
@@ -117,6 +137,32 @@ public class repositoryClient : baseRepository
             });
 
             return Convert.ToInt32(clientIdAdded.Value);
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public int addContactName(int clientId, string name)
+    {
+        try
+        {
+            var contactNameIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@contactNameIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+
+            base._providerDB.ExecuteNonQuery("sp_addClientContactName", new DbParameter[] {
+                contactNameIdAdded,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, clientId),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@name", DbType.String, name)
+            });
+
+            return Convert.ToInt32(contactNameIdAdded.Value);
         }
         catch (SqlException SqlException)
         {
@@ -216,11 +262,11 @@ public class repositoryClient : baseRepository
         }
     }
 
-    public int removeContactEmailsAndPhonesByClientId(int clientId)
+    public int removeContactNamesEmailsAndPhonesByClientId(int clientId)
     {
         try
         {
-            return base._providerDB.ExecuteNonQuery("sp_removeContactEmailsAndPhonesByClientId", new DbParameter[] {
+            return base._providerDB.ExecuteNonQuery("sp_removeContactNamesEmailsAndPhonesByClientId", new DbParameter[] {
                 dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, clientId)
             });
         }

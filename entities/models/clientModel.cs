@@ -17,6 +17,7 @@ public class clientModel
     public bool isActive { get; set; }
     public string? statusColor { get; set; }
     public string? statusName { get; set; }
+    public List<string>? contactNames { get; set; }
     public List<string>? contactEmails { get; set; }
     public List<string>? contactPhones { get; set; }
 }
