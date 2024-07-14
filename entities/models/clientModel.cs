@@ -2,7 +2,8 @@ namespace entities.models;
 
 public class clientModel
 {
-    public int id { get; set; }
+    public int id { get; set;   }
+    public int status { get; set; }
     public string? businessName { get; set; }
     public string? rfc { get; set; }
     public string? address { get; set; }
@@ -14,7 +15,6 @@ public class clientModel
     public string? creationDateAsString { get; set; }
     public DateTime? modificationDate { get; set; }
     public string? modificationDateAsString { get; set; }
-    public bool isActive { get; set; }
     public string? statusColor { get; set; }
     public string? statusName { get; set; }
     public List<string>? contactNames { get; set; }

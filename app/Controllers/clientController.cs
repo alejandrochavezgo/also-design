@@ -54,14 +54,14 @@ public class clientController : Controller
     }
     
     [HttpGet("client/update")]
-    public async Task<IActionResult> update(int clientId)
+    public async Task<IActionResult> update(int id)
     {
         try
         {
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
-            var client = new clientModel { id = clientId };
+            var client = new clientModel { id = id };
             var responseGet = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:client:getClientById"]}", new StringContent(JsonConvert.SerializeObject(client), Encoding.UTF8, "application/json"));
 
             if(!responseGet.IsSuccessStatusCode)
@@ -81,7 +81,7 @@ public class clientController : Controller
             ViewData["city"] = result!.city;
             ViewData["state"] = result!.state;
             ViewData["country"] = result!.country;
-            ViewData["isActive"] = result!.isActive;
+            ViewData["status"] = result!.status;
             ViewData["contactEmails"] = result!.contactEmails;
             ViewData["contactPhones"] = result!.contactPhones;
             ViewData["contactNames"] = result!.contactNames;
@@ -94,15 +94,15 @@ public class clientController : Controller
         }
     }
 
-    [HttpGet("client/getClients")]
-    public async Task<JsonResult> getClients()
+    [HttpGet("client/getAll")]
+    public async Task<JsonResult> getAll()
     {
         try
         {
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
-            var responseGet = await clientHttp.GetAsync($"{configurationManager.appSettings["api:routes:client:getClients"]}");
+            var responseGet = await clientHttp.GetAsync($"{configurationManager.appSettings["api:routes:client:getAll"]}");
 
             if(!responseGet.IsSuccessStatusCode)
             {
@@ -134,8 +134,36 @@ public class clientController : Controller
         }
     }
 
-    [HttpPost("client/addClient")]
-    public async Task<JsonResult> addClient([FromBody] clientModel client)
+    [HttpGet("client/getClientByTerm")]
+    public async Task<IActionResult>  getClientByTerm(string businessName)
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var client = new clientModel { businessName = businessName };
+            var responseGet = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:client:getClientsByTerm"]}", new StringContent(JsonConvert.SerializeObject(client), Encoding.UTF8, "application/json"));
+
+            if(!responseGet.IsSuccessStatusCode)
+            {
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = responseGet.ReasonPhrase });
+            }
+
+            var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<List<entities.models.clientModel>>(responseGetAsJson);
+            clientHttp.Dispose();
+
+            return Json(result);
+        }
+        catch (Exception e)
+        {
+            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+        }
+    }
+
+    [HttpPost("client/add")]
+    public async Task<JsonResult> add([FromBody] clientModel client)
     {
         try
         {
@@ -151,7 +179,7 @@ public class clientController : Controller
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
-            var responsePost = await clientHttp.PostAsync(configurationManager.appSettings["api:routes:client:addClient"], new StringContent(JsonConvert.SerializeObject(client), Encoding.UTF8, "application/json"));
+            var responsePost = await clientHttp.PostAsync(configurationManager.appSettings["api:routes:client:add"], new StringContent(JsonConvert.SerializeObject(client), Encoding.UTF8, "application/json"));
 
             if(!responsePost.IsSuccessStatusCode)
             {
@@ -179,8 +207,8 @@ public class clientController : Controller
         }
     }
 
-    [HttpPost("client/updateClient")]
-    public async Task<JsonResult> updateClient([FromBody] clientModel client)
+    [HttpPost("client/update")]
+    public async Task<JsonResult> update([FromBody] clientModel client)
     {
         try
         {
@@ -196,7 +224,7 @@ public class clientController : Controller
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
-            var responsePost = await clientHttp.PostAsync(configurationManager.appSettings["api:routes:client:updateClient"], new StringContent(JsonConvert.SerializeObject(client), Encoding.UTF8, "application/json"));
+            var responsePost = await clientHttp.PostAsync(configurationManager.appSettings["api:routes:client:update"], new StringContent(JsonConvert.SerializeObject(client), Encoding.UTF8, "application/json"));
 
             if(!responsePost.IsSuccessStatusCode)
             {

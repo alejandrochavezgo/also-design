@@ -4,9 +4,9 @@ document.querySelectorAll('.uppercase-input').forEach(input => {
     });
 });
 
-function updateClient() {
+function update() {
     try {
-        fetch('updateClient', {
+        fetch('update', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -23,7 +23,7 @@ function updateClient() {
                 contactNames: $('#inContactNames').val().split(','),
                 contactEmails: $('#inContactEmails').val().split(','),
                 contactPhones: $('#inContactPhones').val().split(','),
-                isActive: $('#inIsActive').prop('checked')
+                status: $('#seStatus').val()
             })
         })
         .then(response => {

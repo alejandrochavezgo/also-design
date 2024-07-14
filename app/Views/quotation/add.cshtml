@@ -1,0 +1,192 @@
+@using Newtonsoft.Json;
+@{
+    ViewData["title"] = "Add Quotation | Also Design";
+    var user = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Context.Request.Cookies["userCookie"]!);
+}
+@section styles
+{
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet"  type="text/css">
+}
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Add Quotation</h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item color-495057">Quotation</li>
+                            <li class="breadcrumb-item color-495057">Add Quotation</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="alert-custom alert-success alert-borderless" role="alert">
+                            This module will allow you to create quotes efficiently and accurately for various clients. Here, you can manage and generate detailed quotations, ensuring that each client receives a personalized and professional proposal.
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="d-flex col-3">
+                                <div class="navbar-brand-box horizontal-logo d-ruby pl-0 mt-24npx ml-22npx">
+                                    <span class="logo-sm">
+                                        <img width="120" src="../assets/images/alsologo.png"/>
+                                    </span>
+                                    <p class="font-size-15px ml-24npx">ALSO DESIGN</p>
+                                </div>
+                            </div>
+                            <div class="col-6 text-center">
+                                <h4>ALSO DESIGN</h4>
+                                <h6>DISEÑO ELECTROMECÁNICO INDUSTRIAL</h6>
+                                <h6>"RESPONSABILIDAD, CALIDAD E INNOVACIÓN TECNOLÓGICA"</h6>
+                            </div>
+                            <div class="col-3 text-center">
+                                <h6><span class="text-muted fw-semibold">QUOTATION</span></h6>
+                                <input type="text" class="form-control text-center" id="inQuotationCode" disabled>
+                            </div>
+                        </div>
+                        <div class="row pt-4 text-center border-bottom border-bottom-dashed">
+                            <div class="col-12">
+                                Atendiendo su amable solicitud estamos enviando cotizacion de los productos requeridos, para nosotros es un placer poner nuestra compania a su servicio.
+                                <br><br><br>
+                            </div>
+                        </div>
+                        <div class="row pt-4 text-center">
+                            <div class="col-1">
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">CLIENT ID</p>
+                                <input type="text" class="form-control text-center" id="inClientId" disabled>
+                            </div>
+                            <div class="col-5">
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">CLIENT</p>
+                                <input type="text" class="form-control text-center" id="inClientBusinessName" placeholder="SEARCH CLIENT...">
+                            </div>
+                            <div class="col-4">
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">MAIN CONTACT</p>
+                                <select class="form-select" id="clientContactNames"></select>
+                            </div>
+                            <div class="col-2">
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">CITY</p>
+                                <input type="text" class="form-control text-center" id="inClientCity" disabled>
+                            </div>
+                        </div>
+                        <div class="row pt-27px text-center">
+                            <div class="col-3">
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">MAIN PHONE</p>
+                                <select class="form-select" id="clientContactPhones"></select>
+                            </div>
+                            <div class="col-4">
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">ADDRESS</p>
+                                <input type="text" class="form-control text-center" id="inClientAddress" disabled>
+                            </div>
+                            <div class="col-2">
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">RFC</p>
+                                <input type="text" class="form-control text-center" id="inClientRfc" disabled>
+                            </div>
+                            <div class="col-3">
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">PAYMENT TYPE</p>
+                                <select class="form-select" id="quotationPaymentType">
+                                    <option value="1">CONTADO</option>
+                                    <option value="2">A CONVENIR</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-12">
+                                <div class="card-body pt-4 pb-4">
+                                    <div class="table-responsive">
+                                        <table class="table table-borderless text-center table-nowrap align-middle mb-0">
+                                            <thead>
+                                                <tr class="table-active">
+                                                    <th scope="col" style=""></th>
+                                                    <th scope="col" style="width: 50px;">#</th>
+                                                    <th scope="col" style="width: 50px;">Code</th>
+                                                    <th scope="col">Description</th>
+                                                    <th scope="col">Quantity</th>
+                                                    <th scope="col">Unit</th>
+                                                    <th scope="col" class="text-end">Unit value</th>
+                                                    <th scope="col" class="text-end">Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbItems">
+                                                <tr>
+                                                    <td class="width-0per">
+                                                        <button type="button" class="btn btn-danger btn-sm btn-icon waves-effect waves-light"><i class="ri-close-circle-fill"></i></button>
+                                                    </td>
+                                                    <td scope="row">1</td>
+                                                    <td scope="row">-</td>
+                                                    <td class="text-start">
+                                                        <input type="text" class="form-control fw-medium" id="inQuotationItem" placeholder="SEARCH ITEM...">
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-step">
+                                                            <button type="button" class="minus">–</button>
+                                                            <input type="number" class="product-quantity" value="1" min="0" max="100" readonly>
+                                                            <button type="button" class="plus">+</button>
+                                                        </div>
+                                                    </td>
+                                                    <td>-</td>
+                                                    <td class="text-end">$0.00</td>
+                                                    <td class="text-end">$0.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <button type="button" class="btn btn-success btn-sm btn-icon waves-effect waves-light"><i class="ri-add-circle-fill"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="border-top border-top-dashed mt-2">
+                                        <table class="table table-borderless table-nowrap align-middle mb-0 ms-auto" style="width:250px">
+                                            <tbody>
+                                                <tr>
+                                                    <td>Sub Total</td>
+                                                    <td class="text-end">$0.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Estimated Tax <input class="form-control" value="12"></td>
+                                                    <td class="text-end">$0.00</td>
+                                                </tr>
+                                                <tr class="border-top border-top-dashed fs-15">
+                                                    <th scope="row">Total Amount</th>
+                                                    <th class="text-end">$0.00</th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="mt-3">
+                                        <h6 class="text-muted text-uppercase fw-semibold mb-3">ATENTAMENTE</h6>
+                                        <p class="text-muted mb-1">ING. URIEL SOTO</p>
+                                        <p class="text-muted mb-1">TEL: (664) 533-9578</p>
+                                        <p class="text-muted mb-1">GERENTE DE INGENIERÍA</p>
+                                    </div>
+                                    <div class="row pt-4 pb-27px text-center border-bottom border-bottom-dashed">
+                                        <div class="col-12">
+                                            <h6 class="text-muted text-uppercase fw-semibold mb-3">TIJUANA BAJA CALIFORNIA MÉXICO</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-12">
+                                <button type="button" class="btn btn-success w-100per" onclick="addQuotation()">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script src="../assets/js/pages/quotationAdd.js"></script>
+    <script src="../assets/js/pages/form-input-spin.init.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+}

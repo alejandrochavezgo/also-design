@@ -49,8 +49,12 @@
                                 <input type="password" class="form-control" id="inPassword" placeholder="Enter password">
                             </div>
                             <div class="col-4">
-                                <label class="form-check-label" for="inIsActive">Active</label>
-                                <input class="form-check-input d-block mt-18px ml-13px" type="checkbox" id="inIsActive">
+                                <label for="seStatus" class="form-label">Status</label>
+                                <select class="form-select" id="seStatus">
+                                    <option value="1">Active</option>
+                                    <option value="2">Inactive</option>
+                                    <option value="3">Locked</option>
+                                </select>
                             </div>
                         </div>
                         <div class="row pt-27px">
@@ -58,7 +62,7 @@
                                 <button type="button" class="btn btn-warning w-100per" onclick="reset()">clear</button>
                             </div>
                             <div class="col-6">
-                                <button type="button" class="btn btn-success w-100per" onclick="addUser()">Add</button>
+                                <button type="button" class="btn btn-success w-100per" onclick="add()">Add</button>
                             </div>
                         </div>
                     </div>

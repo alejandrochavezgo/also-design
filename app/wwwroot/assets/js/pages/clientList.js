@@ -1,7 +1,7 @@
 $(document).ready(function () {
     try {
         $.ajax({
-            url: 'getClients',
+            url: 'getAll',
             method: 'GET',
             success: function (data) {
                 if (!data.isSuccess) {
@@ -29,7 +29,6 @@ $(document).ready(function () {
                         '<td>' + client.state + '</td>' +
                         '<td>' +
                             '<div class="avatar-group">';
-
                     client.contactEmails.forEach(function(email) {
                         row += '<a class="avatar-group-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="' + email + '">' +
                                     '<img src="../assets/images/account-circle-custom-717171.png" alt="" class="rounded-circle avatar-xxs">' +
@@ -46,9 +45,9 @@ $(document).ready(function () {
                     });
                         row +=      '</div>' +
                                 '</td>' +
-                                '<td><span class="badge rounded-pill badge-soft-' + (client.isActive ? 'success' : 'danger') + '">' + (client.isActive ? 'Active' : 'Inactive') + '</span></td>' +
+                                '<td><span class="badge rounded-pill badge-soft-' + client.statusColor + '">' + client.statusName + '</span></td>' +
                                 '<td class="text-center">' +
-                                    '<button type="button" class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="window.location.href=\'/client/update?clientId=' + client.id + '\'"><i class="ri-pencil-fill"></i></button>' +
+                                    '<button type="button" class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="window.location.href=\'/client/update?id=' + client.id + '\'"><i class="ri-pencil-fill"></i></button>' +
                                 '</td>' +
                             '</tr>';
                     tbody.append(row);

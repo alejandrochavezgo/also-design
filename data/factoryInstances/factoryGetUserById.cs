@@ -6,7 +6,7 @@ using common.logging;
 using entities.models;
 using Newtonsoft.Json;
 
-internal class factoryGetUsers: baseMethod<factoryGetUsers, userModel>
+internal class factoryGetUserById: baseMethod<factoryGetUserById, userModel>
 {
     private log _logger = new log();
 

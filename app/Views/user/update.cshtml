@@ -1,0 +1,71 @@
+@{
+    ViewData["title"] = "Update User | Also Design";
+    var status = ViewData["status"];
+}
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">User Client</h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item color-495057">User</li>
+                            <li class="breadcrumb-item color-495057">Update User</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="alert-custom alert-success alert-borderless" role="alert">
+                            This web module allows for easy and quick user creation, managing user information securely and efficiently.
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-9">
+                                <input type="text" class="form-control" id="inId" value="@ViewData["id"]" hidden>
+                                <label for="email" class="form-label">Email</label>
+                                <input type="text" class="form-control uppercase-input" id="inEmail" placeholder="Enter email" value="@ViewData["email"]">
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label" for="seStatus">Status</label>
+                                <select class="form-select" id="seStatus">
+                                    <option value="1">Active</option>
+                                    <option value="2">Inactive</option>
+                                    <option value="3">Locked</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-6">
+                                <label for="firstname" class="form-label">First Name</label>
+                                <input type="text" class="form-control uppercase-input" id="inFirstname" placeholder="Enter firstname" value="@ViewData["firstname"]">
+                            </div>
+                            <div class="col-6">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control uppercase-input" id="inLastname" placeholder="Enter lastname" value="@ViewData["lastname"]">
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-12">
+                                <button type="button" class="btn btn-success w-100per" onclick="updateUser()">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        $('#seStatus').val(@status);
+    </script>
+    <script src="../assets/js/pages/userUpdate.js"></script>
+}

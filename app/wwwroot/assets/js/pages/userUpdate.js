@@ -4,50 +4,18 @@ document.querySelectorAll('.uppercase-input').forEach(input => {
     });
 });
 
-function reset() {
+function updateUser() {
     try {
-        $('#inBusinessName').val('');
-        $('#inRfc').val('');
-        $('#inAddress').val('');
-        $('#inZipCode').val('');
-        $('#inCity').val('');
-        $('#inState').val('');
-        $('#inCountry').val('');
-        $('#inContactEmails').val('');
-        $('#inContactPhones').val('');
-        $('#inContactNames').val('');
-        $('#seStatus').val(1);
-    } catch (exception) {
-        Swal.fire({
-            title: 'Error!!',
-            html: exception,
-            icon: 'error',
-            confirmButtonClass: 'btn btn-danger w-xs mt-2',
-            buttonsStyling: !1,
-            footer: '',
-            showCloseButton:!1
-        });
-    }
-}
-
-function addClient() {
-    try {
-        fetch('add', {
+        fetch('update', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                businessName: $('#inBusinessName').val(),
-                rfc: $('#inRfc').val(),
-                address: $('#inAddress').val(),
-                zipCode: $('#inZipCode').val(),
-                city: $('#inCity').val(),
-                state: $('#inState').val(),
-                country: $('#inCountry').val(),
-                contactNames: $('#inContactNames').val().split(','),
-                contactEmails: $('#inContactEmails').val().split(','),
-                contactPhones: $('#inContactPhones').val().split(','),
+                id: $('#inId').val(),
+                email: $('#inEmail').val(),
+                firstname: $('#inFirstname').val(),
+                lastname: $('#inLastname').val(),
                 status: $('#seStatus').val()
             })
         })
@@ -55,7 +23,7 @@ function addClient() {
             return response.json();
         })
         .then(data => {
-            if (!data.isSuccess) {
+            if(!data.isSuccess) {
                 Swal.fire({
                     title: 'Error!!',
                     html: data.message,
@@ -63,21 +31,22 @@ function addClient() {
                     confirmButtonClass: 'btn btn-danger w-xs mt-2',
                     buttonsStyling: !1,
                     footer: '',
-                    showCloseButton: !1
+                    showCloseButton:!1
                 });
                 return;
             }
 
             Swal.fire({
-                title: 'Success',
+                title: 'Succcess',
                 html: data.message,
                 icon: 'success',
                 confirmButtonClass: 'btn btn-success w-xs mt-2',
                 buttonsStyling: !1,
                 footer: '',
-                showCloseButton: !1
-            }).then(function (t) {
-                window.location.href = 'list';
+                showCloseButton:!1
+            }).then(function(t) {
+                $('#mdUpdateUser').modal('hide');
+                location.reload();
             });
         })
         .catch(error => {
@@ -88,11 +57,11 @@ function addClient() {
                 confirmButtonClass: 'btn btn-danger w-xs mt-2',
                 buttonsStyling: !1,
                 footer: '',
-                showCloseButton: !1
+                showCloseButton:!1
             });
         });
     }
-    catch (exception) {
+    catch(exception) {
         Swal.fire({
             title: 'Error!!',
             html: exception,
@@ -100,7 +69,7 @@ function addClient() {
             confirmButtonClass: 'btn btn-danger w-xs mt-2',
             buttonsStyling: !1,
             footer: '',
-            showCloseButton: !1
+            showCloseButton:!1
         });
     }
 }

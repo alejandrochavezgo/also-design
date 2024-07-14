@@ -6,6 +6,7 @@
     var contactEmailsString = emails != null ? string.Join(",", emails!) : "";
     var phones = ViewData["contactPhones"] as List<string>;
     var contactPhonesString = emails != null ? string.Join(",", phones!) : "";
+    var status = ViewData["status"];
 }
 <div class="page-content">
     <div class="container-fluid">
@@ -16,7 +17,7 @@
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item color-495057">Client</li>
-                            <li class="breadcrumb-item color-495057">Add Update</li>
+                            <li class="breadcrumb-item color-495057">Update Client</li>
                         </ol>
                     </div>
                 </div>
@@ -64,8 +65,11 @@
                                 <input type="text" class="form-control uppercase-input" id="inCountry" placeholder="Enter country" value="@ViewData["country"]">
                             </div>
                             <div class="col-3">
-                                <label class="form-check-label" for="inIsActive">Active</label>
-                                <input class="form-check-input d-block mt-18px ml-13px" type="checkbox" id="inIsActive" @(Convert.ToBoolean(ViewData["isActive"]) ? "checked" : "")>
+                                <label class="form-label" for="seStatus">Status</label>
+                                <select class="form-select" id="seStatus">
+                                    <option value="1">Active</option>
+                                    <option value="2">Inactive</option>
+                                </select>
                             </div>
                         </div>
                         <div class="row pt-27px">
@@ -84,7 +88,7 @@
                         </div>
                         <div class="row pt-27px">
                             <div class="col-12">
-                                <button type="button" class="btn btn-success w-100per" onclick="updateClient()">Update</button>
+                                <button type="button" class="btn btn-success w-100per" onclick="udpate()">Update</button>
                             </div>
                         </div>
                     </div>
@@ -95,5 +99,8 @@
 </div>
 @section scripts
 {
+    <script type="text/javascript">
+        $('#seStatus').val(@status);
+    </script>
     <script src="../assets/js/pages/clientUpdate.js"></script>
 }

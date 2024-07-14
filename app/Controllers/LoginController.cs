@@ -9,6 +9,7 @@ using System.Text;
 using Newtonsoft.Json;
 using common.configurations;
 using providerData.entitiesData;
+using entities.enums;
 
 public class loginController : Controller
 {
@@ -57,7 +58,7 @@ public class loginController : Controller
                 });
             }
 
-            if (!userIdentity.IsActive)
+            if (userIdentity.StatusId == (int)statusType.INACTIVE)
             {
                 return Json(new
                 {
@@ -67,13 +68,23 @@ public class loginController : Controller
                 });
             }
 
-            if (userIdentity.IsLocked)
+            if (userIdentity.StatusId == (int)statusType.LOCKED)
             {
                 return Json(new
                 {
                     isSuccess = false,
                     url = string.Empty,
                     message = "This user is locked."
+                });
+            }
+
+            if (userIdentity.StatusId != (int)statusType.ACTIVE)
+            {
+                return Json(new
+                {
+                    isSuccess = false,
+                    url = string.Empty,
+                    message = $"This user has {userIdentity.StatusId} as status id."
                 });
             }
 

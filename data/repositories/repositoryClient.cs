@@ -37,12 +37,12 @@ public class repositoryClient : baseRepository
         }
     }
 
-    public clientModel getClientById(int clientId)
+    public clientModel getClientById(int id)
     {
         try
         {
             return factoryGetClientById.get((DbDataReader)_providerDB.GetDataReader("sp_getClientById", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, clientId),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
             }));
         }
         catch (SqlException SqlException)
@@ -57,12 +57,12 @@ public class repositoryClient : baseRepository
         }
     }
 
-    public List<string> getContactNamesByclientId(int clientId)
+    public List<string> getContactNamesByclientId(int id)
     {
         try
         {
             return factoryGetClientContactNamesByClientId.getList((DbDataReader)_providerDB.GetDataReader("sp_getContactNamesByClientId", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, clientId),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
             }));
         }
         catch (SqlException SqlException)
@@ -77,12 +77,12 @@ public class repositoryClient : baseRepository
         }
     }
 
-    public List<string> getContactEmailsByclientId(int clientId)
+    public List<string> getContactEmailsByclientId(int id)
     {
         try
         {
             return factoryGetClientContactEmailsByClientId.getList((DbDataReader)_providerDB.GetDataReader("sp_getContactEmailsByClientId", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, clientId),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
             }));
         }
         catch (SqlException SqlException)
@@ -97,12 +97,32 @@ public class repositoryClient : baseRepository
         }
     }
 
-    public List<string> getContactPhonesByClientId(int clientId)
+    public List<string> getContactPhonesByClientId(int id)
     {
         try
         {
             return factoryGetClientContactPhonesByclientId.getList((DbDataReader)_providerDB.GetDataReader("sp_getContactPhonesByClientId", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, clientId),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<clientModel> getClientsByTerm(string businessName)
+    {
+        try
+        {
+            return factoryGetClientsByTerm.getList((DbDataReader)_providerDB.GetDataReader("sp_getClientsByTerm", new DbParameter[] {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@businessName", DbType.String, businessName),
             }));
         }
         catch (SqlException SqlException)
@@ -133,7 +153,7 @@ public class repositoryClient : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB,"@state", DbType.String, client.state!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@country", DbType.String, client.country!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@creationDate", DbType.DateTime, client.creationDate),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@isActive", DbType.Boolean, client.isActive)
+                dataFactory.getObjParameter(configurationManager.providerDB,"@status", DbType.Int32, client.status)
             });
 
             return Convert.ToInt32(clientIdAdded.Value);
@@ -150,7 +170,7 @@ public class repositoryClient : baseRepository
         }
     }
 
-    public int addContactName(int clientId, string name)
+    public int addContactName(int id, string name)
     {
         try
         {
@@ -158,7 +178,7 @@ public class repositoryClient : baseRepository
 
             base._providerDB.ExecuteNonQuery("sp_addClientContactName", new DbParameter[] {
                 contactNameIdAdded,
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, clientId),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@name", DbType.String, name)
             });
 
@@ -176,7 +196,7 @@ public class repositoryClient : baseRepository
         }
     }
 
-    public int addContactEmail(int clientId, string email)
+    public int addContactEmail(int id, string email)
     {
         try
         {
@@ -184,7 +204,7 @@ public class repositoryClient : baseRepository
 
             base._providerDB.ExecuteNonQuery("sp_addClientContactEmail", new DbParameter[] {
                 contactEmailIdAdded,
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, clientId),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@email", DbType.String, email)
             });
 
@@ -202,7 +222,7 @@ public class repositoryClient : baseRepository
         }
     }
 
-    public int addContactPhone(int clientId, string phone)
+    public int addContactPhone(int id, string phone)
     {
         try
         {
@@ -210,7 +230,7 @@ public class repositoryClient : baseRepository
 
             base._providerDB.ExecuteNonQuery("sp_addClientContactPhone", new DbParameter[] {
                 contactPhoneIdAdded,
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, clientId),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@phone", DbType.String, phone)
             });
 
@@ -236,7 +256,7 @@ public class repositoryClient : baseRepository
 
             base._providerDB.ExecuteNonQuery("sp_UpdateClient", new DbParameter[] {
                 clientIdUpdated,
-                dataFactory.getObjParameter(configurationManager.providerDB,"@id", DbType.String, client.id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.String, client.id),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@businessName", DbType.String, client.businessName!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@rfc", DbType.String, client.rfc!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@address", DbType.String, client.address!),
@@ -244,7 +264,7 @@ public class repositoryClient : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB,"@city", DbType.String, client.city!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@state", DbType.String, client.state!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@country", DbType.String, client.country!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@isActive", DbType.Boolean, client.isActive),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@status", DbType.Int32, client.status),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@modificationDate", DbType.DateTime, client.modificationDate!.Value)
             });
 
@@ -262,12 +282,12 @@ public class repositoryClient : baseRepository
         }
     }
 
-    public int removeContactNamesEmailsAndPhonesByClientId(int clientId)
+    public int removeContactNamesEmailsAndPhonesByClientId(int id)
     {
         try
         {
             return base._providerDB.ExecuteNonQuery("sp_removeContactNamesEmailsAndPhonesByClientId", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, clientId)
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id)
             });
         }
         catch (SqlException SqlException)

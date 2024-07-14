@@ -40,8 +40,8 @@ public class userController : ControllerBase
         }
     }
 
-    [HttpGet("getUsers")]
-    public IActionResult getUsers()
+    [HttpGet("getAll")]
+    public IActionResult getAll()
     {
         try
         {
@@ -53,8 +53,21 @@ public class userController : ControllerBase
         }
     }
 
-    [HttpPost("updateUser")]
-    public IActionResult updateUser(entities.models.userModel user)
+    [HttpPost("getUserById")]
+    public IActionResult getUserById(entities.models.userModel user)
+    {
+        try
+        {
+            return Ok(_facadeUser.getUserById(user.id));
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
+    [HttpPost("update")]
+    public IActionResult update(entities.models.userModel user)
     {
         try
         {
@@ -72,8 +85,8 @@ public class userController : ControllerBase
         }
     }
 
-    [HttpPost("addUser")]
-    public IActionResult addUser(entities.models.userModel user)
+    [HttpPost("add")]
+    public IActionResult add(entities.models.userModel user)
     {
         try
         {

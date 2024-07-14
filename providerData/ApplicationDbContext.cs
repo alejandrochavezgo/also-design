@@ -35,8 +35,7 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<application
         builder.Property(e => e.NormalizedUserName).HasColumnName("USERNAME");
         builder.Property(e => e.Firstname).HasColumnName("FIRSTNAME");
         builder.Property(e => e.Lastname).HasColumnName("LASTNAME");
-        builder.Property(e => e.IsActive).HasColumnName("ISACTIVE");
-        builder.Property(e => e.IsLocked).HasColumnName("ISLOCKED");
+        builder.Property(e => e.StatusId).HasColumnName("IDSTATUS");
         builder.Property(e => e.AccessFailedCount).HasColumnName("FAILCOUNT");
         builder.Ignore(e => e.UserName);
         builder.Ignore(e => e.EmailConfirmed);

@@ -29,6 +29,22 @@ public class facadeUser
         }
     }
 
+    public userModel getUserById(int id)
+    {
+        try
+        {
+            var user = _repositoryUser.getUserById(id);
+            // client.contactEmails = _repositoryClient.getContactEmailsByclientId(client.id);
+            // client.contactPhones = _repositoryClient.getContactPhonesByClientId(client.id);
+            return user;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public bool updateUser(userModel user)
     {
         try
@@ -55,7 +71,7 @@ public class facadeUser
             user.lastname = user.lastname.Trim().ToUpper();
             user.creationDate = DateTime.Now;
             user.email = user.email.Trim().ToUpper();
-            user.isLocked = false;
+            user.status = user.status;
             user.failCount = 0;
             return _repositoryUser.addUser(user);
         }

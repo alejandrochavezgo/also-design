@@ -11,7 +11,7 @@ function reset() {
         $('#inLastname').val('');
         $('#inUsername').val('');
         $('#inPassword').val('');
-        $('#inIsActive').prop('checked', false);
+        $('#seStatus').val(1);
     } catch (exception) {
         Swal.fire({
             title: 'Error!!',
@@ -25,9 +25,9 @@ function reset() {
     }
 }
 
-function addUser() {
+function add() {
     try {
-        fetch('addUser', {
+        fetch('add', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -36,7 +36,7 @@ function addUser() {
                 email: $('#inEmail').val(),
                 firstname: $('#inFirstname').val(),
                 lastname: $('#inLastname').val(),
-                isActive: $('#inIsActive').prop('checked'),
+                status: $('#seStatus').val(),
                 username: $('#inUsername').val(),
                 password: $('#inPassword').val()
             })

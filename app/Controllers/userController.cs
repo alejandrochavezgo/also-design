@@ -39,18 +39,33 @@ public class userController : Controller
         return View();
     }
 
-    [HttpGet("user/updateUserPartial")]
-    public IActionResult updateUserPartial(int id, string email, string firstname, string lastname, bool isActive)
+    [HttpGet("user/update")]
+    public async Task<IActionResult> update(int id)
     {
         try
         {
-            ViewData["id"] = id;
-            ViewData["email"] = email;
-            ViewData["firstname"] = firstname;
-            ViewData["lastname"] = lastname;
-            ViewData["isActive"] = isActive;
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var user = new userModel { id = id };
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:user:getUserById"]}", new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
 
-            return PartialView("_updateUserPartial");
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = responsePost.ReasonPhrase });
+            }
+
+            var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<entities.models.userModel>(responsePostAsJson);
+            clientHttp.Dispose();
+
+            ViewData["id"] = result!.id;
+            ViewData["email"] = result!.email;
+            ViewData["firstname"] = result!.firstname;
+            ViewData["lastname"] = result!.lastname;
+            ViewData["status"] = result!.status;
+
+            return View();
         }
         catch(Exception exception)
         {
@@ -62,25 +77,8 @@ public class userController : Controller
         }
     }
 
-    [HttpGet("user/addUserPartial")]
-    public IActionResult addUserPartial()
-    {
-        try
-        {
-            return PartialView("_addUserPartial");
-        }
-        catch(Exception exception)
-        {
-            return Json(new
-            {
-                isSuccess = false,
-                message = $"{exception.Message}"
-            });
-        }
-    }
-
-    [HttpPost("user/updateUser")]
-    public async Task<JsonResult> updateUser([FromBody] userModel user)
+    [HttpPost("user/update")]
+    public async Task<JsonResult> update([FromBody] userModel user)
     {
         try
         {
@@ -96,7 +94,7 @@ public class userController : Controller
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
-            var responsePost = await clientHttp.PostAsync(configurationManager.appSettings["api:routes:user:updateUser"], new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
+            var responsePost = await clientHttp.PostAsync(configurationManager.appSettings["api:routes:user:update"], new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
 
             if(!responsePost.IsSuccessStatusCode)
             {
@@ -124,8 +122,8 @@ public class userController : Controller
         }
     }
 
-    [HttpPost("user/addUser")]
-    public async Task<JsonResult> addUser([FromBody] userModel user)
+    [HttpPost("user/add")]
+    public async Task<JsonResult> add([FromBody] userModel user)
     {
         try
         {
@@ -151,7 +149,7 @@ public class userController : Controller
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
-            var responsePost = await clientHttp.PostAsync(configurationManager.appSettings["api:routes:user:addUser"], new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
+            var responsePost = await clientHttp.PostAsync(configurationManager.appSettings["api:routes:user:add"], new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
 
             if(!responsePost.IsSuccessStatusCode)
             {
@@ -179,15 +177,15 @@ public class userController : Controller
         }
     }
 
-    [HttpGet("user/getUsers")]
-    public async Task<JsonResult> getUsers()
+    [HttpGet("user/getAll")]
+    public async Task<JsonResult> getAll()
     {
         try
         {
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
-            var responseGet = await clientHttp.GetAsync($"{configurationManager.appSettings["api:routes:user:getUsers"]}");
+            var responseGet = await clientHttp.GetAsync($"{configurationManager.appSettings["api:routes:user:getAll"]}");
 
             if(!responseGet.IsSuccessStatusCode)
             {

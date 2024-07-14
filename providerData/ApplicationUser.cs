@@ -12,9 +12,9 @@ using Microsoft.EntityFrameworkCore.Query;
 
 public class applicationUser : IdentityUser
 {
-    // public int Id { get; set; }
     public int NormalizedId { get; set; }
-    public int AccessFailedCount { get; set; } 
+    public int AccessFailedCount { get; set; }
+    public int StatusId { get; set; }
     public string? UserName { get; set; }
     public string? Firstname { get; set; }
     public string? Lastname { get; set; }
@@ -31,6 +31,4 @@ public class applicationUser : IdentityUser
     public DateTime LockoutEnd { get; set; }
     public bool LockoutEnabled { get; set; }
     public bool TwoFactorEnabled { get; set; }
-    public bool IsActive { get; set; }
-    public bool IsLocked { get; set; }
 }

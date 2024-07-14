@@ -37,15 +37,35 @@ public class facadeClient
         }
     }
 
-    public clientModel getClientById(int clientId)
+    public clientModel getClientById(int id)
     {
         try
         {
-            var client = _repositoryClient.getClientById(clientId);
+            var client = _repositoryClient.getClientById(id);
             client.contactNames = _repositoryClient.getContactNamesByclientId(client.id);
             client.contactEmails = _repositoryClient.getContactEmailsByclientId(client.id);
             client.contactPhones = _repositoryClient.getContactPhonesByClientId(client.id);
             return client;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<clientModel> getClientsByTerm(string businessName)
+    {
+        try
+        {
+            var clients = _repositoryClient.getClientsByTerm(businessName);
+            foreach(var client in clients)
+            {
+                client.contactNames = _repositoryClient.getContactNamesByclientId(client.id);
+                client.contactEmails = _repositoryClient.getContactEmailsByclientId(client.id);
+                client.contactPhones = _repositoryClient.getContactPhonesByClientId(client.id);
+            }
+            return clients;
         }
         catch (Exception exception)
         {
@@ -64,12 +84,12 @@ public class facadeClient
             if (client.contactNames.Count > 0)
                 foreach(var name in client.contactNames)
                     if(!string.IsNullOrEmpty(name))
-                        _repositoryClient.addContactName(clientIdAdded, name);
+                        _repositoryClient.addContactName(clientIdAdded, name.Trim().ToUpper());
 
             if (client.contactEmails.Count > 0)
                 foreach(var email in client.contactEmails)
                     if(!string.IsNullOrEmpty(email))
-                        _repositoryClient.addContactEmail(clientIdAdded, email);
+                        _repositoryClient.addContactEmail(clientIdAdded, email.Trim().ToUpper());
 
             if (client.contactPhones.Count > 0)
                 foreach(var phone in client.contactPhones)
@@ -94,11 +114,11 @@ public class facadeClient
 
             foreach(var name in client.contactNames)
                 if(!string.IsNullOrEmpty(name))
-                    _repositoryClient.addContactName(client.id, name);
+                    _repositoryClient.addContactName(client.id, name.Trim().ToUpper());
 
             foreach(var email in client.contactEmails)
                 if(!string.IsNullOrEmpty(email))
-                    _repositoryClient.addContactEmail(client.id, email);
+                    _repositoryClient.addContactEmail(client.id, email.Trim().ToUpper());
 
             foreach(var phone in client.contactPhones)
                 if(!string.IsNullOrEmpty(phone))

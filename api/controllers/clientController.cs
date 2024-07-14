@@ -21,8 +21,8 @@ public class clientController : ControllerBase
         _facadeClient = new facadeClient();
     }
 
-    [HttpGet("getClients")]
-    public IActionResult getClients()
+    [HttpGet("getAll")]
+    public IActionResult getAll()
     {
         try
         {
@@ -47,8 +47,21 @@ public class clientController : ControllerBase
         }
     }
 
-    [HttpPost("updateClient")]
-    public IActionResult updateClient(entities.models.clientModel client)
+    [HttpPost("getClientsByTerm")]
+    public IActionResult getClientsByTerm(entities.models.clientModel client)
+    {
+        try
+        {
+            return Ok(_facadeClient.getClientsByTerm(client.businessName!));
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
+    [HttpPost("update")]
+    public IActionResult update(entities.models.clientModel client)
     {
         try
         {
@@ -66,8 +79,8 @@ public class clientController : ControllerBase
         }
     }
 
-    [HttpPost("addClient")]
-    public IActionResult addClient(entities.models.clientModel client)
+    [HttpPost("add")]
+    public IActionResult add(entities.models.clientModel client)
     {
         try
         {

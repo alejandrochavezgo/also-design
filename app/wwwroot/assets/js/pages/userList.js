@@ -1,7 +1,7 @@
 $(document).ready(function () {
     try {
         $.ajax({
-            url: 'getUsers',
+            url: 'getAll',
             method: 'GET',
             success: function (data) {
                 if(!data.isSuccess) {
@@ -30,7 +30,7 @@ $(document).ready(function () {
                         '<td>' + user.creationDateAsString + '</td>' +
                         '<td class="' + (user.modificationDateAsString === '-' ? 'text-center' : 'text-left') + '">' + user.modificationDateAsString + '</td>' +
                         '<td class="text-center">' +
-                            '<button type="button" class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="showUpdateModal(' + user.id + ', \'' + user.email + '\', \'' + user.firstname + '\', \'' + user.lastname + '\', \'' + user.isActive + '\')"><i class="ri-pencil-fill"></i></button>' +
+                            '<button type="button" class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="window.location.href=\'/user/update?id=' + user.id + '\'"><i class="ri-pencil-fill"></i></button>' +
                         '</td>' +
                     '</tr>';
                     tbody.append(row);
@@ -62,105 +62,3 @@ $(document).ready(function () {
         });
     }
 });
-
-function showUpdateModal(id, email, firstname, lastname, isActive) {
-    try {
-        const url = new URL('user/updateUserPartial', window.location.origin);
-        url.searchParams.append('id', id);
-        url.searchParams.append('email', email);
-        url.searchParams.append('firstname', firstname);
-        url.searchParams.append('lastname', lastname);
-        url.searchParams.append('isActive', isActive);
-        fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.text();
-        })
-        .then(data => {
-            if (data == '') {
-                Swal.fire({
-                    title: 'Error!!',
-                    html: 'No data to show.',
-                    icon: 'error',
-                    confirmButtonClass: 'btn btn-danger w-xs mt-2',
-                    buttonsStyling: !1,
-                    footer: '',
-                    showCloseButton:!0
-                });
-            }
-            $('#mdUser .modal-body').html(data);
-            $('#mdUser').modal('show');
-        })
-        .catch(error => {
-            Swal.fire({
-                title: 'Error!!',
-                html: error,
-                icon: 'error',
-                confirmButtonClass: 'btn btn-danger w-xs mt-2',
-                buttonsStyling: !1,
-                footer: '',
-                showCloseButton:!0
-            });
-        });
-    } catch (exception) {
-        Swal.fire({
-            title: 'Error!!',
-            html: exception,
-            icon: 'error',
-            confirmButtonClass: 'btn btn-danger w-xs mt-2',
-            buttonsStyling: !1,
-            footer: '',
-            showCloseButton:!0
-        });
-    }
-}
-
-function showAddModal() {
-    try {
-        fetch(new URL('user/addUserPartial', window.location.origin))
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.text();
-        })
-        .then(data => {
-            if (data == '') {
-                Swal.fire({
-                    title: 'Error!!',
-                    html: 'No data to show.',
-                    icon: 'error',
-                    confirmButtonClass: 'btn btn-danger w-xs mt-2',
-                    buttonsStyling: !1,
-                    footer: '',
-                    showCloseButton:!0
-                });
-            }
-            $('#mdUser .modal-body').html(data);
-            $('#mdUser').modal('show');
-        })
-        .catch(error => {
-            Swal.fire({
-                title: 'Error!!',
-                html: error,
-                icon: 'error',
-                confirmButtonClass: 'btn btn-danger w-xs mt-2',
-                buttonsStyling: !1,
-                footer: '',
-                showCloseButton:!0
-            });
-        });
-    } catch (exception) {
-        Swal.fire({
-            title: 'Error!!',
-            html: exception,
-            icon: 'error',
-            confirmButtonClass: 'btn btn-danger w-xs mt-2',
-            buttonsStyling: !1,
-            footer: '',
-            showCloseButton:!0
-        });
-    }
-}
