@@ -39,6 +39,61 @@ public class userController : Controller
         return View();
     }
 
+    [HttpPost("user/add")]
+    public async Task<JsonResult> add([FromBody] userModel user)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+                {
+                    return Json(new
+                    { 
+                        isSuccess = false,
+                        message = "Invalid data."
+                    });
+                }
+
+            user.passwordHash = userSecurityHelper.generateHash(_userManager,
+            new applicationUser(){
+                UserName = user.username,
+                NormalizedUserName = user.username,
+                Password = user.password,
+                Email = user.email,
+                NormalizedEmail = user.email
+            },
+            user.password!);
+
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responsePost = await clientHttp.PostAsync(configurationManager.appSettings["api:routes:user:add"], new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
+
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{responsePost.ReasonPhrase}"
+                });
+            }
+            clientHttp.Dispose();
+
+            return Json(new
+            { 
+                isSuccess = true,
+                message = "User added successfully."
+            });
+        }
+        catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
     [HttpGet("user/update")]
     public async Task<IActionResult> update(int id)
     {
@@ -59,11 +114,20 @@ public class userController : Controller
             var result = JsonConvert.DeserializeObject<entities.models.userModel>(responsePostAsJson);
             clientHttp.Dispose();
 
-            ViewData["id"] = result!.id;
-            ViewData["email"] = result!.email;
-            ViewData["firstname"] = result!.firstname;
-            ViewData["lastname"] = result!.lastname;
-            ViewData["status"] = result!.status;
+            ViewData["user.id"] = result!.id;
+            ViewData["user.email"] = result!.email;
+            ViewData["user.firstname"] = result!.firstname;
+            ViewData["user.lastname"] = result!.lastname;
+            ViewData["user.status"] = result!.status;
+            ViewData["employee.id"] = result.employee!.id;
+            ViewData["employee.gender"] = result.employee!.gender;
+            ViewData["employee.address"] = result.employee!.address;
+            ViewData["employee.city"] = result.employee!.city;
+            ViewData["employee.state"] = result.employee!.state;
+            ViewData["employee.zipcode"] = result.employee!.zipcode;
+            ViewData["employee.profession"] = result.employee!.profession;
+            ViewData["employee.jobPosition"] = result.employee!.jobPosition;
+            ViewData["employee.contactPhones"] = result.employee!.contactPhones;
 
             return View();
         }
@@ -110,61 +174,6 @@ public class userController : Controller
             { 
                 isSuccess = true,
                 message = "User updated successfully."
-            });
-        }
-        catch (Exception exception)
-        {
-            return Json(new
-            {
-                isSuccess = false,
-                message = $"{exception.Message}"
-            });
-        }
-    }
-
-    [HttpPost("user/add")]
-    public async Task<JsonResult> add([FromBody] userModel user)
-    {
-        try
-        {
-            if (!ModelState.IsValid)
-                {
-                    return Json(new
-                    { 
-                        isSuccess = false,
-                        message = "Invalid data."
-                    });
-                }
-
-            user.passwordHash = userSecurityHelper.generateHash(_userManager,
-            new applicationUser(){
-                UserName = user.username,
-                NormalizedUserName = user.username,
-                Password = user.password,
-                Email = user.email,
-                NormalizedEmail = user.email
-            },
-            user.password!);
-
-            var clientHttp = _clientFactory.CreateClient();
-            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
-            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
-            var responsePost = await clientHttp.PostAsync(configurationManager.appSettings["api:routes:user:add"], new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
-
-            if(!responsePost.IsSuccessStatusCode)
-            {
-                return Json(new
-                {
-                    isSuccess = false,
-                    message = $"{responsePost.ReasonPhrase}"
-                });
-            }
-            clientHttp.Dispose();
-
-            return Json(new
-            { 
-                isSuccess = true,
-                message = "User added successfully."
             });
         }
         catch (Exception exception)

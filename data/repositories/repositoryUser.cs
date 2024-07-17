@@ -57,6 +57,33 @@ public class repositoryUser : baseRepository
         }
     }
 
+    public int addContactPhone(int id, string phone)
+    {
+        try
+        {
+            var contactPhoneIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@contactPhoneIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+
+            base._providerDB.ExecuteNonQuery("sp_addUserContactPhone", new DbParameter[] {
+                contactPhoneIdAdded,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@employeeId", DbType.Int32, id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@phone", DbType.String, phone)
+            });
+
+            return Convert.ToInt32(contactPhoneIdAdded.Value);
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+
     public bool updateUser(userModel user)
     {
         try
@@ -87,7 +114,7 @@ public class repositoryUser : baseRepository
         }
     }
 
-    public bool addUser(userModel user)
+    public int addUser(userModel user)
     {
         try
         {
@@ -105,7 +132,27 @@ public class repositoryUser : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB,"@failCount", DbType.Int32, user.failCount)
             });
 
-            return Convert.ToInt32(userIdAdded.Value) > 0;
+            return Convert.ToInt32(userIdAdded.Value);
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public int removeContactPhonesByEmployeeId(int id)
+    {
+        try
+        {
+            return base._providerDB.ExecuteNonQuery("sp_removeContactPhonesByEmployeeId", new DbParameter[] {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@employeeId", DbType.Int32, id)
+            });
         }
         catch (SqlException SqlException)
         {

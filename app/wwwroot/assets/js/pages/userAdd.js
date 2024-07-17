@@ -12,6 +12,13 @@ function reset() {
         $('#inUsername').val('');
         $('#inPassword').val('');
         $('#seStatus').val(1);
+        $('#seGender').val('M');
+        $('#inAddress').val('');
+        $('#inCity').val('');
+        $('#inState').val('');
+        $('#inZipcode').val('');
+        $('#inJobPosition').val('');
+        $('#inContactPhones').val('');
     } catch (exception) {
         Swal.fire({
             title: 'Error!!',
@@ -38,7 +45,17 @@ function add() {
                 lastname: $('#inLastname').val(),
                 status: $('#seStatus').val(),
                 username: $('#inUsername').val(),
-                password: $('#inPassword').val()
+                password: $('#inPassword').val(),
+                employee: {
+                    gender: $('#seGender').val(),
+                    address: $('#inAddress').val(),
+                    city: $('#inCity').val(),
+                    state: $('#inState').val(),
+                    zipcode: $('#inZipcode').val(),
+                    jobPosition: $('#inJobPosition').val(),
+                    profession: $('#inProfession').val(),
+                    contactPhones: $('#inContactPhones').val().split(',')
+                }
             })
         })
         .then(response => {
@@ -67,8 +84,7 @@ function add() {
                 footer: '',
                 showCloseButton:!1
             }).then(function(t) {
-                $('#mdUpdateUser').modal('hide');
-                location.reload();
+                window.location.href = 'list';
             });
         })
         .catch(error => {

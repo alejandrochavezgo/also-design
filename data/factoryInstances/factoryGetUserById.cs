@@ -16,16 +16,27 @@ internal class factoryGetUserById: baseMethod<factoryGetUserById, userModel>
         {
             return new userModel
             {
-                id = conversionManager.toInt(dr["IDUSER"]),
-                username = conversionManager.toString(dr["USERNAME"]),
-                email = conversionManager.toString(dr["EMAIL"]),
-                firstname = conversionManager.toString(dr["FIRSTNAME"]),
-                lastname = conversionManager.toString(dr["LASTNAME"]),
-                status = conversionManager.toInt(dr["IDSTATUS"]),
-                creationDateAsString = conversionManager.toValidDate(dr["CREATIONDATE"]).ToString("yyyy-MM-dd hh:mm:ss"),
-                modificationDateAsString = conversionManager.toValidDate(dr["MODIFICATIONDATE"]) > DateTime.MinValue ? conversionManager.toValidDate(dr["MODIFICATIONDATE"]).ToString("yyyy-MM-dd hh:mm:ss") : "-",
-                statusColor =  getStatusColor(conversionManager.toInt(dr["IDSTATUS"])),
-                statusName = getStatusName(conversionManager.toInt(dr["IDSTATUS"]))
+                id = conversionManager.toInt(dr["USER.IDUSER"]),
+                username = conversionManager.toString(dr["USER.USERNAME"]),
+                email = conversionManager.toString(dr["USER.EMAIL"]),
+                firstname = conversionManager.toString(dr["USER.FIRSTNAME"]),
+                lastname = conversionManager.toString(dr["USER.LASTNAME"]),
+                status = conversionManager.toInt(dr["USER.IDSTATUS"]),
+                creationDateAsString = conversionManager.toValidDate(dr["USER.CREATIONDATE"]).ToString("yyyy-MM-dd hh:mm:ss"),
+                modificationDateAsString = conversionManager.toValidDate(dr["USER.MODIFICATIONDATE"]) > DateTime.MinValue ? conversionManager.toValidDate(dr["USER.MODIFICATIONDATE"]).ToString("yyyy-MM-dd hh:mm:ss") : "-",
+                statusColor =  getStatusColor(conversionManager.toInt(dr["USER.IDSTATUS"])),
+                statusName = getStatusName(conversionManager.toInt(dr["USER.IDSTATUS"])),
+                employee = new employeeModel
+                {
+                    id = conversionManager.toInt(dr["EMPLOYEE.IDEMPLOYEE"]),
+                    gender = conversionManager.toString(dr["EMPLOYEE.GENDER"]),
+                    address = conversionManager.toString(dr["EMPLOYEE.ADDRESS"]),
+                    city = conversionManager.toString(dr["EMPLOYEE.CITY"]),
+                    state = conversionManager.toString(dr["EMPLOYEE.STATE"]),
+                    zipcode = conversionManager.toString(dr["EMPLOYEE.ZIPCODE"]),
+                    profession = conversionManager.toString(dr["EMPLOYEE.PROFESSION"]),
+                    jobPosition = conversionManager.toString(dr["EMPLOYEE.JOBPOSITION"])
+                }
             };
         }
         catch (Exception exception)

@@ -101,7 +101,7 @@ public class repositoryClient : baseRepository
     {
         try
         {
-            return factoryGetClientContactPhonesByclientId.getList((DbDataReader)_providerDB.GetDataReader("sp_getContactPhonesByClientId", new DbParameter[] {
+            return factoryGetClientContactPhonesByClientId.getList((DbDataReader)_providerDB.GetDataReader("sp_getContactPhonesByClientId", new DbParameter[] {
                 dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
             }));
         }
@@ -254,7 +254,7 @@ public class repositoryClient : baseRepository
         {
             var clientIdUpdated = dataFactory.getObjParameter(configurationManager.providerDB, "@clientIdUpdated", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
 
-            base._providerDB.ExecuteNonQuery("sp_UpdateClient", new DbParameter[] {
+            base._providerDB.ExecuteNonQuery("sp_updateClient", new DbParameter[] {
                 clientIdUpdated,
                 dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.String, client.id),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@businessName", DbType.String, client.businessName!),

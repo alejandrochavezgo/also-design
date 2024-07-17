@@ -17,4 +17,5 @@ public class userModel
     public string? modificationDateAsString { get; set; }
     public string? statusColor { get; set; }
     public string? statusName { get; set; }
+    public employeeModel? employee { get; set; }
 }

@@ -5,7 +5,7 @@ using common.conversions;
 using common.logging;
 using Newtonsoft.Json;
 
-internal class factoryGetClientContactPhonesByClientId: baseMethod<factoryGetClientContactPhonesByClientId, string>
+internal class factoryGetEmployeeContactPhonesByEmployeeId: baseMethod<factoryGetEmployeeContactPhonesByEmployeeId, string>
 {
     private log _logger = new log();
 

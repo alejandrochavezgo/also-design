@@ -4,7 +4,7 @@ document.querySelectorAll('.uppercase-input').forEach(input => {
     });
 });
 
-function updateUser() {
+function update() {
     try {
         fetch('update', {
             method: 'post',
@@ -12,11 +12,23 @@ function updateUser() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                id: $('#inId').val(),
-                email: $('#inEmail').val(),
-                firstname: $('#inFirstname').val(),
-                lastname: $('#inLastname').val(),
-                status: $('#seStatus').val()
+                id: $('#inUserId').val(),
+                email: $('#inUserEmail').val(),
+                password: $('#inUserPassword').val(),
+                firstname: $('#inUserFirstname').val(),
+                lastname: $('#inUserLastname').val(),
+                status: $('#seUserStatus').val(),
+                employee: {
+                    id: $('#inEmployeeId').val(),
+                    gender: $('#seEmployeeGender').val(),
+                    address: $('#inEmployeeAddress').val(),
+                    city: $('#inEmployeeCity').val(),
+                    state: $('#inEmployeeState').val(),
+                    zipcode: $('#inEmployeeZipcode').val(),
+                    jobPosition: $('#inEmployeeJobPosition').val(),
+                    profession: $('#inEmployeeProfession').val(),
+                    contactPhones: $('#inEmployeeContactPhones').val().split(',')
+                }
             })
         })
         .then(response => {
@@ -45,8 +57,7 @@ function updateUser() {
                 footer: '',
                 showCloseButton:!1
             }).then(function(t) {
-                $('#mdUpdateUser').modal('hide');
-                location.reload();
+                location.reload(true);
             });
         })
         .catch(error => {

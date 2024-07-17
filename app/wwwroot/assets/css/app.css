@@ -99,3 +99,9 @@
 .width-0per {
   width: 0%;
 }
+.form-control-tax {
+  padding: 0;
+  width: 30%;
+  display: inline;
+  margin-left: 5px;
+}

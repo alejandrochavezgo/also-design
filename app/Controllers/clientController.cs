@@ -135,7 +135,7 @@ public class clientController : Controller
     }
 
     [HttpGet("client/getClientByTerm")]
-    public async Task<IActionResult>  getClientByTerm(string businessName)
+    public async Task<IActionResult> getClientByTerm(string businessName)
     {
         try
         {
@@ -151,10 +151,10 @@ public class clientController : Controller
             }
 
             var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<List<entities.models.clientModel>>(responseGetAsJson);
+            var results = JsonConvert.DeserializeObject<List<entities.models.clientModel>>(responseGetAsJson);
             clientHttp.Dispose();
 
-            return Json(result);
+            return Json(results);
         }
         catch (Exception e)
         {

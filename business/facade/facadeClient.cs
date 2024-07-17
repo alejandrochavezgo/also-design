@@ -4,6 +4,7 @@ using common.logging;
 using data.repositories;
 using entities.models;
 using Newtonsoft.Json;
+using System.Transactions;
 
 public class facadeClient
 {
@@ -76,60 +77,80 @@ public class facadeClient
 
     public bool addClient(clientModel client)
     {
-        try
+        using(var transactionScope = new TransactionScope())
         {
-            client.creationDate = DateTime.Now;
-            var clientIdAdded = _repositoryClient.addClient(client);
+            try
+            {
+                client.creationDate = DateTime.Now;
+                var clientIdAdded = _repositoryClient.addClient(client);
 
-            if (client.contactNames.Count > 0)
-                foreach(var name in client.contactNames)
-                    if(!string.IsNullOrEmpty(name))
-                        _repositoryClient.addContactName(clientIdAdded, name.Trim().ToUpper());
+                if (client.contactNames.Count > 0)
+                    foreach(var name in client.contactNames)
+                        if(!string.IsNullOrEmpty(name))
+                            _repositoryClient.addContactName(clientIdAdded, name.Trim().ToUpper());
 
-            if (client.contactEmails.Count > 0)
-                foreach(var email in client.contactEmails)
-                    if(!string.IsNullOrEmpty(email))
-                        _repositoryClient.addContactEmail(clientIdAdded, email.Trim().ToUpper());
+                if (client.contactEmails.Count > 0)
+                    foreach(var email in client.contactEmails)
+                        if(!string.IsNullOrEmpty(email))
+                            _repositoryClient.addContactEmail(clientIdAdded, email.Trim().ToUpper());
 
-            if (client.contactPhones.Count > 0)
-                foreach(var phone in client.contactPhones)
-                    if(!string.IsNullOrEmpty(phone))
-                        _repositoryClient.addContactPhone(clientIdAdded, phone);
+                if (client.contactPhones.Count > 0)
+                    foreach(var phone in client.contactPhones)
+                        if(!string.IsNullOrEmpty(phone))
+                            _repositoryClient.addContactPhone(clientIdAdded, phone);
+                
+                var result = clientIdAdded > 0;
+                if(result)
+                    transactionScope.Complete();
+                else
+                    transactionScope.Dispose();
 
-            return clientIdAdded > 0;
-        }
-        catch (Exception exception)
-        {
-            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
-            throw exception;
+                return result;
+            }
+            catch (Exception exception)
+            {
+                transactionScope.Dispose();
+                _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+                throw exception;
+            }
         }
     }
 
     public bool updateClient(clientModel client)
     {
-        try
+        using(var transactionScope = new TransactionScope())
         {
-            client.modificationDate = DateTime.Now;
-            _repositoryClient.removeContactNamesEmailsAndPhonesByClientId(client.id);
+            try
+            {
+                client.modificationDate = DateTime.Now;
+                _repositoryClient.removeContactNamesEmailsAndPhonesByClientId(client.id);
 
-            foreach(var name in client.contactNames)
-                if(!string.IsNullOrEmpty(name))
-                    _repositoryClient.addContactName(client.id, name.Trim().ToUpper());
+                foreach(var name in client.contactNames)
+                    if(!string.IsNullOrEmpty(name))
+                        _repositoryClient.addContactName(client.id, name.Trim().ToUpper());
 
-            foreach(var email in client.contactEmails)
-                if(!string.IsNullOrEmpty(email))
-                    _repositoryClient.addContactEmail(client.id, email.Trim().ToUpper());
+                foreach(var email in client.contactEmails)
+                    if(!string.IsNullOrEmpty(email))
+                        _repositoryClient.addContactEmail(client.id, email.Trim().ToUpper());
 
-            foreach(var phone in client.contactPhones)
-                if(!string.IsNullOrEmpty(phone))
-                    _repositoryClient.addContactPhone(client.id, phone);
+                foreach(var phone in client.contactPhones)
+                    if(!string.IsNullOrEmpty(phone))
+                        _repositoryClient.addContactPhone(client.id, phone);
 
-            return _repositoryClient.updateClient(client) > 0;
-        }
-        catch (Exception exception)
-        {
-            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
-            throw exception;
+                var result = _repositoryClient.updateClient(client) > 0;
+                if(result)
+                    transactionScope.Complete();
+                else
+                    transactionScope.Dispose();
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                transactionScope.Dispose();
+                _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+                throw exception;
+            }
         }
     }
 }
