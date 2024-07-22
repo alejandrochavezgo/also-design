@@ -1,11 +1,7 @@
 @using Newtonsoft.Json;
 @{
     ViewData["title"] = "Add Quotation | Also Design";
-    var user = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Context.Request.Cookies["userCookie"]!);
-    var firstname = user!.firstname!.ToUpper();
-    var lastname = user.lastname!.ToUpper();
-    var profession = "ING.".ToUpper();
-    var jobPosition = "GERENTE DE INGENIERÍA".ToUpper();
+    var phones = ViewData["employee.contactPhones"] as List<string>;
 }
 @section styles
 {
@@ -49,10 +45,7 @@
                                 <h6>DISEÑO ELECTROMECÁNICO INDUSTRIAL</h6>
                                 <h6>"RESPONSABILIDAD, CALIDAD E INNOVACIÓN TECNOLÓGICA"</h6>
                             </div>
-                            <div class="col-3 text-center">
-                                <h6><span class="text-muted fw-semibold">QUOTATION</span></h6>
-                                <input type="text" class="form-control text-center" id="inQuotationCode" disabled>
-                            </div>
+                            <div class="col-3 text-center"></div>
                         </div>
                         <div class="row pt-4 text-center border-bottom border-bottom-dashed">
                             <div class="col-12">
@@ -108,7 +101,6 @@
                                                 <tr class="table-active">
                                                     <th scope="col" style=""></th>
                                                     <th scope="col" style="width: 50px;">#</th>
-                                                    <th scope="col" style="width: 50px;">Code</th>
                                                     <th scope="col">Description</th>
                                                     <th scope="col">Quantity</th>
                                                     <th scope="col">Unit</th>
@@ -122,10 +114,11 @@
                                                         <button id="addItem" type="button" class="btn btn-success btn-sm btn-icon waves-effect waves-light"><i class="ri-add-circle-fill"></i></button>
                                                     </td>
                                                     <td scope="row">1</td>
-                                                    <td scope="row">-</td>
                                                     <td class="text-start">
-                                                        <input type="text" class="form-control fw-medium quotation-item mb-1 bg-light border-0" id="inQuotationItem" placeholder="Search Item...">
-                                                        <textarea class="form-control bg-light border-0" id="productDetails-1" rows="2" placeholder="Item Details"></textarea>
+                                                        <textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Description"></textarea>
+                                                        <textarea class="form-control fw-medium mb-1 bg-light border-0" rows="2" placeholder="Material"></textarea>
+                                                        <textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Details"></textarea>
+                                                        <input class="form-control" type="file">
                                                     </td>
                                                     <td>
                                                         <div class="input-step">
@@ -134,43 +127,69 @@
                                                             <button type="button" class="plus">+</button>
                                                         </div>
                                                     </td>
-                                                    <td>-</td>
-                                                    <td class="text-end">$0.00</td>
-                                                    <td class="text-end">$0.00</td>
+                                                    <td>
+                                                        <select class="form-select">
+                                                            <option value="EA">EA</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <input class="form-control text-end numerical-mask subtotal-value" value="0.00" />
+                                                    </td>
+                                                    <td class="text-end total-value">
+                                                        0.00
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="border-top border-top-dashed mt-2">
-                                        <table class="table table-borderless table-nowrap align-middle mb-0 ms-auto" style="width:250px">
-                                            <tbody>
-                                                <tr>
-                                                    <td>Sub Total</td>
-                                                    <td id="tdQuotationSubTotal" class="text-end">$0.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Estimated Tax <input id="inQuotationTax" class="form-control form-control-tax text-center" value="1"> %</td>
-                                                    <td id="tdQuotationTotalAmount" class="text-end">$0.00</td>
-                                                </tr>
-                                                <tr class="border-top border-top-dashed fs-15">
-                                                    <th scope="row">Total Amount</th>
-                                                    <th id="thQuotationTotalAmount" class="text-end">$0.00</th>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <textarea class="form-control fw-semibold bg-light border-0 mt-3" rows="4" placeholder="Notes">@ViewData["enterprise.quotation.toolNotes"]</textarea>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="mt-3">
-                                        <h6 class="text-muted text-uppercase fw-semibold mb-3">ATENTAMENTE</h6>
-                                        <p class="text-muted mb-1">@profession. @firstname @lastname</p>
-                                        <select class="form-select mb-1" id="userContactPhone">
-                                            <option value="1">(664) 224-1107</option>
-                                            <option value="1">(619) 779-2108</option>
-                                        </select>
-                                        <p class="text-muted mb-1">@jobPosition</p>
+                                    <div class="border-top border-top-dashed mt-2">
+                                        <div class="row">
+                                            <div class="col-7">
+                                                <textarea class="form-control fw-semibold bg-light border-0 mt-3" rows="4" placeholder="Notes">@ViewData["enterprise.quotation.generalNotes"]</textarea>
+                                            </div>
+                                            <div class="col-5">
+                                                <table class="table table-borderless table-nowrap align-middle mb-0 ms-auto" style="width:250px">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Sub Total</td>
+                                                            <td id="tdQuotationSubTotal" class="text-end">$0.00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Estimated Tax <input id="inQuotationTax" class="form-control form-control-tax text-center" value="1"> %</td>
+                                                            <td id="tdQuotationTaxAmount" class="text-end">$0.00</td>
+                                                        </tr>
+                                                        <tr class="border-top border-top-dashed fs-15">
+                                                            <th scope="row">Total Amount</th>
+                                                            <th id="thQuotationTotalAmount" class="text-end">$0.00</th>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-6">
+                                            <h6 class="text-muted text-uppercase fw-semibold mb-3">ATENTAMENTE</h6>
+                                            <p class="text-muted mb-1">@ViewData["employee.profession"]. @ViewData["user.firstname"] @ViewData["user.lastname"]</p>
+                                            <select class="form-select mb-1" id="userContactPhone">
+                                                @foreach (var phone in phones!)
+                                                {
+                                                    <option value="@phone">@phone</option>
+                                                }
+                                            </select>
+                                            <p class="text-muted mb-1">@ViewData["employee.jobPosition"]</p>
+                                        </div>
                                     </div>
                                     <div class="row pt-4 pb-27px text-center border-bottom border-bottom-dashed">
                                         <div class="col-12">
-                                            <h6 class="text-muted text-uppercase fw-semibold mb-3">TIJUANA BAJA CALIFORNIA MÉXICO</h6>
+                                            <h6 class="text-muted text-uppercase fw-semibold mb-3">@ViewData["enterprise.location"]</h6>
                                         </div>
                                     </div>
                                 </div>

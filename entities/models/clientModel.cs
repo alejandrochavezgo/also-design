@@ -17,6 +17,8 @@ public class clientModel
     public string? modificationDateAsString { get; set; }
     public string? statusColor { get; set; }
     public string? statusName { get; set; }
+    public string? mainContactName { get; set; }
+    public string? mainContactPhone { get; set; }
     public List<string>? contactNames { get; set; }
     public List<string>? contactEmails { get; set; }
     public List<string>? contactPhones { get; set; }

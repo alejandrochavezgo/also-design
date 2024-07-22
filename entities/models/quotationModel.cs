@@ -1,3 +1,6 @@
+using System.Drawing.Printing;
+using entities.enums;
+
 namespace entities.models;
 
 public class quotationModel
@@ -6,8 +9,9 @@ public class quotationModel
     public int status { get; set; }
     public string? code { get; set; }
     public decimal? subtotal { get; set; }
-    public decimal? tax { get; set; }
-    public decimal? total { get; set; }
+    public decimal? taxRate { get; set; }
+    public decimal? taxAmount { get; set; }
+    public decimal? totalAmount { get; set; }
     public DateTime creationDate { get; set; }
     public string? creationDateAsString { get; set; }
     public DateTime? modificationDate { get; set; }
@@ -18,4 +22,10 @@ public class quotationModel
     public userModel? user { get; set; }
     public paymentModel? payment { get; set; }
     public currencyModel? currency { get; set; }
+    public string? toolNotes { get; set; }
+    public string? generalNotes { get; set; }
+    public List<quotationItemsModel>? items { get; set; }
+    public string? notes { get; set; }
+    public string? description { get; set; }
+    public configType configType { get; set; }
 }
