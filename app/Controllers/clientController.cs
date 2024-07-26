@@ -62,15 +62,15 @@ public class clientController : Controller
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
             var client = new clientModel { id = id };
-            var responseGet = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:client:getClientById"]}", new StringContent(JsonConvert.SerializeObject(client), Encoding.UTF8, "application/json"));
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:client:getClientById"]}", new StringContent(JsonConvert.SerializeObject(client), Encoding.UTF8, "application/json"));
 
-            if(!responseGet.IsSuccessStatusCode)
+            if(!responsePost.IsSuccessStatusCode)
             {
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = responseGet.ReasonPhrase });
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = responsePost.ReasonPhrase });
             }
 
-            var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<entities.models.clientModel>(responseGetAsJson);
+            var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<entities.models.clientModel>(responsePostAsJson);
             clientHttp.Dispose();
 
             ViewData["id"] = result!.id;
@@ -192,7 +192,7 @@ public class clientController : Controller
             clientHttp.Dispose();
 
             return Json(new
-            { 
+            {
                 isSuccess = true,
                 message = "Client added successfully."
             });

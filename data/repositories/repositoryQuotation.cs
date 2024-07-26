@@ -36,4 +36,113 @@ public class repositoryQuotation : baseRepository
             throw exception;
         }
     }
+
+    public quotationModel getQuotationById(int id)
+    {
+        try
+        {
+            return factoryGetQuotationById.get((DbDataReader)_providerDB.GetDataReader("sp_getQuotationById", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@quotationId", DbType.Int32, id),
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public int addQuotation(quotationModel quotation)
+    {
+        try
+        {
+            var quotationIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@quotationIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+
+            base._providerDB.ExecuteNonQuery("sp_addQuotation", new DbParameter[] {
+                quotationIdAdded,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, quotation.client!.id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@userId", DbType.Int32, quotation.user!.id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@status", DbType.Int32, quotation.status),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@paymentId", DbType.Int32, quotation.payment!.id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@currencyId", DbType.Int32, quotation.currency!.id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@subtotal", DbType.Decimal, quotation.subtotal!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@taxRate", DbType.Decimal, quotation.taxRate!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@taxAmount", DbType.Decimal, quotation.taxAmount!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@totalAmount", DbType.Decimal, quotation.totalAmount!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@creationDate", DbType.DateTime, quotation.creationDate),
+            });
+
+            return Convert.ToInt32(quotationIdAdded.Value);
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public int addQuotationItem(quotationItemsModel quotationItem, int quotationId)
+    {
+        try
+        {
+            var quotationItemIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@quotationItemIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+
+            base._providerDB.ExecuteNonQuery("sp_addQuotationItem", new DbParameter[] {
+                quotationItemIdAdded,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@quotationId", DbType.Int32, quotationId),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@quantity", DbType.Int32, quotationItem.quantity),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@unit", DbType.String, quotationItem.unit!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@unitValue", DbType.Decimal, quotationItem.unitValue),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@totalValue", DbType.Decimal, quotationItem.totalValue),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@description", DbType.String, quotationItem.description!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@material", DbType.String, quotationItem.material!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@details", DbType.String, quotationItem.details!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@imagePath", DbType.String, quotationItem.imagePath!)
+            });
+
+            return Convert.ToInt32(quotationItemIdAdded.Value);
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public bool deleteQuotationById(int id)
+    {
+        try
+        {
+            base._providerDB.ExecuteNonQuery("sp_deleteQuotationById", new DbParameter[] {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@quotationId", DbType.Int32, id),
+            });
+            return true;
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
 }

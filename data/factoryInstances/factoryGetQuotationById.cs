@@ -6,7 +6,7 @@ using common.logging;
 using entities.models;
 using Newtonsoft.Json;
 
-internal class factoryGetQuotations: baseMethod<factoryGetQuotations, quotationModel>
+internal class factoryGetQuotationById: baseMethod<factoryGetQuotationById, quotationModel>
 {
     private log _logger = new log();
 

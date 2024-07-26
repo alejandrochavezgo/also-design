@@ -69,7 +69,7 @@ public class clientController : ControllerBase
                 return BadRequest("The client was not modified.");
 
             if (!_facadeClient.updateClient(client))
-                return BadRequest("Client not mo.");
+                return BadRequest("Client not modified.");
 
             return Ok();
         }
@@ -85,7 +85,7 @@ public class clientController : ControllerBase
         try
         {
             if(client == null)
-                return BadRequest("The client was not modified.");
+                return BadRequest("Missing data.");
 
             if (!_facadeClient.addClient(client))
                 return BadRequest("Client not added.");

@@ -178,8 +178,24 @@ public class quotationController : Controller
                 }
             }
 
-            //save images into server... done.
-            //save quotation with paths... pending.
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            quotation.user = new userModel
+            {
+                id = userCookie!.id
+            };
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:quotation:add"]}", new StringContent(JsonConvert.SerializeObject(quotation), Encoding.UTF8, "application/json"));
+
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{responsePost.ReasonPhrase}"
+                });
+            }
+            clientHttp.Dispose();
 
             return Json(new
             {
@@ -188,6 +204,42 @@ public class quotationController : Controller
             });
         }
         catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
+    [HttpPost("quotation/delete")]
+    public async Task<JsonResult> delete([FromBody] quotationModel quotation)
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:quotation:delete"]}", new StringContent(JsonConvert.SerializeObject(quotation), Encoding.UTF8, "application/json"));
+
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{responsePost.ReasonPhrase}"
+                });
+            }
+            clientHttp.Dispose();
+
+            return Json(new
+            { 
+                isSuccess = true,
+                message = "Quotation deleted successfully."
+            });
+        }
+        catch(Exception exception)
         {
             return Json(new
             {

@@ -343,6 +343,10 @@ function addQuotation() {
             payment: {
                 id: $('#quotationPaymentType').val(),
             },
+            status: "1",
+            currency: {
+                id: $('#quotationCurrencyType').val(),
+            },
             subTotal: parseFloat($('#tdQuotationSubTotal').text().replace('$', '').trim()),
             taxRate: parseFloat($('#inQuotationTax').val()),
             taxAmount: parseFloat($('#tdQuotationTaxAmount').text().replace('$', '').trim()),
@@ -353,8 +357,6 @@ function addQuotation() {
         };
         formData.append('quotation', JSON.stringify(quotation));
 
-        console.log(quotation);
-
         fetch('add', {
             method: 'post',
             headers: {
@@ -364,14 +366,29 @@ function addQuotation() {
         })
         .then(response => response.json())
         .then(data => {
+            if (!data.isSuccess) {
+                Swal.fire({
+                    title: 'Error!!',
+                    html: data.message,
+                    icon: 'error',
+                    confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                    buttonsStyling: !1,
+                    footer: '',
+                    showCloseButton: !1
+                });
+                return;
+            }
+
             Swal.fire({
-                title: 'Success!',
-                text: 'Quotation added successfully.',
+                title: 'Success',
+                html: data.message,
                 icon: 'success',
                 confirmButtonClass: 'btn btn-success w-xs mt-2',
-                buttonsStyling: false,
+                buttonsStyling: !1,
                 footer: '',
-                showCloseButton: true
+                showCloseButton: !1
+            }).then(function (t) {
+                window.location.href = 'list';
             });
         })
         .catch(error => {
