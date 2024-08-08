@@ -8,5 +8,5 @@ public class enterpriseModel
     public string? city { get; set; }
     public string? state { get; set; }
     public string? country { get; set; }
-    public quotationModel? quotation { get; set; }
+    public quotationDefaultValuesModel? quotationDefaultValues { get; set; }
 }

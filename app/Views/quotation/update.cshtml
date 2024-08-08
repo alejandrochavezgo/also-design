@@ -1,7 +1,10 @@
 @using Newtonsoft.Json;
 @{
-    ViewData["title"] = "Add Quotation | Also Design";
-    var employeeContactPhones = ViewData["employee.contactPhones"] as List<string> ?? new List<string>();;
+    ViewData["title"] = "Update Quotation | Also Design";
+    var phones = ViewData["employee.contactPhones"] as List<string> ?? new List<string>();
+    var clientContactNames = ViewData["client.contactNames"] as List<string> ?? new List<string>();
+    var clientContactPhones = ViewData["client.contactPhones"] as List<string> ?? new List<string>();
+    var employeeContactPhones = ViewData["employee.contactPhones"] as List<string> ?? new List<string>();
 }
 @section styles
 {
@@ -12,11 +15,11 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">Add Quotation</h4>
+                    <h4 class="mb-sm-0">Update Quotation</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item color-495057">Quotation</li>
-                            <li class="breadcrumb-item color-495057">Add Quotation</li>
+                            <li class="breadcrumb-item color-495057">Update Quotation</li>
                         </ol>
                     </div>
                 </div>
@@ -27,7 +30,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="alert-custom alert-success alert-borderless" role="alert">
-                            This module will allow you to create quotes efficiently and accurately for various clients. Here, you can manage and generate detailed quotations, ensuring that each client receives a personalized and professional proposal.
+                            This module allows users to modify, update, and manage existing quotations efficiently. It includes features to adjust product details, prices, and payment terms in real-time.
                         </div>
                     </div>
                     <div class="card-body">
@@ -45,7 +48,10 @@
                                 <h6>DISEÑO ELECTROMECÁNICO INDUSTRIAL</h6>
                                 <h6>"RESPONSABILIDAD, CALIDAD E INNOVACIÓN TECNOLÓGICA"</h6>
                             </div>
-                            <div class="col-3 text-center"></div>
+                            <div class="col-3 text-center">
+                                <input id="inQuotationId" value="@ViewData["quotation.id"]" hidden>
+                                <input class="form-control text-center" value="@ViewData["quotation.code"]" disabled>
+                            </div>
                         </div>
                         <div class="row pt-4 text-center border-bottom border-bottom-dashed">
                             <div class="col-12">
@@ -56,33 +62,43 @@
                         <div class="row pt-4 text-center">
                             <div class="col-1">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">CLIENT ID</p>
-                                <input type="text" class="form-control text-center" id="inClientId" disabled>
+                                <input type="text" class="form-control text-center" id="inClientId" disabled value="@ViewData["client.id"]">
                             </div>
                             <div class="col-5">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">CLIENT</p>
-                                <input type="text" class="form-control text-center" id="inClientBusinessName" placeholder="SEARCH CLIENT...">
+                                <input type="text" class="form-control text-center" id="inClientBusinessName" placeholder="SEARCH CLIENT..." value="@ViewData["client.businessName"]">
                             </div>
                             <div class="col-4">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">MAIN CONTACT</p>
-                                <select class="form-select" id="seClientContactNames"></select>
+                                <select class="form-select" id="seClientContactNames">
+                                    @foreach (var clientContactName in clientContactNames!)
+                                    {
+                                        <option value="@clientContactName">@clientContactName</option>
+                                    }
+                                </select>
                             </div>
                             <div class="col-2">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">CITY</p>
-                                <input type="text" class="form-control text-center" id="inClientCity" disabled>
+                                <input type="text" class="form-control text-center" id="inClientCity" disabled value="@ViewData["client.city"]">
                             </div>
                         </div>
                         <div class="row pt-27px text-center">
                             <div class="col-2">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">MAIN PHONE</p>
-                                <select class="form-select" id="seClientContactPhones"></select>
+                                <select class="form-select" id="seClientContactPhones">
+                                    @foreach (var clientContactPhone in clientContactPhones!)
+                                    {
+                                        <option value="@clientContactPhone">@clientContactPhone</option>
+                                    }
+                                </select>
                             </div>
                             <div class="col-4">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">ADDRESS</p>
-                                <input type="text" class="form-control text-center" id="inClientAddress" disabled>
+                                <input type="text" class="form-control text-center" id="inClientAddress" disabled value="@ViewData["client.address"]">
                             </div>
                             <div class="col-2">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">RFC</p>
-                                <input type="text" class="form-control text-center" id="inClientRfc" disabled>
+                                <input type="text" class="form-control text-center" id="inClientRfc" disabled value="@ViewData["client.rfc"]">
                             </div>
                             <div class="col-2">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">PAYMENT TYPE</p>
@@ -115,59 +131,75 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="tbItems">
-                                                <tr>
-                                                    <td class="width-0per">
-                                                        <button id="addItem" type="button" class="btn btn-success btn-sm btn-icon waves-effect waves-light"><i class="ri-add-circle-fill"></i></button>
-                                                    </td>
-                                                    <td scope="row">1</td>
-                                                    <td class="text-start">
-                                                        <textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Description"></textarea>
-                                                        <textarea class="form-control fw-medium mb-1 bg-light border-0" rows="2" placeholder="Material"></textarea>
-                                                        <textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Details"></textarea>
-                                                        <input class="form-control mb-1" type="file">
-                                                        <textarea class="form-control fw-medium bg-light border-0" rows="4" placeholder="Notes">@ViewData["enterprise.quotationDefaultValues.items.notes"]</textarea>
-                                                    </td>
-                                                    <td>
-                                                        <div class="input-step">
-                                                            <button type="button" class="minus_1">–</button>
-                                                            <input type="number" class="product-quantity" value="1" min="1" max="100" readonly>
-                                                            <button type="button" class="plus_1">+</button>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <select class="form-select">
-                                                            <option value="EA">EA</option>
-                                                        </select>
-                                                    </td>
-                                                    <td class="text-end">
-                                                        <input class="form-control text-end numerical-mask subtotal-value" value="0.00" />
-                                                    </td>
-                                                    <td class="text-end total-value">
-                                                        0.00
-                                                    </td>
-                                                </tr>
+                                                @if (ViewData["quotation.items"] != null)
+                                                {
+                                                    var quotationItems = ViewData["quotation.items"] as List<entities.models.quotationItemsModel>;
+                                                    if (quotationItems != null)
+                                                    {
+                                                        var index = 1;
+                                                        foreach (var item in quotationItems)
+                                                        {
+                                                            <tr>
+                                                                <td class="width-0per"></td>
+                                                                <td scope="row">@index</td>
+                                                                <td class="text-start">
+                                                                    <input class="itemId" hidden value="@item.id">
+                                                                    <textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Description">@item.description</textarea>
+                                                                    <textarea class="form-control fw-medium mb-1 bg-light border-0" rows="2" placeholder="Material">@item.material</textarea>
+                                                                    <textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Details">@item.details</textarea>
+                                                                    <input class="form-control mb-1 fileInput" id="fileInput" type="file">
+                                                                    @if (!string.IsNullOrEmpty(item.imageString))
+                                                                    {
+                                                                        <img src="@item.imageString" class="rounded avatar-xl mb-1 image-item" />
+                                                                        <button type="button" class="btn btn-danger btn-icon waves-effect waves-light delete-image"><i class="ri-delete-bin-5-line"></i></button>
+                                                                    }
+                                                                    <textarea class="form-control fw-medium bg-light border-0" rows="4" placeholder="Notes">@item.notes</textarea>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="input-step">
+                                                                        <button type="button" class="minus_@index">–</button>
+                                                                        <input type="number" class="product-quantity" value="@item.quantity" min="1" max="100" readonly>
+                                                                        <button type="button" class="plus_@index">+</button>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <select class="form-select">
+                                                                        <option value="EA" selected>@item.unit</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td class="text-end">
+                                                                    <input class="form-control text-end numerical-mask subtotal-value" value="@item.unitValue.ToString("F2")" />
+                                                                </td>
+                                                                <td class="text-end total-value">
+                                                                    @item.totalValue.ToString("F2")
+                                                                </td>
+                                                            </tr>
+                                                            index++;
+                                                        }
+                                                    }
+                                                }
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="border-top border-top-dashed mt-2">
                                         <div class="row">
                                             <div class="col-7">
-                                                <textarea class="form-control fw-semibold bg-light border-0 mt-3" rows="4" placeholder="Notes">@ViewData["enterprise.quotationDefaultValues.text"]</textarea>
+                                                <textarea class="form-control fw-semibold bg-light border-0 mt-3" rows="4" placeholder="Notes">@ViewData["quotation.generalNotes"]</textarea>
                                             </div>
                                             <div class="col-5">
                                                 <table class="table table-borderless table-nowrap align-middle mb-0 ms-auto" style="width:250px">
                                                     <tbody>
                                                         <tr>
                                                             <td>Sub Total</td>
-                                                            <td id="tdQuotationSubTotal" class="text-end">$0.00</td>
+                                                            <td id="tdQuotationSubTotal" class="text-end">$@ViewData["quotation.subtotal"]</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>Estimated Tax <input id="inQuotationTax" class="form-control form-control-tax text-center" value="1"> %</td>
-                                                            <td id="tdQuotationTaxAmount" class="text-end">$0.00</td>
+                                                            <td>Estimated Tax <input id="inQuotationTax" class="form-control form-control-tax text-center" value="@ViewData["quotation.taxRate"]"> %</td>
+                                                            <td id="tdQuotationTaxAmount" class="text-end">$@ViewData["quotation.taxAmount"]</td>
                                                         </tr>
                                                         <tr class="border-top border-top-dashed fs-15">
                                                             <th scope="row">Total Amount</th>
-                                                            <th id="thQuotationTotalAmount" class="text-end">$0.00</th>
+                                                            <th id="thQuotationTotalAmount" class="text-end">$@ViewData["quotation.totalAmount"]</th>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -190,7 +222,7 @@
                                     </div>
                                     <div class="row pt-4 pb-27px text-center border-bottom border-bottom-dashed">
                                         <div class="col-12">
-                                            <h6 class="text-muted text-uppercase fw-semibold mb-3">@ViewData["enterprise.location"]</h6>
+                                            @* <h6 class="text-muted text-uppercase fw-semibold mb-3">@ViewData["enterprise.location"]</h6> *@
                                         </div>
                                     </div>
                                 </div>
@@ -198,7 +230,7 @@
                         </div>
                         <div class="row pt-27px">
                             <div class="col-12">
-                                <button type="button" class="btn btn-success w-100per" onclick="addQuotation()">Add</button>
+                                <button type="button" class="btn btn-success w-100per" onclick="updateQuotation()">Update</button>
                             </div>
                         </div>
                     </div>
@@ -209,6 +241,6 @@
 </div>
 @section scripts
 {
-    <script src="../assets/js/pages/quotationAdd.js"></script>
+    <script src="../assets/js/pages/quotationUpdate.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 }

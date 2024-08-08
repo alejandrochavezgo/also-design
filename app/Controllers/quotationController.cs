@@ -101,7 +101,7 @@ public class quotationController : Controller
             var enterprise = new enterpriseModel
             {
                 id = 1,
-                quotation = new quotationModel
+                quotationDefaultValues = new quotationDefaultValuesModel
                 {
                     configType = entities.enums.configType.QUOTATIONS
                 }
@@ -123,8 +123,8 @@ public class quotationController : Controller
             ViewData["employee.jobPosition"] = resultUser.employee!.jobPosition;
             ViewData["employee.contactPhones"] = resultUser.employee!.contactPhones;
             ViewData["enterprise.location"] = $"{resultEnterprises!.First().city} {resultEnterprises!.First()!.state} {resultEnterprises!.First()!.country}";
-            ViewData["enterprise.quotation.toolNotes"] = resultEnterprises!.First().quotation!.notes;
-            ViewData["enterprise.quotation.generalNotes"] = resultEnterprises!.Last().quotation!.notes;
+            ViewData["enterprise.quotationDefaultValues.items.notes"] = resultEnterprises!.First().quotationDefaultValues!.text;
+            ViewData["enterprise.quotationDefaultValues.generalNotes"] = resultEnterprises!.Last().quotationDefaultValues!.text;
 
             return View();
         }
@@ -180,10 +180,6 @@ public class quotationController : Controller
 
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
-            quotation.user = new userModel
-            {
-                id = userCookie!.id
-            };
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
             var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:quotation:add"]}", new StringContent(JsonConvert.SerializeObject(quotation), Encoding.UTF8, "application/json"));
 
@@ -240,6 +236,145 @@ public class quotationController : Controller
             });
         }
         catch(Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
+    [HttpGet("quotation/update")]
+    public async Task<IActionResult> update(int id)
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var user = new userModel { id = userCookie.id };
+            var responsePostUser = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:user:getUserById"]}", new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
+            if(!responsePostUser.IsSuccessStatusCode)
+            {
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = responsePostUser.ReasonPhrase });
+            }
+            var responsePostUserAsJson = await responsePostUser.Content.ReadAsStringAsync();
+            var resultUser = JsonConvert.DeserializeObject<entities.models.userModel>(responsePostUserAsJson);
+
+            var quotation = new quotationModel { id = id };
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:quotation:getQuotationById"]}", new StringContent(JsonConvert.SerializeObject(quotation), Encoding.UTF8, "application/json"));
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = responsePost.ReasonPhrase });
+            }
+            var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<entities.models.quotationModel>(responsePostAsJson);
+            clientHttp.Dispose();
+
+            ViewData["user.id"] = resultUser!.id;
+            ViewData["user.email"] = resultUser!.email;
+            ViewData["user.firstname"] = resultUser!.firstname;
+            ViewData["user.lastname"] = resultUser!.lastname;
+            ViewData["employee.profession"] = resultUser.employee!.profession;
+            ViewData["employee.jobPosition"] = resultUser.employee!.jobPosition;
+            ViewData["employee.contactPhones"] = resultUser.employee!.contactPhones;
+            ViewData["quotation.id"] = result!.id;
+            ViewData["client.businessName"] = result!.client!.businessName;
+            ViewData["client.id"] = result!.client!.id;
+            ViewData["client.rfc"] = result!.client!.rfc;
+            ViewData["client.address"] = result!.client!.address;
+            ViewData["client.city"] = result!.client.city;
+            ViewData["client.mainContactName"] = result!.client.mainContactName;
+            ViewData["client.mainContactPhone"] = result!.client.mainContactPhone;
+            ViewData["client.contactNames"] = result!.client.contactNames;
+            ViewData["client.contactPhones"] = result!.client.contactPhones;
+            ViewData["quotation.id"] = result!.id;
+            ViewData["quotation.code"] = result!.code;
+            ViewData["quotation.generalNotes"] = result!.generalNotes;
+            ViewData["quotation.subtotal"] = result!.subtotal;
+            ViewData["quotation.taxRate"] = result!.taxRate;
+            ViewData["quotation.taxAmount"] = result!.taxAmount;
+            ViewData["quotation.totalAmount"] = result!.totalAmount;
+            ViewData["quotation.items"] = result!.items;
+            foreach(var item in result.items!)
+                if (!string.IsNullOrEmpty(item.imagePath))
+                    item.imageString = $"data:image/jpg;base64,{Convert.ToBase64String(System.IO.File.ReadAllBytes(item.imagePath!))}";
+
+            return View();
+        }
+        catch(Exception e)
+        {
+            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+        }
+    }
+
+    [HttpPost("quotation/update")]
+    public async Task<JsonResult> update(IFormCollection form)
+    {
+        try
+        {
+            var quotationJson = form["quotation"].FirstOrDefault();
+            if (string.IsNullOrEmpty(quotationJson))
+            {
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = "Quotation data is missing."
+                });
+            }
+
+            var quotation = JsonConvert.DeserializeObject<quotationModel>(quotationJson);
+            if (quotation == null || !ModelState.IsValid)
+            {
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = "Invalid data."
+                });
+            }
+
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", "images", "quotationItems");
+            var files = form.Files;
+            foreach (var file in files)
+            {
+                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                var filePath = Path.Combine(folderPath, fileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                var match = Regex.Match(file.Name, @"image_(\d+)");
+                if (match.Success)
+                {
+                    int index = int.Parse(match.Groups[1].Value);
+                    quotation.items![index].imagePath = filePath;
+                }
+            }
+
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:quotation:update"]}", new StringContent(JsonConvert.SerializeObject(quotation), Encoding.UTF8, "application/json"));
+
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{responsePost.ReasonPhrase}"
+                });
+            }
+            clientHttp.Dispose();
+
+            return Json(new
+            {
+                isSuccess = true,
+                message = "Quotation updated successfully."
+            });
+        }
+        catch (Exception exception)
         {
             return Json(new
             {

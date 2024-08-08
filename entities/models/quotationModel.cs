@@ -22,10 +22,6 @@ public class quotationModel
     public userModel? user { get; set; }
     public paymentModel? payment { get; set; }
     public currencyModel? currency { get; set; }
-    public string? toolNotes { get; set; }
     public string? generalNotes { get; set; }
     public List<quotationItemsModel>? items { get; set; }
-    public string? notes { get; set; }
-    public string? description { get; set; }
-    public configType configType { get; set; }
 }

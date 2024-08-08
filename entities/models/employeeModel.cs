@@ -11,5 +11,6 @@ public class employeeModel
     public string? zipcode { get; set;}
     public string? jobPosition { get; set;}
     public string? profession { get; set;}
+    public string? mainContactPhone { get; set;}
     public List<string>? contactPhones { get; set; }
 }

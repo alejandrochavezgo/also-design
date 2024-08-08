@@ -53,6 +53,25 @@ public class quotationController : ControllerBase
         }
     }
 
+    [HttpPost("update")]
+    public IActionResult update(entities.models.quotationModel quotation)
+    {
+        try
+        {
+            if(quotation == null)
+                return BadRequest("Missing data.");
+
+            if (!_facadeQuotation.updateQuotation(quotation))
+                return BadRequest("Quotation not updated.");
+
+            return Ok();
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
     [HttpPost("deleteQuotationById")]
     public IActionResult deleteQuotationById(entities.models.quotationModel quotation)
     {
@@ -62,9 +81,22 @@ public class quotationController : ControllerBase
                 return BadRequest("Missing data.");
 
             if (!_facadeQuotation.deleteQuotationById(quotation.id))
-                return BadRequest("Quotation was not deleted.");
+                return BadRequest("Quotation can't be deleted.");
 
             return Ok();
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
+    [HttpPost("getQuotationById")]
+    public IActionResult getQuotationById(entities.models.quotationModel quotation)
+    {
+        try
+        {
+            return Ok(_facadeQuotation.getQuotationById(quotation.id));
         }
         catch(Exception e)
         {

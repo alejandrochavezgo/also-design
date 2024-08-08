@@ -108,7 +108,7 @@ $(document).ready(function () {
                             '<td><span class="badge rounded-pill badge-soft-' + quotation.statusColor + '">' + quotation.statusName + '</span></td>' +
                             '<td>' + quotation.creationDateAsString + '</td>' +
                             '<td class="text-center">' +
-                                '<button type="button" class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="window.location.href=\'/quotation/update?quotationId=' + quotation.id + '\'"><i class="ri-pencil-fill"></i></button>' +
+                                '<button type="button" class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="window.location.href=\'/quotation/update?id=' + quotation.id + '\'"><i class="ri-pencil-fill"></i></button>' +
                                 '<button type="button" class="btn btn-danger btn-icon waves-effect waves-light mx-1" onclick="showDeleteModal(' + quotation.id  + ')"><i class="ri-delete-bin-2-fill"></i></button>' +
                             '</td>' +
                         '<tr>'

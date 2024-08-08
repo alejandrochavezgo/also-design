@@ -56,6 +56,34 @@ public class facadeQuotation
         }
     }
 
+    public bool updateQuotation(quotationModel quotation)
+    {
+        using(var transactionScope = new TransactionScope())
+        {
+            try
+            {
+                quotation.modificationDate = DateTime.Now;
+                var quotationIdUpdated = _repositoryQuotation.updateQuotation(quotation);
+
+                foreach (var item in quotation.items)
+                {
+                    item.imagePath = string.IsNullOrEmpty(item.imagePath) ? string.Empty : item.imagePath;
+                    if(!(_repositoryQuotation.updateQuotationItem(item) > 0))
+                        throw new Exception($"Error at updating the quotation item.");
+                }
+
+                transactionScope.Complete();
+                return true;
+            }
+            catch (Exception exception)
+            {
+                transactionScope.Dispose();
+                _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+                throw exception;
+            }
+        }
+    }
+
     public bool deleteQuotationById(int id)
     {
         try
@@ -64,6 +92,25 @@ public class facadeQuotation
             if (quotation == null || quotation.status != (int)statusType.ACTIVE)
                 return false;
             return _repositoryQuotation.deleteQuotationById(id);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public quotationModel getQuotationById(int id)
+    {
+        try
+        {
+            var quotation = _repositoryQuotation.getQuotationById(id);
+            quotation.items = _repositoryQuotation.getQuotationItemsByIdQuotation(id);
+
+            var _repositoryClient = new repositoryClient();
+            quotation.client.contactNames = _repositoryClient.getContactNamesByclientId(quotation.client.id);
+            quotation.client.contactPhones = _repositoryClient.getContactPhonesByClientId(quotation.client.id);
+            return quotation;
         }
         catch (Exception exception)
         {

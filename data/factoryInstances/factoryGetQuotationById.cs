@@ -20,6 +20,7 @@ internal class factoryGetQuotationById: baseMethod<factoryGetQuotationById, quot
                 code = conversionManager.toString(dr["QUOTATIONS.CODE"]),
                 subtotal = conversionManager.toDecimal(dr["QUOTATIONS.SUBTOTAL"]),
                 taxAmount = conversionManager.toDecimal(dr["QUOTATIONS.TAX"]),
+                taxRate = conversionManager.toDecimal(dr["QUOTATIONS.TAXRATE"]),
                 totalAmount = conversionManager.toDecimal(dr["QUOTATIONS.TOTAL"]),
                 creationDate = conversionManager.toValidDate(dr["QUOTATIONS.CREATIONDATE"]),
                 creationDateAsString = conversionManager.toValidDate(dr["QUOTATIONS.CREATIONDATE"]).ToString("yyyy-MM-dd hh:mm:ss"),
@@ -27,23 +28,42 @@ internal class factoryGetQuotationById: baseMethod<factoryGetQuotationById, quot
                 status = conversionManager.toInt(dr["QUOTATIONS.IDSTATUS"]),
                 statusColor =  getStatusColor(conversionManager.toInt(dr["QUOTATIONS.IDSTATUS"])),
                 statusName = getStatusName(conversionManager.toInt(dr["QUOTATIONS.IDSTATUS"])),
+                generalNotes = conversionManager.toString(dr["QUOTATIONS.GENERALNOTES"]),
                 client = new clientModel
                 {
                     id = conversionManager.toInt(dr["CLIENTS.IDCLIENT"]),
-                    businessName = conversionManager.toString(dr["CLIENTS.BUSINESSNAME"])
+                    businessName = conversionManager.toString(dr["CLIENTS.BUSINESSNAME"]),
+                    address = conversionManager.toString(dr["CLIENTS.ADDRESS"]),
+                    city = conversionManager.toString(dr["CLIENTS.CITY"]),
+                    rfc = conversionManager.toString(dr["CLIENTS.RFC"]),
+                    mainContactName = conversionManager.toString(dr["CLIENTS.CLIENTCONTACTNAME"]),
+                    mainContactPhone = conversionManager.toString(dr["CLIENTS.CLIENTCONTACTPHONE"]),
+                    status = conversionManager.toInt(dr["CLIENTS.IDSTATUS"]),
+                    statusColor =  getStatusColor(conversionManager.toInt(dr["CLIENTS.IDSTATUS"])),
+                    statusName = getStatusName(conversionManager.toInt(dr["CLIENTS.IDSTATUS"]))
                 },
                 user = new userModel
                 {
                     id = conversionManager.toInt(dr["USERS.IDUSER"]),
-                    username = conversionManager.toString(dr["USERS.USERNAME"])
+                    username = conversionManager.toString(dr["USERS.USERNAME"]),
+                    employee = new employeeModel
+                    {
+                        id = conversionManager.toInt(dr["EMPLOYEES.IDEMPLOYEE"]),
+                        mainContactPhone = conversionManager.toString(dr["USERS.USERCONTACTPHONE"]),
+                    },
+                    status = conversionManager.toInt(dr["USERS.IDSTATUS"]),
+                    statusColor =  getStatusColor(conversionManager.toInt(dr["USERS.IDSTATUS"])),
+                    statusName = getStatusName(conversionManager.toInt(dr["USERS.IDSTATUS"])),
                 },
                 payment = new paymentModel
                 {
-                    description = conversionManager.toString(dr["PAYMENTTYPES.DESCRIPTION"])
+                    description = conversionManager.toString(dr["PAYMENTTYPES.DESCRIPTION"]),
+                    isActive = conversionManager.toBoolean(dr["PAYMENTTYPES.IDSTATUS"])
                 },
                 currency = new currencyModel
                 {
-                    description = conversionManager.toString(dr["CURRENCIES.DESCRIPTION"])
+                    description = conversionManager.toString(dr["CURRENCIES.DESCRIPTION"]),
+                    isActive = conversionManager.toBoolean(dr["CURRENCIES.IDSTATUS"])
                 }
             };
         }

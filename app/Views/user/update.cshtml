@@ -2,7 +2,7 @@
     ViewData["title"] = "Update User | Also Design";
     var status = ViewData["user.status"];
     var gender = ViewData["employee.gender"];
-    var phones = ViewData["employee.contactPhones"] as List<string>;
+    var phones = ViewData["employee.contactPhones"] as List<string> ?? new List<string>();
     var employeeContactPhonesString = phones != null ? string.Join(",", phones!) : "";
 }
 <div class="page-content">

@@ -58,6 +58,27 @@ public class repositoryQuotation : baseRepository
         }
     }
 
+    public List<quotationItemsModel> getQuotationItemsByIdQuotation(int id)
+    {
+        try
+        {
+            return factoryGetQuotationItemsByIdQuotation.getList((DbDataReader)_providerDB.GetDataReader("sp_getQuotationItemsByIdQuotation", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@quotationId", DbType.Int32, id),
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public int addQuotation(quotationModel quotation)
     {
         try
@@ -76,9 +97,52 @@ public class repositoryQuotation : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB,"@taxAmount", DbType.Decimal, quotation.taxAmount!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@totalAmount", DbType.Decimal, quotation.totalAmount!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@creationDate", DbType.DateTime, quotation.creationDate),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@userMainContactPhone", DbType.String, quotation.user.employee!.mainContactPhone!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientMainContactName", DbType.String, quotation.client!.mainContactName!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientMainContactPhone", DbType.String, quotation.client!.mainContactPhone!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@generalNotes", DbType.String, quotation.generalNotes!)
             });
 
             return Convert.ToInt32(quotationIdAdded.Value);
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public int updateQuotation(quotationModel quotation)
+    {
+        try
+        {
+            var quotationIdUpdated = dataFactory.getObjParameter(configurationManager.providerDB, "@quotationIdUpdated", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+
+            base._providerDB.ExecuteNonQuery("sp_updateQuotation", new DbParameter[] {
+                quotationIdUpdated,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@quotationId", DbType.Int32, quotation!.id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, quotation.client!.id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@userId", DbType.Int32, quotation.user!.id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@status", DbType.Int32, quotation.status),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@paymentId", DbType.Int32, quotation.payment!.id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@currencyId", DbType.Int32, quotation.currency!.id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@subtotal", DbType.Decimal, quotation.subtotal!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@taxRate", DbType.Decimal, quotation.taxRate!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@taxAmount", DbType.Decimal, quotation.taxAmount!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@totalAmount", DbType.Decimal, quotation.totalAmount!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@modificationDate", DbType.DateTime, quotation.modificationDate!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@userMainContactPhone", DbType.String, quotation.user.employee!.mainContactPhone!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientMainContactName", DbType.String, quotation.client!.mainContactName!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientMainContactPhone", DbType.String, quotation.client!.mainContactPhone!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@generalNotes", DbType.String, quotation.generalNotes!)
+            });
+
+            return Convert.ToInt32(quotationIdUpdated.Value);
         }
         catch (SqlException SqlException)
         {
@@ -108,10 +172,45 @@ public class repositoryQuotation : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB,"@description", DbType.String, quotationItem.description!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@material", DbType.String, quotationItem.material!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@details", DbType.String, quotationItem.details!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@imagePath", DbType.String, quotationItem.imagePath!)
+                dataFactory.getObjParameter(configurationManager.providerDB,"@imagePath", DbType.String, quotationItem.imagePath!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@notes", DbType.String, quotationItem.notes!)
             });
 
             return Convert.ToInt32(quotationItemIdAdded.Value);
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public int updateQuotationItem(quotationItemsModel quotationItem)
+    {
+        try
+        {
+            var quotationItemIdUpdated = dataFactory.getObjParameter(configurationManager.providerDB, "@quotationItemIdUpdated", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+
+            base._providerDB.ExecuteNonQuery("sp_updateQuotationItem", new DbParameter[] {
+                quotationItemIdUpdated,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@quotationItemId", DbType.Int32, quotationItem.id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@quantity", DbType.Int32, quotationItem.quantity),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@unit", DbType.String, quotationItem.unit!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@unitValue", DbType.Decimal, quotationItem.unitValue),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@totalValue", DbType.Decimal, quotationItem.totalValue),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@description", DbType.String, quotationItem.description!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@material", DbType.String, quotationItem.material!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@details", DbType.String, quotationItem.details!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@imagePath", DbType.String, quotationItem.imagePath!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@notes", DbType.String, quotationItem.notes!)
+            });
+
+            return Convert.ToInt32(quotationItemIdUpdated.Value);
         }
         catch (SqlException SqlException)
         {

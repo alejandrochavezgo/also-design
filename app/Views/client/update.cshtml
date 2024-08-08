@@ -1,10 +1,10 @@
 @{
     ViewData["title"] = "Update Client | Also Design";
-    var names = ViewData["contactNames"] as List<string>;
+    var names = ViewData["contactNames"] as List<string> ?? new List<string>();
     var contactNamesString = names != null ? string.Join(",", names!) : "";
-    var emails = ViewData["contactEmails"] as List<string>;
+    var emails = ViewData["contactEmails"] as List<string> ?? new List<string>();
     var contactEmailsString = emails != null ? string.Join(",", emails!) : "";
-    var phones = ViewData["contactPhones"] as List<string>;
+    var phones = ViewData["contactPhones"] as List<string> ?? new List<string>();
     var contactPhonesString = emails != null ? string.Join(",", phones!) : "";
     var status = ViewData["status"];
 }

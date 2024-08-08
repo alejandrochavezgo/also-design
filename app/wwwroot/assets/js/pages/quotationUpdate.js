@@ -4,6 +4,15 @@ document.querySelectorAll('.uppercase-input').forEach(input => {
     });
 });
 
+$('#fileInput').on('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        var $row = $(this).closest('tr');
+        $row.find('.image-item').remove();
+        $row.find('.delete-image').remove();
+    }
+});
+
 function updateAddAndRemoveButtons() {
     try {
         var count = 1;
@@ -60,7 +69,7 @@ function updateQuotationAmounts() {
 $(document).on('click', '#addItem', function() {
     try {
         var rowCounter = ($('#tbItems tr').length) + 1;
-        var newRow = '' + 
+        var newRow = '' +
             '<tr>' +
                 '<td class="width-0per">' +
                     '<button id="addItem" type="button" class="btn btn-success btn-sm btn-icon waves-effect waves-light"><i class="ri-add-circle-fill"></i></button>' +
@@ -73,6 +82,7 @@ $(document).on('click', '#addItem', function() {
                         '</span>' +
                     '</td>' +
                 '<td class="text-start">' +
+                    '<input class="itemId" hidden value="0">' +
                     '<textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Description"></textarea>' +
                     '<textarea class="form-control fw-medium mb-1 bg-light border-0" rows="2" placeholder="Material"></textarea>' +
                     '<textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Details"></textarea>' +
@@ -216,7 +226,6 @@ function initializeInputNumericalMasks()
                     $(this).val('0');
                 }
             }
-
             updateQuotationAmounts();
         });
         
@@ -314,12 +323,13 @@ function initializeCounter(counter) {
     }
 }
 
-function addQuotation() {
+function updateQuotation() {
     try {
         let formData = new FormData();
         let items = [];
         $('#tbItems tr').each(function(index, row) {
             let item = {
+                id: $(row).find('.itemId').val(),
                 description: $(row).find('textarea').eq(0).val(),
                 material: $(row).find('textarea').eq(1).val(),
                 details: $(row).find('textarea').eq(2).val(),
@@ -333,11 +343,21 @@ function addQuotation() {
             let imageFile = $(row).find('input[type="file"]')[0].files[0];
             if (imageFile) {
                 formData.append('image_' + index, imageFile);
+                item.hasNewImage = true;
+            } else {
+                item.hasNewImage = false;
             }
+
+            if ($(row).find('.image-item').length > 0)
+                item.hasOriginalImage = true;
+            else
+                item.hasOriginalImage = false;
+
             items.push(item);
         });
 
         let quotation = {
+            id: $('#inQuotationId').val(),
             client: {
                 id: $('#inClientId').val(),
                 mainContactName: $('#seClientContactNames').val(),
@@ -365,7 +385,7 @@ function addQuotation() {
         };
         formData.append('quotation', JSON.stringify(quotation));
 
-        fetch('add', {
+        fetch('update', {
             method: 'post',
             headers: {
                 'Accept': 'application/json'
@@ -422,6 +442,12 @@ function addQuotation() {
         });
     }
 }
+
+$(document).on('click', '.delete-image', function() {
+    var $row = $(this).closest('tr');
+    $row.find('.image-item').remove();
+    $(this).remove();
+});
 
 $(document).ready(function() {
     updateAddAndRemoveButtons();
