@@ -76,6 +76,23 @@ function showDeleteModal(quotationId) {
     }
 }
 
+function downloadQuotation(quotationId)
+{
+    try {
+        alert('This feature is not available yet.');
+    } catch(exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: false,
+            footer: '',
+            showCloseButton: true
+        });
+    }
+}
+
 $(document).ready(function () {
     try {
         $.ajax({
@@ -108,8 +125,9 @@ $(document).ready(function () {
                             '<td><span class="badge rounded-pill badge-soft-' + quotation.statusColor + '">' + quotation.statusName + '</span></td>' +
                             '<td>' + quotation.creationDateAsString + '</td>' +
                             '<td class="text-center">' +
-                                '<button type="button" class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="window.location.href=\'/quotation/update?id=' + quotation.id + '\'"><i class="ri-pencil-fill"></i></button>' +
-                                '<button type="button" class="btn btn-danger btn-icon waves-effect waves-light mx-1" onclick="showDeleteModal(' + quotation.id  + ')"><i class="ri-delete-bin-2-fill"></i></button>' +
+                                '<button type="button" class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="window.location.href=\'/quotation/update?id=' + quotation.id + '\'" title="Update"><i class="ri-pencil-fill"></i></button>' +
+                                '<button type="button" class="btn btn-danger btn-icon waves-effect waves-light mx-1" onclick="showDeleteModal(' + quotation.id  + ')" title="Delete"><i class="ri-delete-bin-2-fill"></i></button>' +
+                                '<button type="button" class="btn btn-info btn-icon waves-effect waves-light mx-1" onclick="downloadQuotation(' + quotation.id  + ')" title="Download"><i class="ri-file-download-fill"></i></button>' +
                             '</td>' +
                         '<tr>'
                     tbody.append(row);
