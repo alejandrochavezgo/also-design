@@ -18,30 +18,94 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = /Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app
 build_property._RazorSourceGeneratorDebug = 
 
-[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/Views/Dashboard/Dashboard.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRGFzaGJvYXJkL0Rhc2hib2FyZC5jc2h0bWw=
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/client/add.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3MvY2xpZW50L2FkZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/Views/Login/Login.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTG9naW4vTG9naW4uY3NodG1s
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/client/list.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3MvY2xpZW50L2xpc3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/Views/Login/PasswordReset.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTG9naW4vUGFzc3dvcmRSZXNldC5jc2h0bWw=
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/client/update.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3MvY2xpZW50L3VwZGF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/Views/Shared/_ValidationScriptsPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/dashboard/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3MvZGFzaGJvYXJkL0Rhc2hib2FyZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/Views/_ViewImports.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/error/error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3MvZXJyb3IvZXJyb3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/Views/_ViewStart.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdTdGFydC5jc2h0bWw=
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/login/login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3MvbG9naW4vbG9naW4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/Views/Shared/_Layout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19MYXlvdXQuY3NodG1s
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/login/passwordReset.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3MvbG9naW4vcGFzc3dvcmRSZXNldC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/purchaseOrder/add.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3MvcHVyY2hhc2VPcmRlci9hZGQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/purchaseOrder/list.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3MvcHVyY2hhc2VPcmRlci9saXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/purchaseOrder/update.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3MvcHVyY2hhc2VPcmRlci91cGRhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/quotation/add.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3MvcXVvdGF0aW9uL2FkZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/quotation/list.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3MvcXVvdGF0aW9uL2xpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/quotation/update.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3MvcXVvdGF0aW9uL3VwZGF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/shared/_validationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3Mvc2hhcmVkL192YWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/supplier/add.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3Mvc3VwcGxpZXIvYWRkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/supplier/list.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3Mvc3VwcGxpZXIvbGlzdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/supplier/update.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3Mvc3VwcGxpZXIvdXBkYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/user/add.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3MvdXNlci9hZGQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/user/list.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3MvdXNlci9saXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/user/update.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3MvdXNlci91cGRhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3MvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3MvX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/views/shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = dmlld3Mvc2hhcmVkL19MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-66efiyljir

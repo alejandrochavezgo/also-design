@@ -180,6 +180,9 @@
             "projectReferences": {
               "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/common.csproj": {
                 "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/common.csproj"
+              },
+              "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj": {
+                "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj"
               }
             }
           }

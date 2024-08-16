@@ -2697,7 +2697,8 @@
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 7.0.11",
       "Microsoft.Extensions.Identity.Core >= 7.0.11",
       "System.IdentityModel.Tokens.Jwt >= 7.0.2",
-      "common >= 1.0.0"
+      "common >= 1.0.0",
+      "entities >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -2727,6 +2728,9 @@
           "projectReferences": {
             "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/common.csproj": {
               "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/common/common.csproj"
+            },
+            "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj": {
+              "projectPath": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/entities/entities.csproj"
             }
           }
         }

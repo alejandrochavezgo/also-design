@@ -77,10 +77,6 @@
       "PackagePath": "staticwebassets/assets/css/password-reset.css"
     },
     {
-      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/favicon.ico",
-      "PackagePath": "staticwebassets/assets/favicon.ico"
-    },
-    {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/fonts/boxicons.eot",
       "PackagePath": "staticwebassets/assets/fonts/boxicons.eot"
     },
@@ -277,6 +273,22 @@
       "PackagePath": "staticwebassets/assets/images/404-error.png"
     },
     {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/account-circle-custom-1abc9c.png",
+      "PackagePath": "staticwebassets/assets/images/account-circle-custom-1abc9c.png"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/account-circle-custom-695eef.png",
+      "PackagePath": "staticwebassets/assets/images/account-circle-custom-695eef.png"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/account-circle-custom-717171.png",
+      "PackagePath": "staticwebassets/assets/images/account-circle-custom-717171.png"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/account-circle-custom.png",
+      "PackagePath": "staticwebassets/assets/images/account-circle-custom.png"
+    },
+    {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/alsologo.png",
       "PackagePath": "staticwebassets/assets/images/alsologo.png"
     },
@@ -431,6 +443,10 @@
     {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/demos/saas.png",
       "PackagePath": "staticwebassets/assets/images/demos/saas.png"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/email-custom.png",
+      "PackagePath": "staticwebassets/assets/images/email-custom.png"
     },
     {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/error.svg",
@@ -701,6 +717,14 @@
       "PackagePath": "staticwebassets/assets/images/nft/wallet/metamask.png"
     },
     {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/phone-custom-1abc9c.png",
+      "PackagePath": "staticwebassets/assets/images/phone-custom-1abc9c.png"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/phone-custom-717171.png",
+      "PackagePath": "staticwebassets/assets/images/phone-custom-717171.png"
+    },
+    {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/products/img-1.png",
       "PackagePath": "staticwebassets/assets/images/products/img-1.png"
     },
@@ -743,6 +767,46 @@
     {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/profile-bg.jpg",
       "PackagePath": "staticwebassets/assets/images/profile-bg.jpg"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/quotationItems/069e5bac-59ab-4dc0-a830-71c2d48678e5.jpg",
+      "PackagePath": "staticwebassets/assets/images/quotationItems/069e5bac-59ab-4dc0-a830-71c2d48678e5.jpg"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/quotationItems/238c76ce-12e1-4d1d-a1b7-cbb0ae1af1fe.jpg",
+      "PackagePath": "staticwebassets/assets/images/quotationItems/238c76ce-12e1-4d1d-a1b7-cbb0ae1af1fe.jpg"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/quotationItems/2a74c37b-26d6-4ee3-8274-7e365e36a066.jpg",
+      "PackagePath": "staticwebassets/assets/images/quotationItems/2a74c37b-26d6-4ee3-8274-7e365e36a066.jpg"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/quotationItems/360eca90-57bf-469a-9f85-8259cc153e28.jpeg",
+      "PackagePath": "staticwebassets/assets/images/quotationItems/360eca90-57bf-469a-9f85-8259cc153e28.jpeg"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/quotationItems/3a4ff1ff-b96a-4811-9e54-d5d690d99965.jpg",
+      "PackagePath": "staticwebassets/assets/images/quotationItems/3a4ff1ff-b96a-4811-9e54-d5d690d99965.jpg"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/quotationItems/47405a44-c839-45e0-93df-a9fb2c52a2c3.jpg",
+      "PackagePath": "staticwebassets/assets/images/quotationItems/47405a44-c839-45e0-93df-a9fb2c52a2c3.jpg"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/quotationItems/80310a2d-aec1-46d1-a519-2b6bbf6091c2.png",
+      "PackagePath": "staticwebassets/assets/images/quotationItems/80310a2d-aec1-46d1-a519-2b6bbf6091c2.png"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/quotationItems/cad911d2-85d1-49b5-b171-4ddd0d4a180b.jpg",
+      "PackagePath": "staticwebassets/assets/images/quotationItems/cad911d2-85d1-49b5-b171-4ddd0d4a180b.jpg"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/quotationItems/d86b6321-7f24-4f16-80ff-05cd9b7da6ae.jpg",
+      "PackagePath": "staticwebassets/assets/images/quotationItems/d86b6321-7f24-4f16-80ff-05cd9b7da6ae.jpg"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/quotationItems/e409af2f-5f85-4b57-bd34-c774394d014e.jpg",
+      "PackagePath": "staticwebassets/assets/images/quotationItems/e409af2f-5f85-4b57-bd34-c774394d014e.jpg"
     },
     {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/server-error.png",
@@ -2905,6 +2969,18 @@
       "PackagePath": "staticwebassets/assets/js/pages/chat.init.js"
     },
     {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/clientAdd.js",
+      "PackagePath": "staticwebassets/assets/js/pages/clientAdd.js"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/clientList.js",
+      "PackagePath": "staticwebassets/assets/js/pages/clientList.js"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/clientUpdate.js",
+      "PackagePath": "staticwebassets/assets/js/pages/clientUpdate.js"
+    },
+    {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/coming-soon.init.js",
       "PackagePath": "staticwebassets/assets/js/pages/coming-soon.init.js"
     },
@@ -3153,6 +3229,30 @@
       "PackagePath": "staticwebassets/assets/js/pages/project-overview.init.js"
     },
     {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/purchaseOrderAdd.js",
+      "PackagePath": "staticwebassets/assets/js/pages/purchaseOrderAdd.js"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/purchaseOrderList.js",
+      "PackagePath": "staticwebassets/assets/js/pages/purchaseOrderList.js"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/purchaseOrderUpdate.js",
+      "PackagePath": "staticwebassets/assets/js/pages/purchaseOrderUpdate.js"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/quotationAdd.js",
+      "PackagePath": "staticwebassets/assets/js/pages/quotationAdd.js"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/quotationList.js",
+      "PackagePath": "staticwebassets/assets/js/pages/quotationList.js"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/quotationUpdate.js",
+      "PackagePath": "staticwebassets/assets/js/pages/quotationUpdate.js"
+    },
+    {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/range-sliders.init.js",
       "PackagePath": "staticwebassets/assets/js/pages/range-sliders.init.js"
     },
@@ -3179,6 +3279,18 @@
     {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/sellers.init.js",
       "PackagePath": "staticwebassets/assets/js/pages/sellers.init.js"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/supplierAdd.js",
+      "PackagePath": "staticwebassets/assets/js/pages/supplierAdd.js"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/supplierList.js",
+      "PackagePath": "staticwebassets/assets/js/pages/supplierList.js"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/supplierUpdate.js",
+      "PackagePath": "staticwebassets/assets/js/pages/supplierUpdate.js"
     },
     {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/sweetalerts.init.js",
@@ -3219,6 +3331,18 @@
     {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/two-step-verification.init.js",
       "PackagePath": "staticwebassets/assets/js/pages/two-step-verification.init.js"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/userAdd.js",
+      "PackagePath": "staticwebassets/assets/js/pages/userAdd.js"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/userList.js",
+      "PackagePath": "staticwebassets/assets/js/pages/userList.js"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/userUpdate.js",
+      "PackagePath": "staticwebassets/assets/js/pages/userUpdate.js"
     },
     {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/js/pages/vector-maps.init.js",
