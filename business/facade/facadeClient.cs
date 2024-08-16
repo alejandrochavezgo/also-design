@@ -24,8 +24,8 @@ public class facadeClient
             var clients = _repositoryClient.getClients();
             foreach(var client in clients)
             {
-                client.contactNames = _repositoryClient.getContactNamesByclientId(client.id);
-                client.contactEmails = _repositoryClient.getContactEmailsByclientId(client.id);
+                client.contactNames = _repositoryClient.getContactNamesByClientId(client.id);
+                client.contactEmails = _repositoryClient.getContactEmailsByClientId(client.id);
                 client.contactPhones = _repositoryClient.getContactPhonesByClientId(client.id);
             }
 
@@ -43,8 +43,8 @@ public class facadeClient
         try
         {
             var client = _repositoryClient.getClientById(id);
-            client.contactNames = _repositoryClient.getContactNamesByclientId(client.id);
-            client.contactEmails = _repositoryClient.getContactEmailsByclientId(client.id);
+            client.contactNames = _repositoryClient.getContactNamesByClientId(client.id);
+            client.contactEmails = _repositoryClient.getContactEmailsByClientId(client.id);
             client.contactPhones = _repositoryClient.getContactPhonesByClientId(client.id);
             return client;
         }
@@ -62,8 +62,8 @@ public class facadeClient
             var clients = _repositoryClient.getClientsByTerm(businessName);
             foreach(var client in clients)
             {
-                client.contactNames = _repositoryClient.getContactNamesByclientId(client.id);
-                client.contactEmails = _repositoryClient.getContactEmailsByclientId(client.id);
+                client.contactNames = _repositoryClient.getContactNamesByClientId(client.id);
+                client.contactEmails = _repositoryClient.getContactEmailsByClientId(client.id);
                 client.contactPhones = _repositoryClient.getContactPhonesByClientId(client.id);
             }
             return clients;

@@ -26,7 +26,7 @@ public class enterpriseController : ControllerBase
     {
         try
         {
-            return Ok(_facadeEnterprise.getEnterpriseFullInformationByIdAndConfigType(enterprise.id, enterprise.quotationDefaultValues!.configType));
+            return Ok(_facadeEnterprise.getEnterpriseFullInformationByIdAndConfigType(enterprise.id, enterprise.defaultValues!.configType));
         }
         catch(Exception e)
         {

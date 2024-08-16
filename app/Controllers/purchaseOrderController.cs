@@ -13,14 +13,14 @@ using providerData.helpers;
 using System.Text.RegularExpressions;
 
 [authorization]
-public class quotationController : Controller
+public class purchaseOrderController : Controller
 {
-    private readonly ILogger<quotationController> _logger;
+    private readonly ILogger<purchaseOrderController> _logger;
     private readonly UserManager<applicationUser> _userManager;
     private readonly SignInManager<applicationUser> _signInManager;
     private readonly IHttpClientFactory _clientFactory;
 
-    public quotationController(ILogger<quotationController> logger, UserManager<applicationUser> userManager, SignInManager<applicationUser> signInManager, IHttpClientFactory clientFactory)
+    public purchaseOrderController(ILogger<purchaseOrderController> logger, UserManager<applicationUser> userManager, SignInManager<applicationUser> signInManager, IHttpClientFactory clientFactory)
     {
         _logger = logger;
         _userManager = userManager;
@@ -28,7 +28,7 @@ public class quotationController : Controller
         _clientFactory = clientFactory;
     }
 
-    [HttpGet("quotation/list")]
+    [HttpGet("purchaseOrder/list")]
     public IActionResult list()
     {
         try
@@ -41,7 +41,7 @@ public class quotationController : Controller
         }
     }
 
-    [HttpGet("quotation/getAll")]
+    [HttpGet("purchaseOrder/getAll")]
     public async Task<JsonResult> getAll()
     {
         try
@@ -49,7 +49,7 @@ public class quotationController : Controller
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
-            var responseGet = await clientHttp.GetAsync($"{configurationManager.appSettings["api:routes:quotation:getAll"]}");
+            var responseGet = await clientHttp.GetAsync($"{configurationManager.appSettings["api:routes:purchaseOrder:getAll"]}");
 
             if(!responseGet.IsSuccessStatusCode)
             {
@@ -61,7 +61,7 @@ public class quotationController : Controller
             }
 
             var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<IEnumerable<entities.models.quotationModel>>(responseGetAsJson);
+            var results = JsonConvert.DeserializeObject<IEnumerable<entities.models.purchaseOrderModel>>(responseGetAsJson);
             clientHttp.Dispose();
 
             return Json(new
@@ -81,7 +81,7 @@ public class quotationController : Controller
         }
     }
 
-    [HttpGet("quotation/add")]
+    [HttpGet("purchaseOrder/add")]
     public async Task<IActionResult> add()
     {
         try
@@ -103,7 +103,7 @@ public class quotationController : Controller
                 id = 1,
                 defaultValues = new defaultValuesModel
                 {
-                    configType = entities.enums.configType.QUOTATIONS
+                    configType = entities.enums.configType.PURCHASE_ORDERS
                 }
             };
             var responsePostEnterprise = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:enterprise:getEnterpriseFullInformationByIdAndConfigType"]}", new StringContent(JsonConvert.SerializeObject(enterprise), Encoding.UTF8, "application/json"));
@@ -123,8 +123,7 @@ public class quotationController : Controller
             ViewData["employee.jobPosition"] = resultUser.employee!.jobPosition;
             ViewData["employee.contactPhones"] = resultUser.employee!.contactPhones;
             ViewData["enterprise.location"] = $"{resultEnterprises!.First().city} {resultEnterprises!.First()!.state} {resultEnterprises!.First()!.country}";
-            ViewData["enterprise.defaultValues.items.notes"] = resultEnterprises!.First().defaultValues!.text;
-            ViewData["enterprise.defaultValues.generalNotes"] = resultEnterprises!.Last().defaultValues!.text;
+            ViewData["enterprise.defaultValues.generalNotes"] = resultEnterprises!.First().defaultValues!.text;
 
             return View();
         }
@@ -134,22 +133,23 @@ public class quotationController : Controller
         }
     }
 
-    [HttpPost("quotation/add")]
+    [HttpPost("purchaseOrder/add")]
     public async Task<JsonResult> Add(IFormCollection form)
     {
         try
         {
-            var quotationJson = form["quotation"].FirstOrDefault();
-            if (string.IsNullOrEmpty(quotationJson))
+            var purchaseOrderJson = form["purchaseOrder"].FirstOrDefault();
+            if (string.IsNullOrEmpty(purchaseOrderJson))
             {
                 return Json(new
                 {
                     isSuccess = false,
+                    message = "Purchase order data is missing."
                 });
             }
 
-            var quotation = JsonConvert.DeserializeObject<quotationModel>(quotationJson);
-            if (quotation == null || !ModelState.IsValid)
+            var purchaseOrder = JsonConvert.DeserializeObject<purchaseOrderModel>(purchaseOrderJson);
+            if (purchaseOrder == null || !ModelState.IsValid)
             {
                 return Json(new
                 {
@@ -158,7 +158,7 @@ public class quotationController : Controller
                 });
             }
 
-            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", "images", "quotationItems");
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", "images", "purchaseOrderItems");
             var files = form.Files;
             foreach (var file in files)
             {
@@ -173,14 +173,14 @@ public class quotationController : Controller
                 if (match.Success)
                 {
                     int index = int.Parse(match.Groups[1].Value);
-                    quotation.items![index].imagePath = filePath;
+                    purchaseOrder.items![index].imagePath = filePath;
                 }
             }
 
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
-            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:quotation:add"]}", new StringContent(JsonConvert.SerializeObject(quotation), Encoding.UTF8, "application/json"));
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:purchaseOrder:add"]}", new StringContent(JsonConvert.SerializeObject(purchaseOrder), Encoding.UTF8, "application/json"));
 
             if(!responsePost.IsSuccessStatusCode)
             {
@@ -195,7 +195,7 @@ public class quotationController : Controller
             return Json(new
             {
                 isSuccess = true,
-                message = "Quotation added successfully."
+                message = "Purchase order added successfully."
             });
         }
         catch (Exception exception)
@@ -208,15 +208,15 @@ public class quotationController : Controller
         }
     }
 
-    [HttpPost("quotation/delete")]
-    public async Task<JsonResult> delete([FromBody] quotationModel quotation)
+    [HttpPost("purchaseOrder/delete")]
+    public async Task<JsonResult> delete([FromBody] purchaseOrderModel purchaseOrder)
     {
         try
         {
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
-            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:quotation:delete"]}", new StringContent(JsonConvert.SerializeObject(quotation), Encoding.UTF8, "application/json"));
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:purchaseOrder:delete"]}", new StringContent(JsonConvert.SerializeObject(purchaseOrder), Encoding.UTF8, "application/json"));
 
             if(!responsePost.IsSuccessStatusCode)
             {
@@ -231,7 +231,7 @@ public class quotationController : Controller
             return Json(new
             { 
                 isSuccess = true,
-                message = "Quotation deleted successfully."
+                message = "Purchase order deleted successfully."
             });
         }
         catch(Exception exception)
@@ -244,7 +244,7 @@ public class quotationController : Controller
         }
     }
 
-    [HttpGet("quotation/update")]
+    [HttpGet("purchaseOrder/update")]
     public async Task<IActionResult> update(int id)
     {
         try
@@ -261,14 +261,14 @@ public class quotationController : Controller
             var responsePostUserAsJson = await responsePostUser.Content.ReadAsStringAsync();
             var resultUser = JsonConvert.DeserializeObject<entities.models.userModel>(responsePostUserAsJson);
 
-            var quotation = new quotationModel { id = id };
-            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:quotation:getQuotationById"]}", new StringContent(JsonConvert.SerializeObject(quotation), Encoding.UTF8, "application/json"));
+            var purchaseOrder = new purchaseOrderModel { id = id };
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:purchaseOrder:getPurchaseOrderById"]}", new StringContent(JsonConvert.SerializeObject(purchaseOrder), Encoding.UTF8, "application/json"));
             if(!responsePost.IsSuccessStatusCode)
             {
                 return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = responsePost.ReasonPhrase });
             }
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<entities.models.quotationModel>(responsePostAsJson);
+            var result = JsonConvert.DeserializeObject<entities.models.purchaseOrderModel>(responsePostAsJson);
             clientHttp.Dispose();
 
             ViewData["user.id"] = resultUser!.id;
@@ -278,24 +278,25 @@ public class quotationController : Controller
             ViewData["employee.profession"] = resultUser.employee!.profession;
             ViewData["employee.jobPosition"] = resultUser.employee!.jobPosition;
             ViewData["employee.contactPhones"] = resultUser.employee!.contactPhones;
-            ViewData["quotation.id"] = result!.id;
-            ViewData["client.businessName"] = result!.client!.businessName;
-            ViewData["client.id"] = result!.client!.id;
-            ViewData["client.rfc"] = result!.client!.rfc;
-            ViewData["client.address"] = result!.client!.address;
-            ViewData["client.city"] = result!.client.city;
-            ViewData["client.mainContactName"] = result!.client.mainContactName;
-            ViewData["client.mainContactPhone"] = result!.client.mainContactPhone;
-            ViewData["client.contactNames"] = result!.client.contactNames;
-            ViewData["client.contactPhones"] = result!.client.contactPhones;
-            ViewData["quotation.id"] = result!.id;
-            ViewData["quotation.code"] = result!.code;
-            ViewData["quotation.generalNotes"] = result!.generalNotes;
-            ViewData["quotation.subtotal"] = result!.subtotal;
-            ViewData["quotation.taxRate"] = result!.taxRate;
-            ViewData["quotation.taxAmount"] = result!.taxAmount;
-            ViewData["quotation.totalAmount"] = result!.totalAmount;
-            ViewData["quotation.items"] = result!.items;
+            ViewData["employee.mainContactPhone"] = result!.user!.employee!.mainContactPhone;
+            ViewData["purchaseOrder.id"] = result!.id;
+            ViewData["supplier.businessName"] = result!.supplier!.businessName;
+            ViewData["supplier.id"] = result!.supplier!.id;
+            ViewData["supplier.rfc"] = result!.supplier!.rfc;
+            ViewData["supplier.address"] = result!.supplier!.address;
+            ViewData["supplier.city"] = result!.supplier.city;
+            ViewData["supplier.mainContactName"] = result!.supplier.mainContactName;
+            ViewData["supplier.mainContactPhone"] = result!.supplier.mainContactPhone;
+            ViewData["supplier.contactNames"] = result!.supplier.contactNames;
+            ViewData["supplier.contactPhones"] = result!.supplier.contactPhones;
+            ViewData["purchaseOrder.id"] = result!.id;
+            ViewData["purchaseOrder.code"] = result!.code;
+            ViewData["purchaseOrder.generalNotes"] = result!.generalNotes;
+            ViewData["purchaseOrder.subtotal"] = result!.subtotal;
+            ViewData["purchaseOrder.taxRate"] = result!.taxRate;
+            ViewData["purchaseOrder.taxAmount"] = result!.taxAmount;
+            ViewData["purchaseOrder.totalAmount"] = result!.totalAmount;
+            ViewData["purchaseOrder.items"] = result!.items;
             foreach(var item in result.items!)
                 if (!string.IsNullOrEmpty(item.imagePath))
                     item.imageString = $"data:image/jpg;base64,{Convert.ToBase64String(System.IO.File.ReadAllBytes(item.imagePath!))}";
@@ -308,23 +309,23 @@ public class quotationController : Controller
         }
     }
 
-    [HttpPost("quotation/update")]
+    [HttpPost("purchaseOrder/update")]
     public async Task<JsonResult> update(IFormCollection form)
     {
         try
         {
-            var quotationJson = form["quotation"].FirstOrDefault();
-            if (string.IsNullOrEmpty(quotationJson))
+            var purchaseOrderJson = form["purchaseOrder"].FirstOrDefault();
+            if (string.IsNullOrEmpty(purchaseOrderJson))
             {
                 return Json(new
                 {
                     isSuccess = false,
-                    message = "Quotation data is missing."
+                    message = "Purchase order data is missing."
                 });
             }
 
-            var quotation = JsonConvert.DeserializeObject<quotationModel>(quotationJson);
-            if (quotation == null || !ModelState.IsValid)
+            var purchaseOrder = JsonConvert.DeserializeObject<purchaseOrderModel>(purchaseOrderJson);
+            if (purchaseOrder == null || !ModelState.IsValid)
             {
                 return Json(new
                 {
@@ -333,7 +334,7 @@ public class quotationController : Controller
                 });
             }
 
-            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", "images", "quotationItems");
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", "images", "purchaseOrderItems");
             var files = form.Files;
             foreach (var file in files)
             {
@@ -348,14 +349,14 @@ public class quotationController : Controller
                 if (match.Success)
                 {
                     int index = int.Parse(match.Groups[1].Value);
-                    quotation.items![index].imagePath = filePath;
+                    purchaseOrder.items![index].imagePath = filePath;
                 }
             }
 
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
-            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:quotation:update"]}", new StringContent(JsonConvert.SerializeObject(quotation), Encoding.UTF8, "application/json"));
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:purchaseOrder:update"]}", new StringContent(JsonConvert.SerializeObject(purchaseOrder), Encoding.UTF8, "application/json"));
 
             if(!responsePost.IsSuccessStatusCode)
             {
@@ -370,7 +371,7 @@ public class quotationController : Controller
             return Json(new
             {
                 isSuccess = true,
-                message = "Quotation updated successfully."
+                message = "Purchase order updated successfully."
             });
         }
         catch (Exception exception)

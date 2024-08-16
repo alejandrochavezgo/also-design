@@ -1,0 +1,95 @@
+@{
+    ViewData["title"] = "Purchase Order List | Also Design";
+}
+@section styles
+{
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+}
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Purchase Order List</h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item color-495057">Purchase Order</li>
+                            <li class="breadcrumb-item color-495057">Purchase Order List</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="alert-custom alert-success alert-borderless" role="alert">
+                            This module allows you to view and manage existing purchase orders, providing a detailed overview of the status, content, and associated suppliers for each order.
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-10 ml-1remN">
+                                <div class="card ribbon-box shadow-none mb-lg-0">
+                                    <div class="card-body">
+                                        <div id="dvTotalPurchaseOrders" class="ribbon ribbon-success round-shape">Total Purchase Order: 0</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2 text-right pr-0">
+                                <button type="button" class="btn btn-success btn-label waves-effect waves-light" onclick="window.location.href='/purchaseOrder/add'">
+                                    <i class="ri-user-add-fill label-icon align-middle fs-16 me-2"></i> Add Purchase Order
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-12">
+                                <table id="tbPurchaseOrders" class="table table-bordered dt-responsive nowrap align-middle mdl-data-table" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Supplier</th>
+                                            <th>User Creator</th>
+                                            <th>Payment Type</th>
+                                            <th>Total</th>
+                                            <th>Currency</th>
+                                            <th>Status</th>
+                                            <th>Creation Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Supplier</th>
+                                            <th>User Creator</th>
+                                            <th>Payment Type</th>
+                                            <th>Total</th>
+                                            <th>Currency</th>
+                                            <th>Status</th>
+                                            <th>Creation Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script src="../assets/js/pages/purchaseOrderList.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+}

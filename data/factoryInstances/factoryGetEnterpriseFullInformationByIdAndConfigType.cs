@@ -20,7 +20,7 @@ internal class factoryGetEnterpriseFullInformationByIdAndConfigType: baseMethod<
                 city = conversionManager.toString(dr["ENTERPRISE.CITY"]),
                 state = conversionManager.toString(dr["ENTERPRISE.STATE"]),
                 country = conversionManager.toString(dr["ENTERPRISE.COUNTRY"]),
-                quotationDefaultValues = new quotationDefaultValuesModel
+                defaultValues = new defaultValuesModel
                 {
                     text = conversionManager.toString(dr["ENTERPRISECONFIG.TEXT"]),
                     description = conversionManager.toString(dr["ENTERPRISECONFIG.DESCRIPTION"])

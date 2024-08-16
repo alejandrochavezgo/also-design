@@ -1,6 +1,6 @@
 @using Newtonsoft.Json;
 @{
-    ViewData["title"] = "Add Quotation | Also Design";
+    ViewData["title"] = "Add Purchase Order | Also Design";
     var employeeContactPhones = ViewData["employee.contactPhones"] as List<string> ?? new List<string>();;
 }
 @section styles
@@ -12,11 +12,11 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">Add Quotation</h4>
+                    <h4 class="mb-sm-0">Add Purchase Order</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item color-495057">Quotation</li>
-                            <li class="breadcrumb-item color-495057">Add Quotation</li>
+                            <li class="breadcrumb-item color-495057">Purchase Order</li>
+                            <li class="breadcrumb-item color-495057">Add Purchase Order</li>
                         </ol>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="alert-custom alert-success alert-borderless" role="alert">
-                            This module will allow you to create quotes efficiently and accurately for various clients. Here, you can manage and generate detailed quotations, ensuring that each client receives a personalized and professional proposal.
+                            This module allows for efficient management and tracking of purchase orders, enabling the creation, editing, and real-time status viewing of each order.
                         </div>
                     </div>
                     <div class="card-body">
@@ -56,44 +56,44 @@
                         <div class="row pt-4 text-center">
                             <div class="col-1">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">ID</p>
-                                <input type="text" class="form-control text-center" id="inClientId" disabled>
+                                <input type="text" class="form-control text-center" id="inSupplierId" disabled>
                             </div>
                             <div class="col-5">
-                                <p class="text-muted mb-2 text-uppercase fw-semibold">CLIENT</p>
-                                <input type="text" class="form-control text-center" id="inClientBusinessName" placeholder="SEARCH CLIENT...">
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">SUPPLIER</p>
+                                <input type="text" class="form-control text-center" id="inSupplierBusinessName" placeholder="SEARCH SUPPLIER...">
                             </div>
                             <div class="col-4">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">MAIN CONTACT</p>
-                                <select class="form-select" id="seClientContactNames"></select>
+                                <select class="form-select" id="seSupplierContactNames"></select>
                             </div>
                             <div class="col-2">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">CITY</p>
-                                <input type="text" class="form-control text-center" id="inClientCity" disabled>
+                                <input type="text" class="form-control text-center" id="inSupplierCity" disabled>
                             </div>
                         </div>
                         <div class="row pt-27px text-center">
                             <div class="col-2">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">MAIN PHONE</p>
-                                <select class="form-select" id="seClientContactPhones"></select>
+                                <select class="form-select" id="seSupplierContactPhones"></select>
                             </div>
                             <div class="col-4">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">ADDRESS</p>
-                                <input type="text" class="form-control text-center" id="inClientAddress" disabled>
+                                <input type="text" class="form-control text-center" id="inSupplierAddress" disabled>
                             </div>
                             <div class="col-2">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">RFC</p>
-                                <input type="text" class="form-control text-center" id="inClientRfc" disabled>
+                                <input type="text" class="form-control text-center" id="inSupplierRfc" disabled>
                             </div>
                             <div class="col-2">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">PAYMENT TYPE</p>
-                                <select class="form-select" id="seQuotationPaymentType">
+                                <select class="form-select" id="sePurchaseOrderPaymentType">
                                     <option value="1">CONTADO</option>
                                     <option value="2">A CONVENIR</option>
                                 </select>
                             </div>
                             <div class="col-2">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">CURRENCY</p>
-                                <select class="form-select" id="quotationCurrencyType" disabled>
+                                <select class="form-select" id="purchaseOrderCurrencyType" disabled>
                                     <option value="2">USD</option>
                                 </select>
                             </div>
@@ -122,10 +122,10 @@
                                                     <td scope="row">1</td>
                                                     <td class="text-start">
                                                         <textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Description"></textarea>
-                                                        <textarea class="form-control fw-medium mb-1 bg-light border-0" rows="2" placeholder="Material"></textarea>
+                                                        <textarea class="form-control fw-medium mb-1 bg-light border-0 quotation-item" rows="2" placeholder="Search material..."></textarea>
                                                         <textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Details"></textarea>
                                                         <input class="form-control mb-1" type="file">
-                                                        <textarea class="form-control fw-medium bg-light border-0" rows="4" placeholder="Notes">@ViewData["enterprise.defaultValues.items.notes"]</textarea>
+                                                        <textarea class="form-control fw-medium bg-light border-0" rows="4" placeholder="Notes"></textarea>
                                                     </td>
                                                     <td>
                                                         <div class="input-step">
@@ -159,15 +159,15 @@
                                                     <tbody>
                                                         <tr>
                                                             <td>Sub Total</td>
-                                                            <td id="tdQuotationSubTotal" class="text-end">$0.00</td>
+                                                            <td id="tdPurchaseOrderSubTotal" class="text-end">$0.00</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>Estimated Tax <input id="inQuotationTax" class="form-control form-control-tax text-center" value="1"> %</td>
-                                                            <td id="tdQuotationTaxAmount" class="text-end">$0.00</td>
+                                                            <td>Estimated Tax <input id="inPurchaseOrderTax" class="form-control form-control-tax text-center" value="1"> %</td>
+                                                            <td id="tdPurchaseOrderTaxAmount" class="text-end">$0.00</td>
                                                         </tr>
                                                         <tr class="border-top border-top-dashed fs-15">
                                                             <th scope="row">Total Amount</th>
-                                                            <th id="thQuotationTotalAmount" class="text-end">$0.00</th>
+                                                            <th id="thPurchaseOrderTotalAmount" class="text-end">$0.00</th>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -198,7 +198,7 @@
                         </div>
                         <div class="row pt-27px">
                             <div class="col-12">
-                                <button type="button" class="btn btn-success w-100per" onclick="addQuotation()">Add</button>
+                                <button type="button" class="btn btn-success w-100per" onclick="addPurchaseOrder()">Add</button>
                             </div>
                         </div>
                     </div>
@@ -209,6 +209,6 @@
 </div>
 @section scripts
 {
-    <script src="../assets/js/pages/quotationAdd.js"></script>
+    <script src="../assets/js/pages/purchaseOrderAdd.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 }

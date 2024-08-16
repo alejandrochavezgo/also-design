@@ -41,8 +41,11 @@ public class facadeQuotation
                 var quotationIdAdded = _repositoryQuotation.addQuotation(quotation);
 
                 foreach (var item in quotation.items)
+                {
+                    item.imagePath = string.IsNullOrEmpty(item.imagePath) ? string.Empty : item.imagePath;
                     if(!(_repositoryQuotation.addQuotationItem(item, quotationIdAdded) > 0))
                         throw new Exception($"Error at saving the quotation item.");
+                }
 
                 transactionScope.Complete();
                 return true;
@@ -108,7 +111,7 @@ public class facadeQuotation
             quotation.items = _repositoryQuotation.getQuotationItemsByIdQuotation(id);
 
             var _repositoryClient = new repositoryClient();
-            quotation.client.contactNames = _repositoryClient.getContactNamesByclientId(quotation.client.id);
+            quotation.client.contactNames = _repositoryClient.getContactNamesByClientId(quotation.client.id);
             quotation.client.contactPhones = _repositoryClient.getContactPhonesByClientId(quotation.client.id);
             return quotation;
         }

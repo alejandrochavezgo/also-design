@@ -107,15 +107,15 @@
                             <li class="menu-title"><span>Menu</span></li>
                             <li class="nav-item">
                                 <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
-                                    <i class="ri-file-list-line"></i> <span>Quotation</span>
+                                    <i class="ri-team-fill"></i> <span>Suppliers</span>
                                 </a>
                                 <div class="collapse menu-dropdown" id="sidebarApps">
                                     <ul class="nav nav-sm flex-column">
                                         <li class="nav-item">
-                                            <a href="@Url.Action("add", "quotation")" class="nav-link"> Add Quotation </a>
+                                            <a href="@Url.Action("add", "supplier")" class="nav-link"> Add Supplier </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="@Url.Action("list", "quotation")" class="nav-link"> Quotation List </a>
+                                            <a href="@Url.Action("list", "supplier")" class="nav-link"> Supplier List </a>
                                         </li>
                                     </ul>
                                 </div>
@@ -127,10 +127,26 @@
                                 <div class="collapse menu-dropdown" id="sidebarApps">
                                     <ul class="nav nav-sm flex-column">
                                         <li class="nav-item">
-                                            <a href="apps-calendar.html" class="nav-link"> Add Purchase Order </a>
+                                            <a href="@Url.Action("add", "purchaseOrder")" class="nav-link"> Add Purchase Order </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="apps-chat.html" class="nav-link"> Purchase Order List </a>
+                                            <a href="@Url.Action("list", "purchaseOrder")" class="nav-link"> Purchase Order List </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="menu-title"><span>Menu</span></li>
+                            <li class="nav-item">
+                                <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
+                                    <i class="ri-file-list-line"></i> <span>Quotation</span>
+                                </a>
+                                <div class="collapse menu-dropdown" id="sidebarApps">
+                                    <ul class="nav nav-sm flex-column">
+                                        <li class="nav-item">
+                                            <a href="@Url.Action("add", "quotation")" class="nav-link"> Add Quotation </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="@Url.Action("list", "quotation")" class="nav-link"> Quotation List </a>
                                         </li>
                                     </ul>
                                 </div>

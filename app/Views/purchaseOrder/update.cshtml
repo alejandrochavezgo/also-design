@@ -1,9 +1,9 @@
 @using Newtonsoft.Json;
 @{
-    ViewData["title"] = "Update Quotation | Also Design";
+    ViewData["title"] = "Update Purchase Order | Also Design";
     var phones = ViewData["employee.contactPhones"] as List<string> ?? new List<string>();
-    var clientContactNames = ViewData["client.contactNames"] as List<string> ?? new List<string>();
-    var clientContactPhones = ViewData["client.contactPhones"] as List<string> ?? new List<string>();
+    var supplierContactNames = ViewData["supplier.contactNames"] as List<string> ?? new List<string>();
+    var supplierContactPhones = ViewData["supplier.contactPhones"] as List<string> ?? new List<string>();
     var employeeContactPhones = ViewData["employee.contactPhones"] as List<string> ?? new List<string>();
 }
 @section styles
@@ -15,11 +15,11 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">Update Quotation</h4>
+                    <h4 class="mb-sm-0">Update Purchase Order</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item color-495057">Quotation</li>
-                            <li class="breadcrumb-item color-495057">Update Quotation</li>
+                            <li class="breadcrumb-item color-495057">Purchase Order</li>
+                            <li class="breadcrumb-item color-495057">Update Purchase Order</li>
                         </ol>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="alert-custom alert-success alert-borderless" role="alert">
-                            This module allows users to modify, update, and manage existing quotations efficiently. It includes features to adjust product details, prices, and payment terms in real-time.
+                            This module allows you to update supplier information, making it easy to edit details such as contacts, addresses, and relevant data to maintain an accurate and up-to-date record.
                         </div>
                     </div>
                     <div class="card-body">
@@ -49,8 +49,8 @@
                                 <h6>"RESPONSABILIDAD, CALIDAD E INNOVACIÓN TECNOLÓGICA"</h6>
                             </div>
                             <div class="col-3 text-center">
-                                <input id="inQuotationId" value="@ViewData["quotation.id"]" hidden>
-                                <input class="form-control text-center" value="@ViewData["quotation.code"]" disabled>
+                                <input id="inPurchaseOrderId" value="@ViewData["purchaseOrder.id"]" hidden>
+                                <input class="form-control text-center" value="@ViewData["purchaseOrder.code"]" disabled>
                             </div>
                         </div>
                         <div class="row pt-4 text-center border-bottom border-bottom-dashed">
@@ -62,54 +62,54 @@
                         <div class="row pt-4 text-center">
                             <div class="col-1">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">ID</p>
-                                <input type="text" class="form-control text-center" id="inClientId" disabled value="@ViewData["client.id"]">
+                                <input type="text" class="form-control text-center" id="inSupplierId" disabled value="@ViewData["supplier.id"]">
                             </div>
                             <div class="col-5">
-                                <p class="text-muted mb-2 text-uppercase fw-semibold">CLIENT</p>
-                                <input type="text" class="form-control text-center" id="inClientBusinessName" placeholder="SEARCH CLIENT..." value="@ViewData["client.businessName"]">
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">SUPPLIER</p>
+                                <input type="text" class="form-control text-center" id="inSupplierBusinessName" placeholder="SEARCH SUPPLIER..." value="@ViewData["supplier.businessName"]">
                             </div>
                             <div class="col-4">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">MAIN CONTACT</p>
-                                <select class="form-select" id="seClientContactNames">
-                                    @foreach (var clientContactName in clientContactNames!)
+                                <select class="form-select" id="seSupplierContactNames">
+                                    @foreach (var supplierContactName in supplierContactNames!)
                                     {
-                                        <option value="@clientContactName">@clientContactName</option>
+                                        <option value="@supplierContactName">@supplierContactName</option>
                                     }
                                 </select>
                             </div>
                             <div class="col-2">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">CITY</p>
-                                <input type="text" class="form-control text-center" id="inClientCity" disabled value="@ViewData["client.city"]">
+                                <input type="text" class="form-control text-center" id="inSupplierCity" disabled value="@ViewData["supplier.city"]">
                             </div>
                         </div>
                         <div class="row pt-27px text-center">
                             <div class="col-2">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">MAIN PHONE</p>
-                                <select class="form-select" id="seClientContactPhones">
-                                    @foreach (var clientContactPhone in clientContactPhones!)
+                                <select class="form-select" id="seSupplierContactPhones">
+                                    @foreach (var supplierContactPhone in supplierContactPhones!)
                                     {
-                                        <option value="@clientContactPhone">@clientContactPhone</option>
+                                        <option value="@supplierContactPhone">@supplierContactPhone</option>
                                     }
                                 </select>
                             </div>
                             <div class="col-4">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">ADDRESS</p>
-                                <input type="text" class="form-control text-center" id="inClientAddress" disabled value="@ViewData["client.address"]">
+                                <input type="text" class="form-control text-center" id="inSupplierAddress" disabled value="@ViewData["supplier.address"]">
                             </div>
                             <div class="col-2">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">RFC</p>
-                                <input type="text" class="form-control text-center" id="inClientRfc" disabled value="@ViewData["client.rfc"]">
+                                <input type="text" class="form-control text-center" id="inSupplierRfc" disabled value="@ViewData["supplier.rfc"]">
                             </div>
                             <div class="col-2">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">PAYMENT TYPE</p>
-                                <select class="form-select" id="seQuotationPaymentType">
+                                <select class="form-select" id="sePurchaseOrderPaymentType">
                                     <option value="1">CONTADO</option>
                                     <option value="2">A CONVENIR</option>
                                 </select>
                             </div>
                             <div class="col-2">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">CURRENCY</p>
-                                <select class="form-select" id="quotationCurrencyType" disabled>
+                                <select class="form-select" id="purchaseOrderCurrencyType" disabled>
                                     <option value="2">USD</option>
                                 </select>
                             </div>
@@ -131,13 +131,13 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="tbItems">
-                                                @if (ViewData["quotation.items"] != null)
+                                                @if (ViewData["purchaseOrder.items"] != null)
                                                 {
-                                                    var quotationItems = ViewData["quotation.items"] as List<entities.models.quotationItemsModel>;
-                                                    if (quotationItems != null)
+                                                    var purchaseOrderItems = ViewData["purchaseOrder.items"] as List<entities.models.purchaseOrderItemsModel>;
+                                                    if (purchaseOrderItems != null)
                                                     {
                                                         var index = 1;
-                                                        foreach (var item in quotationItems)
+                                                        foreach (var item in purchaseOrderItems)
                                                         {
                                                             <tr>
                                                                 <td class="width-0per"></td>
@@ -164,7 +164,7 @@
                                                                 </td>
                                                                 <td>
                                                                     <select class="form-select">
-                                                                        <option value="EA" selected>@item.unit</option>
+                                                                        <option value="PZA" selected>@item.unit</option>
                                                                     </select>
                                                                 </td>
                                                                 <td class="text-end">
@@ -184,22 +184,22 @@
                                     <div class="border-top border-top-dashed mt-2">
                                         <div class="row">
                                             <div class="col-7">
-                                                <textarea class="form-control fw-semibold bg-light border-0 mt-3" rows="4" placeholder="Notes">@ViewData["quotation.generalNotes"]</textarea>
+                                                <textarea class="form-control fw-semibold bg-light border-0 mt-3" rows="4" placeholder="Notes">@ViewData["purchaseOrder.generalNotes"]</textarea>
                                             </div>
                                             <div class="col-5">
                                                 <table class="table table-borderless table-nowrap align-middle mb-0 ms-auto" style="width:250px">
                                                     <tbody>
                                                         <tr>
                                                             <td>Sub Total</td>
-                                                            <td id="tdQuotationSubTotal" class="text-end">$@ViewData["quotation.subtotal"]</td>
+                                                            <td id="tdPurchaseOrderSubTotal" class="text-end">$@ViewData["purchaseOrder.subtotal"]</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>Estimated Tax <input id="inQuotationTax" class="form-control form-control-tax text-center" value="@ViewData["quotation.taxRate"]"> %</td>
-                                                            <td id="tdQuotationTaxAmount" class="text-end">$@ViewData["quotation.taxAmount"]</td>
+                                                            <td>Estimated Tax <input id="inPurchaseOrderTax" class="form-control form-control-tax text-center" value="@ViewData["purchaseOrder.taxRate"]"> %</td>
+                                                            <td id="tdPurchaseOrderTaxAmount" class="text-end">$@ViewData["purchaseOrder.taxAmount"]</td>
                                                         </tr>
                                                         <tr class="border-top border-top-dashed fs-15">
                                                             <th scope="row">Total Amount</th>
-                                                            <th id="thQuotationTotalAmount" class="text-end">$@ViewData["quotation.totalAmount"]</th>
+                                                            <th id="thPurchaseOrderTotalAmount" class="text-end">$@ViewData["purchaseOrder.totalAmount"]</th>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -220,17 +220,13 @@
                                             <p class="text-muted mb-1">@ViewData["employee.jobPosition"]</p>
                                         </div>
                                     </div>
-                                    <div class="row pt-4 pb-27px text-center border-bottom border-bottom-dashed">
-                                        <div class="col-12">
-                                            @* <h6 class="text-muted text-uppercase fw-semibold mb-3">@ViewData["enterprise.location"]</h6> *@
-                                        </div>
-                                    </div>
+                                    <div class="row pt-4 pb-27px text-center border-bottom border-bottom-dashed"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="row pt-27px">
                             <div class="col-12">
-                                <button type="button" class="btn btn-success w-100per" onclick="updateQuotation()">Update</button>
+                                <button type="button" class="btn btn-success w-100per" onclick="updatePurchaseOrder()">Update</button>
                             </div>
                         </div>
                     </div>
@@ -242,10 +238,10 @@
 @section scripts
 {
     <script type="text/javascript">
-        $('#seClientContactNames').val("@ViewData["client.mainContactName"]");
-        $('#seClientContactPhones').val("@ViewData["client.mainContactPhone"]");
+        $('#seSupplierContactNames').val("@ViewData["supplier.mainContactName"]");
+        $('#seSupplierContactPhones').val("@ViewData["supplier.mainContactPhone"]");
         $('#seEmployeeContactPhone').val("@ViewData["employee.mainContactPhone"]");
     </script>
-    <script src="../assets/js/pages/quotationUpdate.js"></script>
+    <script src="../assets/js/pages/purchaseOrderUpdate.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 }

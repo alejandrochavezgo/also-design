@@ -10,20 +10,20 @@ using data.providerData;
 using entities.models;
 using Newtonsoft.Json;
 
-public class repositoryClient : baseRepository
+public class repositorySupplier : baseRepository
 {
     private log _logger;
 
-    public repositoryClient()
+    public repositorySupplier()
     {
         _logger = new log();
     }
 
-    public List<clientModel> getClients()
+    public List<supplierModel> getSuppliers()
     {
         try
         {
-            return factoryGetClients.getList((DbDataReader)_providerDB.GetDataReader("sp_getClients", new DbParameter[] {}));
+            return factoryGetSuppliers.getList((DbDataReader)_providerDB.GetDataReader("sp_getSuppliers", new DbParameter[] {}));
         }
         catch (SqlException SqlException)
         {
@@ -37,12 +37,13 @@ public class repositoryClient : baseRepository
         }
     }
 
-    public clientModel getClientById(int id)
+    public supplierModel getSupplierById(int id)
     {
         try
         {
-            return factoryGetClientById.get((DbDataReader)_providerDB.GetDataReader("sp_getClientById", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
+            return factoryGetSupplierById.get((DbDataReader)_providerDB.GetDataReader("sp_getSupplierById", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@supplierId", DbType.Int32, id),
             }));
         }
         catch (SqlException SqlException)
@@ -57,12 +58,13 @@ public class repositoryClient : baseRepository
         }
     }
 
-    public List<string> getContactNamesByClientId(int id)
+    public List<string> getContactNamesBySupplierId(int id)
     {
         try
         {
-            return factoryGetClientContactNamesByClientId.getList((DbDataReader)_providerDB.GetDataReader("sp_getContactNamesByClientId", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
+            return factoryGetSupplierContactNamesBySupplierId.getList((DbDataReader)_providerDB.GetDataReader("sp_getContactNamesBySupplierId", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@supplierId", DbType.Int32, id),
             }));
         }
         catch (SqlException SqlException)
@@ -77,12 +79,13 @@ public class repositoryClient : baseRepository
         }
     }
 
-    public List<string> getContactEmailsByClientId(int id)
+    public List<string> getContactEmailsBySupplierId(int id)
     {
         try
         {
-            return factoryGetClientContactEmailsByClientId.getList((DbDataReader)_providerDB.GetDataReader("sp_getContactEmailsByClientId", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
+            return factoryGetSupplierContactEmailsBySupplierId.getList((DbDataReader)_providerDB.GetDataReader("sp_getContactEmailsBySupplierId", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@supplierId", DbType.Int32, id),
             }));
         }
         catch (SqlException SqlException)
@@ -97,12 +100,13 @@ public class repositoryClient : baseRepository
         }
     }
 
-    public List<string> getContactPhonesByClientId(int id)
+    public List<string> getContactPhonesBySupplierId(int id)
     {
         try
         {
-            return factoryGetClientContactPhonesByClientId.getList((DbDataReader)_providerDB.GetDataReader("sp_getContactPhonesByClientId", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
+            return factoryGetSupplierContactPhonesBySupplierId.getList((DbDataReader)_providerDB.GetDataReader("sp_getContactPhonesBySupplierId", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@supplierId", DbType.Int32, id),
             }));
         }
         catch (SqlException SqlException)
@@ -117,11 +121,12 @@ public class repositoryClient : baseRepository
         }
     }
 
-    public List<clientModel> getClientsByTerm(string businessName)
+    public List<supplierModel> getSuppliersByTerm(string businessName)
     {
         try
         {
-            return factoryGetClientsByTerm.getList((DbDataReader)_providerDB.GetDataReader("sp_getClientsByTerm", new DbParameter[] {
+            return factoryGetSuppliersByTerm.getList((DbDataReader)_providerDB.GetDataReader("sp_getSuppliersByTerm", new DbParameter[]
+            {
                 dataFactory.getObjParameter(configurationManager.providerDB,"@businessName", DbType.String, businessName),
             }));
         }
@@ -137,26 +142,26 @@ public class repositoryClient : baseRepository
         }
     }
 
-    public int addClient(clientModel client)
+    public int addSupplier(supplierModel supplier)
     {
         try
         {
-            var clientIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@clientIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+            var supplierIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@supplierIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
 
-            base._providerDB.ExecuteNonQuery("sp_addClient", new DbParameter[] {
-                clientIdAdded,
-                dataFactory.getObjParameter(configurationManager.providerDB,"@businessName", DbType.String, client.businessName!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@rfc", DbType.String, client.rfc!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@address", DbType.String, client.address!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@zipcode", DbType.String, client.zipCode!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@city", DbType.String, client.city!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@state", DbType.String, client.state!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@country", DbType.String, client.country!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@creationDate", DbType.DateTime, client.creationDate),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@status", DbType.Int32, client.status)
+            base._providerDB.ExecuteNonQuery("sp_addSupplier", new DbParameter[] {
+                supplierIdAdded,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@businessName", DbType.String, supplier.businessName!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@rfc", DbType.String, supplier.rfc!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@address", DbType.String, supplier.address!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@zipcode", DbType.String, supplier.zipCode!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@city", DbType.String, supplier.city!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@state", DbType.String, supplier.state!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@country", DbType.String, supplier.country!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@creationDate", DbType.DateTime, supplier.creationDate),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@status", DbType.Int32, supplier.status)
             });
 
-            return Convert.ToInt32(clientIdAdded.Value);
+            return Convert.ToInt32(supplierIdAdded.Value);
         }
         catch (SqlException SqlException)
         {
@@ -176,9 +181,9 @@ public class repositoryClient : baseRepository
         {
             var contactNameIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@contactNameIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
 
-            base._providerDB.ExecuteNonQuery("sp_addClientContactName", new DbParameter[] {
+            base._providerDB.ExecuteNonQuery("sp_addSupplierContactName", new DbParameter[] {
                 contactNameIdAdded,
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@supplierId", DbType.Int32, id),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@name", DbType.String, name)
             });
 
@@ -202,9 +207,9 @@ public class repositoryClient : baseRepository
         {
             var contactEmailIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@contactEmailIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
 
-            base._providerDB.ExecuteNonQuery("sp_addClientContactEmail", new DbParameter[] {
+            base._providerDB.ExecuteNonQuery("sp_addSupplierContactEmail", new DbParameter[] {
                 contactEmailIdAdded,
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@supplierId", DbType.Int32, id),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@email", DbType.String, email)
             });
 
@@ -228,9 +233,9 @@ public class repositoryClient : baseRepository
         {
             var contactPhoneIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@contactPhoneIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
 
-            base._providerDB.ExecuteNonQuery("sp_addClientContactPhone", new DbParameter[] {
+            base._providerDB.ExecuteNonQuery("sp_addSupplierContactPhone", new DbParameter[] {
                 contactPhoneIdAdded,
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@supplierId", DbType.Int32, id),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@phone", DbType.String, phone)
             });
 
@@ -248,27 +253,27 @@ public class repositoryClient : baseRepository
         }
     }
 
-    public int updateClient(clientModel client)
+    public int updateSupplier(supplierModel supplier)
     {
         try
         {
-            var clientIdUpdated = dataFactory.getObjParameter(configurationManager.providerDB, "@clientIdUpdated", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+            var supplierIdUpdated = dataFactory.getObjParameter(configurationManager.providerDB, "@supplierIdUpdated", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
 
-            base._providerDB.ExecuteNonQuery("sp_updateClient", new DbParameter[] {
-                clientIdUpdated,
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.String, client.id),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@businessName", DbType.String, client.businessName!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@rfc", DbType.String, client.rfc!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@address", DbType.String, client.address!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@zipcode", DbType.String, client.zipCode!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@city", DbType.String, client.city!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@state", DbType.String, client.state!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@country", DbType.String, client.country!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@status", DbType.Int32, client.status),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@modificationDate", DbType.DateTime, client.modificationDate!.Value)
+            base._providerDB.ExecuteNonQuery("sp_updateSupplier", new DbParameter[] {
+                supplierIdUpdated,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@supplierId", DbType.String, supplier.id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@businessName", DbType.String, supplier.businessName!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@rfc", DbType.String, supplier.rfc!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@address", DbType.String, supplier.address!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@zipcode", DbType.String, supplier.zipCode!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@city", DbType.String, supplier.city!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@state", DbType.String, supplier.state!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@country", DbType.String, supplier.country!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@status", DbType.Int32, supplier.status),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@modificationDate", DbType.DateTime, supplier.modificationDate!.Value)
             });
 
-            return Convert.ToInt32(clientIdUpdated.Value);
+            return Convert.ToInt32(supplierIdUpdated.Value);
         }
         catch (SqlException SqlException)
         {
@@ -282,12 +287,12 @@ public class repositoryClient : baseRepository
         }
     }
 
-    public int removeContactNamesEmailsAndPhonesByClientId(int id)
+    public int removeContactNamesEmailsAndPhonesBySupplierId(int id)
     {
         try
         {
-            return base._providerDB.ExecuteNonQuery("sp_removeContactNamesEmailsAndPhonesByClientId", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id)
+            return base._providerDB.ExecuteNonQuery("sp_removeContactNamesEmailsAndPhonesBySupplierId", new DbParameter[] {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@supplierId", DbType.Int32, id)
             });
         }
         catch (SqlException SqlException)

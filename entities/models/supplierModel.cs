@@ -1,6 +1,6 @@
 namespace entities.models;
 
-public class clientModel
+public class supplierModel
 {
     public int id { get; set; }
     public int status { get; set; }

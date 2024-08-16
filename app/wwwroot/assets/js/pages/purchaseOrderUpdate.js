@@ -4,6 +4,15 @@ document.querySelectorAll('.uppercase-input').forEach(input => {
     });
 });
 
+$('#fileInput').on('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        var $row = $(this).closest('tr');
+        $row.find('.image-item').remove();
+        $row.find('.delete-image').remove();
+    }
+});
+
 function updateAddAndRemoveButtons() {
     try {
         var count = 1;
@@ -26,7 +35,7 @@ function updateAddAndRemoveButtons() {
     }
 }
 
-function updateQuotationAmounts() {
+function updatePurchaseOrderAmounts() {
     try {
         var subTotal = 0;
         $('#tbItems tr').each(function(index, row) {
@@ -37,13 +46,13 @@ function updateQuotationAmounts() {
             $(row).find('td:last').text('$' + total.toFixed(2));
             subTotal += total;
         });
-        var taxRate = parseFloat($('#inQuotationTax').val()) || 0;
+        var taxRate = parseFloat($('#inPurchaseOrderTax').val()) || 0;
         var taxAmount = subTotal * (taxRate / 100) || 0;
         var totalAmount = subTotal + taxAmount || 0;
 
-        $('#tdQuotationSubTotal').text('$' + subTotal.toFixed(2));
-        $('#tdQuotationTaxAmount').text('$' + taxAmount.toFixed(2));
-        $('#thQuotationTotalAmount').text('$' + totalAmount.toFixed(2));
+        $('#tdPurchaseOrderSubTotal').text('$' + subTotal.toFixed(2));
+        $('#tdPurchaseOrderTaxAmount').text('$' + taxAmount.toFixed(2));
+        $('#thPurchaseOrderTotalAmount').text('$' + totalAmount.toFixed(2));
     } catch (exception) {
         Swal.fire({
             title: 'Error!!',
@@ -60,7 +69,7 @@ function updateQuotationAmounts() {
 $(document).on('click', '#addItem', function() {
     try {
         var rowCounter = ($('#tbItems tr').length) + 1;
-        var newRow = '' + 
+        var newRow = '' +
             '<tr>' +
                 '<td class="width-0per">' +
                     '<button id="addItem" type="button" class="btn btn-success btn-sm btn-icon waves-effect waves-light"><i class="ri-add-circle-fill"></i></button>' +
@@ -73,6 +82,7 @@ $(document).on('click', '#addItem', function() {
                         '</span>' +
                     '</td>' +
                 '<td class="text-start">' +
+                    '<input class="itemId" hidden value="0">' +
                     '<textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Description"></textarea>' +
                     '<textarea class="form-control fw-medium mb-1 bg-light border-0" rows="2" placeholder="Material"></textarea>' +
                     '<textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Details"></textarea>' +
@@ -88,7 +98,7 @@ $(document).on('click', '#addItem', function() {
                 '</td>' +
                 '<td>' +
                     '<select class="form-select">' +
-                        '<option value="1">EA</option>' +
+                        '<option value="1">PZA</option>' +
                     '</select>' +
                 '</td>' +
                 '<td class="text-end">' +
@@ -102,7 +112,7 @@ $(document).on('click', '#addItem', function() {
         updateAddAndRemoveButtons();
         initializeInputNumericalMasks();
         initializeCounter(rowCounter);
-        updateQuotationAmounts();
+        updatePurchaseOrderAmounts();
     } catch (exception) {
         Swal.fire({
             title: 'Error!!',
@@ -120,7 +130,7 @@ $(document).on('click', '#removeItem', function() {
     try {
         $(this).closest('tr').remove();
         updateAddAndRemoveButtons();
-        updateQuotationAmounts();
+        updatePurchaseOrderAmounts();
     } catch (exception) {
         Swal.fire({
             title: 'Error!!',
@@ -134,12 +144,12 @@ $(document).on('click', '#removeItem', function() {
     }
 });
 
-function initializeClientAutocomplete() {
+function initializeSupplierAutocomplete() {
     try {
-        $('#inClientBusinessName').autocomplete({
+        $('#inSupplierBusinessName').autocomplete({
             source: function(request, response) {
                 $.ajax({
-                    url: '/client/getClientByTerm',
+                    url: '/supplier/getSupplierByTerm',
                     method: 'GET',
                     dataType: 'json',
                     data: {
@@ -163,7 +173,7 @@ function initializeClientAutocomplete() {
                     error: function(error) {
                         Swal.fire({
                             title: 'Error!!',
-                            html: error,
+                            html: exception,
                             icon: 'error',
                             confirmButtonClass: 'btn btn-danger w-xs mt-2',
                             buttonsStyling: !1,
@@ -175,17 +185,17 @@ function initializeClientAutocomplete() {
             },
             minLength: 2,
             select: function(event, ui) {
-                $('#inClientId').val(ui.item.id);
-                $('#inClientCity').val(ui.item.city);
-                $('#inClientAddress').val(ui.item.address);
-                $('#inClientRfc').val(ui.item.rfc);
-                $('#seClientContactNames').empty();
-                $('#seClientContactPhones').empty();
+                $('#inSupplierId').val(ui.item.id);
+                $('#inSupplierCity').val(ui.item.city);
+                $('#inSupplierAddress').val(ui.item.address);
+                $('#inSupplierRfc').val(ui.item.rfc);
+                $('#seSupplierContactNames').empty();
+                $('#seSupplierContactPhones').empty();
                 $.each(ui.item.contactNames, function(index, value) {
-                    $('#seClientContactNames').append($('<option>').text(value).attr('value', value));
+                    $('#seSupplierContactNames').append($('<option>').text(value).attr('value', value));
                 });
                 $.each(ui.item.contactPhones, function(index, value) {
-                    $('#seClientContactPhones').append($('<option>').text(value).attr('value', value));
+                    $('#seSupplierContactPhones').append($('<option>').text(value).attr('value', value));
                 });
             }
         });
@@ -216,8 +226,7 @@ function initializeInputNumericalMasks()
                     $(this).val('0');
                 }
             }
-
-            updateQuotationAmounts();
+            updatePurchaseOrderAmounts();
         });
         
         $('.numerical-mask').on('blur', function() {
@@ -243,7 +252,7 @@ function initializeInputNumericalMasks()
 
 function initializeInputTaxMasks() {
     try {
-        $('#inQuotationTax').on('input', function() {
+        $('#inPurchaseOrderTax').on('input', function() {
             var value = $(this).val();
             var valid = /^\d*\.?\d*$/.test(value);
             if (!valid || value.length > 10) {
@@ -254,7 +263,7 @@ function initializeInputTaxMasks() {
                     $(this).val('0');
                 }
             }
-            updateQuotationAmounts();
+            updatePurchaseOrderAmounts();
         });
     } catch (exception) {
         Swal.fire({
@@ -288,7 +297,7 @@ function initializeCounter(counter) {
             var currentValue = parseInt(input.value);
             if (currentValue < maxValue) {
                 input.value = currentValue + 1;
-                updateQuotationAmounts();
+                updatePurchaseOrderAmounts();
             }
         }
 
@@ -298,7 +307,7 @@ function initializeCounter(counter) {
             var currentValue = parseInt(input.value);
             if (currentValue > minValue) {
                 input.value = currentValue - 1;
-                updateQuotationAmounts();
+                updatePurchaseOrderAmounts();
             }
         }
     } catch (exception) {
@@ -314,37 +323,48 @@ function initializeCounter(counter) {
     }
 }
 
-function addQuotation() {
+function updatePurchaseOrder() {
     try {
         let formData = new FormData();
         let items = [];
         $('#tbItems tr').each(function(index, row) {
             let item = {
+                id: $(row).find('.itemId').val(),
                 description: $(row).find('textarea').eq(0).val(),
                 material: $(row).find('textarea').eq(1).val(),
                 details: $(row).find('textarea').eq(2).val(),
                 notes: $(row).find('textarea').eq(3).val(),
                 quantity: parseInt($(row).find('.product-quantity').val(), 10),
                 unit: $(row).find('select').val(),
-                unitValue: parseFloat($(row).find('.subtotal-value').val()),
+                unitValue: parseFloat($(row).find('.subtotal-value').val().replace('$', '').trim()),
                 totalValue: parseFloat($(row).find('.total-value').text().replace('$', '').trim())
             };
 
             let imageFile = $(row).find('input[type="file"]')[0].files[0];
             if (imageFile) {
                 formData.append('image_' + index, imageFile);
+                item.hasNewImage = true;
+            } else {
+                item.hasNewImage = false;
             }
+
+            if ($(row).find('.image-item').length > 0)
+                item.hasOriginalImage = true;
+            else
+                item.hasOriginalImage = false;
+
             items.push(item);
         });
 
-        let quotation = {
-            client: {
-                id: $('#inClientId').val(),
-                mainContactName: $('#seClientContactNames').val(),
-                mainContactPhone: $('#seClientContactPhones').val()
+        let purchaseOrder = {
+            id: $('#inPurchaseOrderId').val(),
+            supplier: {
+                id: $('#inSupplierId').val(),
+                mainContactName: $('#seSupplierContactNames').val(),
+                mainContactPhone: $('#seSupplierContactPhones').val()
             },
             payment: {
-                id: $('#seQuotationPaymentType').val()
+                id: $('#sePurchaseOrderPaymentType').val()
             },
             user: {
                 id: $('#userContactId').val(),
@@ -354,18 +374,18 @@ function addQuotation() {
             },
             status: '1',
             currency: {
-                id: $('#quotationCurrencyType').val(),
+                id: $('#purchaseOrderCurrencyType').val(),
             },
-            subTotal: parseFloat($('#tdQuotationSubTotal').text().replace('$', '').trim()),
-            taxRate: parseFloat($('#inQuotationTax').val()),
-            taxAmount: parseFloat($('#tdQuotationTaxAmount').text().replace('$', '').trim()),
-            totalAmount: parseFloat($('#thQuotationTotalAmount').text().replace('$', '').trim()),
+            subTotal: parseFloat($('#tdPurchaseOrderSubTotal').text().replace('$', '').trim()),
+            taxRate: parseFloat($('#inPurchaseOrderTax').val()),
+            taxAmount: parseFloat($('#tdPurchaseOrderTaxAmount').text().replace('$', '').trim()),
+            totalAmount: parseFloat($('#thPurchaseOrderTotalAmount').text().replace('$', '').trim()),
             generalNotes: $('textarea[placeholder="Notes"]').eq(1).val(),
             items: items
         };
-        formData.append('quotation', JSON.stringify(quotation));
+        formData.append('purchaseOrder', JSON.stringify(purchaseOrder));
 
-        fetch('add', {
+        fetch('update', {
             method: 'post',
             headers: {
                 'Accept': 'application/json'
@@ -423,9 +443,15 @@ function addQuotation() {
     }
 }
 
+$(document).on('click', '.delete-image', function() {
+    var $row = $(this).closest('tr');
+    $row.find('.image-item').remove();
+    $(this).remove();
+});
+
 $(document).ready(function() {
     updateAddAndRemoveButtons();
-    initializeClientAutocomplete();
+    initializeSupplierAutocomplete();
     initializeInputTaxMasks();
     initializeInputNumericalMasks();
     initializeCounter(1);
