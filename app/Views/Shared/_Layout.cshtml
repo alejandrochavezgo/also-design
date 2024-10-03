@@ -24,6 +24,9 @@
         @await RenderSectionAsync("styles", required: false)
     </head>
     <body>
+        <div id="loader" style="display: none;">
+            <div class="spinner"></div>
+        </div>
         <div class="hideMobileContent">
             <header id="page-topbar">
                 <div class="layout-width">
@@ -163,9 +166,39 @@
                                         <li class="nav-item">
                                             <a href="apps-chat.html" class="nav-link"> Work Order List </a>
                                         </li>
+                                        <li class="nav-item">
+                                            <a href="" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false"> Workflow Config </a>
+                                            <div class="collapse menu-dropdown">
+                                                <ul class="nav nav-sm flex-column">
+                                                    <li class="nav-item">
+                                                        <a href="@Url.Action("steps", "workorder")"" class="nav-link"> Steps </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="@Url.Action("status", "workorder")"" class="nav-link"> Status </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
+                                    <i class="ri-file-word-line"></i> <span>Inventory</span>
+                                </a>
+                                <div class="collapse menu-dropdown" id="sidebarApps">
+                                    <ul class="nav nav-sm flex-column">
+                                        <li class="nav-item">
+                                            <a href="@Url.Action("add", "inventory")" class="nav-link"> Add Item </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="@Url.Action("list", "inventory")" class="nav-link"> Inventory List </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
                             <li class="nav-item">
                                 <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
                                     <i class="ri-apps-2-line"></i> <span>Administrative Actions</span>
@@ -173,62 +206,40 @@
                                 <div class="collapse menu-dropdown" id="sidebarApps">
                                     <ul class="nav nav-sm flex-column">
                                         <li class="nav-item">
-                                            <a href="apps-calendar.html" class="nav-link"> Inventory </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false">
-                                                Users
-                                            </a>
+                                            <a href="" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false"> Users </a>
                                             <div class="collapse menu-dropdown">
                                                 <ul class="nav nav-sm flex-column">
                                                     <li class="nav-item">
-                                                        <a href="@Url.Action("add", "user")"" class="nav-link"> Add User </a>
+                                                        <a href="@Url.Action("list", "user")" class="nav-link"> Add User </a>
                                                     </li>
                                                     <li class="nav-item">
-                                                        <a href="@Url.Action("list", "user")" class="nav-link"> User List </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarEcommerce">
-                                                Workflow
-                                            </a>
-                                            <div class="collapse menu-dropdown" id="sidebarEcommerce">
-                                                <ul class="nav nav-sm flex-column">
-                                                    <li class="nav-item">
-                                                        <a href="apps-ecommerce-products.html" class="nav-link"> Add Step </a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a href="apps-ecommerce-product-details.html" class="nav-link"> Step List </a>
+                                                        <a href="@Url.Action("status", "workorder")"" class="nav-link"> User List </a>
                                                     </li>
                                                 </ul>
                                             </div>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarProjects">
-                                                Status
-                                            </a>
-                                            <div class="collapse menu-dropdown" id="sidebarProjects">
+                                            <a href="" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false"> Employees </a>
+                                            <div class="collapse menu-dropdown">
                                                 <ul class="nav nav-sm flex-column">
                                                     <li class="nav-item">
-                                                        <a href="apps-projects-list.html" class="nav-link"> Add status </a>
+                                                        <a href="@Url.Action("list", "user")" class="nav-link"> Add Employee </a>
                                                     </li>
                                                     <li class="nav-item">
-                                                        <a href="apps-projects-overview.html" class="nav-link"> Status List </a>
+                                                        <a href="@Url.Action("status", "workorder")"" class="nav-link"> Employee List </a>
                                                     </li>
                                                 </ul>
                                             </div>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarTasks"> Machines </a>
-                                            <div class="collapse menu-dropdown" id="sidebarTasks">
+                                            <a href="" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false"> Reports </a>
+                                            <div class="collapse menu-dropdown">
                                                 <ul class="nav nav-sm flex-column">
                                                     <li class="nav-item">
-                                                        <a href="apps-tasks-kanban.html" class="nav-link"> Add Machine </a>
+                                                        <a href="@Url.Action("list", "user")" class="nav-link"> Dashboard </a>
                                                     </li>
                                                     <li class="nav-item">
-                                                        <a href="apps-tasks-list-view.html" class="nav-link"> Machine List </a>
+                                                        <a href="@Url.Action("status", "workorder")"" class="nav-link"> Deliveries </a>
                                                     </li>
                                                 </ul>
                                             </div>

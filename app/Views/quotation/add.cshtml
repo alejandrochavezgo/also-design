@@ -26,9 +26,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="alert-custom alert-success alert-borderless" role="alert">
-                            This module will allow you to create quotes efficiently and accurately for various clients. Here, you can manage and generate detailed quotations, ensuring that each client receives a personalized and professional proposal.
-                        </div>
+                        <h5 class="card-title">Quotation Information</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -89,11 +87,13 @@
                                 <select class="form-select" id="seQuotationPaymentType">
                                     <option value="1">CONTADO</option>
                                     <option value="2">A CONVENIR</option>
+                                    <option value="3">CRÉDITO</option>
                                 </select>
                             </div>
                             <div class="col-2">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">CURRENCY</p>
-                                <select class="form-select" id="quotationCurrencyType" disabled>
+                                <select class="form-select" id="quotationCurrencyType">
+                                    <option value="1">MXN</option>
                                     <option value="2">USD</option>
                                 </select>
                             </div>
@@ -136,7 +136,16 @@
                                                     </td>
                                                     <td>
                                                         <select class="form-select">
-                                                            <option value="PZA">PZA</option>
+                                                            <option value="EA">Each (EA)</option>
+                                                            <option value="BOX">Box (BOX)</option>
+                                                            <option value="PKG">Package (PKG)</option>
+                                                            <option value="SET">Set (SET)</option>
+                                                            <option value="PAL">Pallet (PAL)</option>
+                                                            <option value="LB">Pound (LB)</option>
+                                                            <option value="KG">Kilogram (KG)</option>
+                                                            <option value="M">Meter (M)</option>
+                                                            <option value="L">Liter (L)</option>
+                                                            <option value="FT">Foot (FT)</option>
                                                         </select>
                                                     </td>
                                                     <td class="text-end">

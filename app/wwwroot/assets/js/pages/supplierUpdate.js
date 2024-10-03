@@ -6,6 +6,10 @@ document.querySelectorAll('.uppercase-input').forEach(input => {
 
 function update() {
     try {
+        if(!isValidForm())
+            return;
+
+        $('#loader').show();
         fetch('update', {
             method: 'post',
             headers: {
@@ -40,6 +44,7 @@ function update() {
                     footer: '',
                     showCloseButton: !1
                 });
+                $('#loader').hide();
                 return;
             }
 
@@ -54,6 +59,7 @@ function update() {
             }).then(function (t) {
                 location.reload(true);
             });
+            $('#loader').hide();
         })
         .catch(error => {
             Swal.fire({
@@ -65,9 +71,49 @@ function update() {
                 footer: '',
                 showCloseButton: !1
             });
+            $('#loader').hide();
         });
     }
     catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: !1,
+            footer: '',
+            showCloseButton: !1
+        });
+        $('#loader').hide();
+    }
+}
+
+function isValidForm() {
+    try {
+        var id = $('#inId').val();
+        var businessName = $('#inBusinessName').val();
+        var rfc = $('#inRfc').val();
+        var address = $('#inAddress').val();
+        var zipCode = $('#inZipCode').val();
+        var status = $('#seStatus').val();
+        var city = $('#inCity').val();
+        var state = $('#inState').val();
+        var country = $('#inCountry').val();
+
+        if (!id || !businessName || !rfc || !address || !zipCode || !status || !city || !state || !country) {
+            Swal.fire({
+                title: 'Error!!',
+                html: 'The fields Bussiness Name, RFC, Address, ZIP Code, Status, City, State and Country cannot be empty.',
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: !1,
+                footer: '',
+                showCloseButton: !1
+            });
+            return false;
+        }
+        return true;
+    } catch (exception) {
         Swal.fire({
             title: 'Error!!',
             html: exception,

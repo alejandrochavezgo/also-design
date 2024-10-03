@@ -6,6 +6,7 @@ using api.services;
 using business.facade;
 using providerData.entitiesData;
 using Newtonsoft.Json;
+using common.helpers;
 
 [ApiController]
 [authorize]
@@ -65,8 +66,11 @@ public class supplierController : ControllerBase
     {
         try
         {
-            if(supplier == null)
+            if(supplier == null || !new supplierFormHelper().isUpdateFormValid(supplier))
                 return BadRequest("The supplier was not modified.");
+
+            if(_facadeSupplier.existSupplierByBusinessNameAndRfcAndId(supplier.businessName, supplier.rfc, supplier.id))
+                return BadRequest("This Business Name and RFC already exist.");
 
             if (!_facadeSupplier.updateSupplier(supplier))
                 return BadRequest("Supplier not modified.");
@@ -84,8 +88,11 @@ public class supplierController : ControllerBase
     {
         try
         {
-            if(supplier == null)
+            if(supplier == null || !new supplierFormHelper().isAddFormValid(supplier))
                 return BadRequest("Missing data.");
+
+            if(_facadeSupplier.existSupplierByBusinessNameAndRfc(supplier.businessName, supplier.rfc))
+                return BadRequest("This Business Name and RFC already exist.");
 
             if (!_facadeSupplier.addSupplier(supplier))
                 return BadRequest("Supplier not added.");

@@ -20,41 +20,39 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="alert-custom alert-success alert-borderless" role="alert">
-                            This module allows administrators to add new clients to the system, providing all the necessary details.
-                        </div>
+                        <h5 class="card-title">Client Information</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-3">
                                 <label for="inBusinessName" class="form-label">Business Name</label>
-                                <input type="text" class="form-control uppercase-input" id="inBusinessName" placeholder="Enter business name">
+                                <input type="text" class="form-control uppercase-input" id="inBusinessName" maxlength="200" placeholder="Enter business name">
                             </div>
                             <div class="col-3">
                                 <label for="inRfc" class="form-label">RFC</label>
-                                <input type="text" class="form-control uppercase-input" id="inRfc" placeholder="Enter rfc">
+                                <input type="text" class="form-control uppercase-input" id="inRfc" maxlength="50" placeholder="Enter RFC">
                             </div>
                             <div class="col-3">
                                 <label for="inAddress" class="form-label">Address</label>
-                                <input type="text" class="form-control uppercase-input" id="inAddress" placeholder="Enter address">
+                                <input type="text" class="form-control uppercase-input" id="inAddress" maxlength="300" placeholder="Enter address">
                             </div>
                             <div class="col-3">
                                 <label for="inZipCode" class="form-label">ZIP Code</label>
-                                <input type="text" class="form-control uppercase-input" id="inZipCode" placeholder="Enter ZIP code">
+                                <input type="text" class="form-control uppercase-input" id="inZipCode" maxlength="10" placeholder="Enter ZIP code">
                             </div>
                         </div>
                         <div class="row pt-27px">
                             <div class="col-3">
                                 <label for="inCity" class="form-label">City</label>
-                                <input type="text" class="form-control uppercase-input" id="inCity" placeholder="Enter city">
+                                <input type="text" class="form-control uppercase-input" id="inCity" maxlength="100" placeholder="Enter city">
                             </div>
                             <div class="col-3">
                                 <label for="inState" class="form-label">State</label>
-                                <input type="text" class="form-control uppercase-input" id="inState" placeholder="Enter state">
+                                <input type="text" class="form-control uppercase-input" id="inState" maxlength="100" placeholder="Enter state">
                             </div>
                             <div class="col-3">
                                 <label for="inCountry" class="form-label">Country</label>
-                                <input type="text" class="form-control uppercase-input" id="inCountry" placeholder="Enter country">
+                                <input type="text" class="form-control uppercase-input" id="inCountry" maxlength="100" placeholder="Enter country">
                             </div>
                             <div class="col-3">
                                 <label class="form-label" for="seStatus">Status</label>
@@ -64,17 +62,28 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row pt-27px">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Contact Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
                             <div class="col-4">
-                                <label for="inContactNames" class="form-label">Contact name</label>
+                                <label for="inContactNames" class="form-label">Contact Name</label>
                                 <input class="form-control uppercase-input" id="inContactNames" data-choices data-choices-limit="10" data-choices-removeItem type="text"/>
                             </div>
                             <div class="col-4">
-                                <label for="inContactEmails" class="form-label">Contact e-mail</label>
+                                <label for="inContactEmails" class="form-label">Contact E-mail</label>
                                 <input class="form-control uppercase-input" id="inContactEmails" data-choices data-choices-limit="10" data-choices-removeItem type="text"/>
                             </div>
                             <div class="col-4">
-                                <label for="inContactPhones" class="form-label">Contact phone</label>
+                                <label for="inContactPhones" class="form-label">Contact Phone</label>
                                 <input class="form-control uppercase-input" id="inContactPhones" data-choices data-choices-limit="10" data-choices-removeItem type="text"/>
                             </div>
                         </div>

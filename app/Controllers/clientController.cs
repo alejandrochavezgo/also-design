@@ -9,7 +9,9 @@ using authorization;
 using System.Net.Http.Headers;
 using common.configurations;
 using System.Text;
+using app.helpers;
 using providerData.helpers;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 
 [authorization]
 public class clientController : Controller
@@ -167,7 +169,7 @@ public class clientController : Controller
     {
         try
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || !clientFormHelper.isAddFormValid(client))
                 {
                     return Json(new
                     { 
@@ -183,10 +185,12 @@ public class clientController : Controller
 
             if(!responsePost.IsSuccessStatusCode)
             {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
                 return Json(new
                 {
                     isSuccess = false,
-                    message = $"{responsePost.ReasonPhrase}"
+                    message = $"{message}"
                 });
             }
             clientHttp.Dispose();
@@ -212,10 +216,10 @@ public class clientController : Controller
     {
         try
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || !clientFormHelper.isUpdateFormValid(client))
                 {
                     return Json(new
-                    { 
+                    {
                         isSuccess = false,
                         message = "Invalid data."
                     });
@@ -228,16 +232,18 @@ public class clientController : Controller
 
             if(!responsePost.IsSuccessStatusCode)
             {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
                 return Json(new
                 {
                     isSuccess = false,
-                    message = $"{responsePost.ReasonPhrase}"
+                    message = $"{message}"
                 });
             }
             clientHttp.Dispose();
 
             return Json(new
-            { 
+            {
                 isSuccess = true,
                 message = "Client updated successfully."
             });

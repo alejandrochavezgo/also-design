@@ -40,7 +40,6 @@ function updatePurchaseOrderAmounts() {
         var taxRate = parseFloat($('#inPurchaseOrderTax').val()) || 0;
         var taxAmount = subTotal * (taxRate / 100) || 0;
         var totalAmount = subTotal + taxAmount || 0;
-
         $('#tdPurchaseOrderSubTotal').text('$' + subTotal.toFixed(2));
         $('#tdPurchaseOrderTaxAmount').text('$' + taxAmount.toFixed(2));
         $('#thPurchaseOrderTotalAmount').text('$' + totalAmount.toFixed(2));
@@ -88,7 +87,7 @@ $(document).on('click', '#addItem', function() {
                 '</td>' +
                 '<td>' +
                     '<select class="form-select">' +
-                        '<option value="PZA">PZA</option>' +
+                        '<option value="EA">EA</option>' +
                     '</select>' +
                 '</td>' +
                 '<td class="text-end">' +
@@ -391,6 +390,9 @@ function addPurchaseOrder() {
                 totalValue: parseFloat($(row).find('.total-value').text().replace('$', '').trim())
             };
 
+            if (!item.description || !item.material || !item.unit)
+                return true;
+
             let imageFile = $(row).find('input[type="file"]')[0].files[0];
             if (imageFile) {
                 formData.append('image_' + index, imageFile);
@@ -424,8 +426,12 @@ function addPurchaseOrder() {
             generalNotes: $('textarea[placeholder="Notes"]').eq(1).val(),
             items: items
         };
-        formData.append('purchaseOrder', JSON.stringify(purchaseOrder));
+        
+        if(!isValidForm(purchaseOrder))
+            return;
 
+        $('#loader').show();
+        formData.append('purchaseOrder', JSON.stringify(purchaseOrder));
         fetch('add', {
             method: 'post',
             headers: {
@@ -445,6 +451,7 @@ function addPurchaseOrder() {
                     footer: '',
                     showCloseButton: !1
                 });
+                $('#loader').hide();
                 return;
             }
 
@@ -459,6 +466,7 @@ function addPurchaseOrder() {
             }).then(function (t) {
                 window.location.href = 'list';
             });
+            $('#loader').hide();
         })
         .catch(error => {
             Swal.fire({
@@ -470,6 +478,7 @@ function addPurchaseOrder() {
                 footer: '',
                 showCloseButton: true
             });
+            $('#loader').hide();
         });
     } catch (exception) {
         Swal.fire({
@@ -480,6 +489,36 @@ function addPurchaseOrder() {
             buttonsStyling: false,
             footer: '',
             showCloseButton: true
+        });
+        $('#loader').hide();
+    }
+}
+
+function isValidForm(purchaseOrder) {
+    try {
+        if (!purchaseOrder.supplier.id || !purchaseOrder.supplier.mainContactName || !purchaseOrder.supplier.mainContactPhone ||
+            !purchaseOrder.payment.id || !purchaseOrder.user.id || !purchaseOrder.currency.id || purchaseOrder.items.length == 0) {
+            Swal.fire({
+                title: 'Error!!',
+                html: 'The fields Supplier, Payment Type, Currency and Items cannot be empty.',
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: !1,
+                footer: '',
+                showCloseButton: !1
+            });
+            return false;
+        }
+        return true;
+    } catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: !1,
+            footer: '',
+            showCloseButton: !1
         });
     }
 }

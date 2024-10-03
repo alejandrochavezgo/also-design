@@ -1,4 +1,4 @@
-namespace api.Controllers;
+namespace api.controllers;
 
 using Microsoft.AspNetCore.Mvc;
 using api.authorization;
@@ -6,6 +6,7 @@ using api.services;
 using business.facade;
 using providerData.entitiesData;
 using Newtonsoft.Json;
+using common.helpers;
 
 [ApiController]
 [authorize]
@@ -65,8 +66,11 @@ public class clientController : ControllerBase
     {
         try
         {
-            if(client == null)
-                return BadRequest("The client was not modified.");
+            if(client == null || !new clientFormHelper().isUpdateFormValid(client))
+                return BadRequest("The Client was not modified.");
+
+            if(_facadeClient.existClientByBusinessNameAndRfcAndId(client.businessName, client.rfc, client.id))
+                return BadRequest("This Business Name and RFC already exist.");
 
             if (!_facadeClient.updateClient(client))
                 return BadRequest("Client not modified.");
@@ -84,8 +88,11 @@ public class clientController : ControllerBase
     {
         try
         {
-            if(client == null)
+            if(client == null || !new clientFormHelper().isAddFormValid(client))
                 return BadRequest("Missing data.");
+
+            if(_facadeClient.existClientByBusinessNameAndRfc(client.businessName, client.rfc))
+                return BadRequest("This Business Name and RFC already exist.");
 
             if (!_facadeClient.addClient(client))
                 return BadRequest("Client not added.");

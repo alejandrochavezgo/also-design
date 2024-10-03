@@ -19,6 +19,45 @@ public class repositorySupplier : baseRepository
         _logger = new log();
     }
 
+    public supplierModel existSupplierByBusinessNameAndRfc(string businessName, string rfc)
+    {
+        try
+        {
+            return factoryExistSupplierByBusinessNameAndRfc.get((DbDataReader)_providerDB.GetDataReader("sp_existSupplierByBusinessNameAndRfc", new DbParameter[] {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@businessName", DbType.String, businessName),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@rfc", DbType.String, rfc)
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<clientModel> getClients()
+    {
+        try
+        {
+            return factoryGetClients.getList((DbDataReader)_providerDB.GetDataReader("sp_getClients", new DbParameter[] {}));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public List<supplierModel> getSuppliers()
     {
         try

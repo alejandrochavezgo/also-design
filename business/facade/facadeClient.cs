@@ -5,6 +5,7 @@ using data.repositories;
 using entities.models;
 using Newtonsoft.Json;
 using System.Transactions;
+using entities.enums;
 
 public class facadeClient
 {
@@ -15,6 +16,40 @@ public class facadeClient
     {
         _logger = new log();
         _repositoryClient = new repositoryClient();
+    }
+
+    public bool existClientByBusinessNameAndRfc(string businessName, string rfc)
+    {
+        try
+        {
+            var client = _repositoryClient.existClientByBusinessNameAndRfc(businessName.Trim().ToUpper(), rfc.Trim().ToUpper());
+            if (client == null || client.id <= 0 || client.status != (int)statusType.ACTIVE)
+                return false;
+
+            return true;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public bool existClientByBusinessNameAndRfcAndId(string businessName, string rfc, int clientId)
+    {
+        try
+        {
+            var client = _repositoryClient.existClientByBusinessNameAndRfc(businessName.Trim().ToUpper(), rfc.Trim().ToUpper());
+            if (client == null || client.id <= 0 || client.status != (int)statusType.ACTIVE || client.id == clientId)
+                return false;
+
+            return true;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
     }
 
     public List<clientModel> getClients()

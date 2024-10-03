@@ -19,6 +19,27 @@ public class repositoryClient : baseRepository
         _logger = new log();
     }
 
+    public clientModel existClientByBusinessNameAndRfc(string businessName, string rfc)
+    {
+        try
+        {
+            return factoryExistClientByBusinessNameAndRfc.get((DbDataReader)_providerDB.GetDataReader("sp_existClientByBusinessNameAndRfc", new DbParameter[] {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@businessName", DbType.String, businessName),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@rfc", DbType.String, rfc)
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public List<clientModel> getClients()
     {
         try
@@ -42,7 +63,7 @@ public class repositoryClient : baseRepository
         try
         {
             return factoryGetClientById.get((DbDataReader)_providerDB.GetDataReader("sp_getClientById", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id)
             }));
         }
         catch (SqlException SqlException)
@@ -62,7 +83,7 @@ public class repositoryClient : baseRepository
         try
         {
             return factoryGetClientContactNamesByClientId.getList((DbDataReader)_providerDB.GetDataReader("sp_getContactNamesByClientId", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id)
             }));
         }
         catch (SqlException SqlException)
@@ -82,7 +103,7 @@ public class repositoryClient : baseRepository
         try
         {
             return factoryGetClientContactEmailsByClientId.getList((DbDataReader)_providerDB.GetDataReader("sp_getContactEmailsByClientId", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id)
             }));
         }
         catch (SqlException SqlException)
@@ -102,7 +123,7 @@ public class repositoryClient : baseRepository
         try
         {
             return factoryGetClientContactPhonesByClientId.getList((DbDataReader)_providerDB.GetDataReader("sp_getContactPhonesByClientId", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id)
             }));
         }
         catch (SqlException SqlException)
@@ -122,7 +143,7 @@ public class repositoryClient : baseRepository
         try
         {
             return factoryGetClientsByTerm.getList((DbDataReader)_providerDB.GetDataReader("sp_getClientsByTerm", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@businessName", DbType.String, businessName),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@businessName", DbType.String, businessName)
             }));
         }
         catch (SqlException SqlException)

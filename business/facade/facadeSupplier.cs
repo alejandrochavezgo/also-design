@@ -5,6 +5,7 @@ using data.repositories;
 using entities.models;
 using Newtonsoft.Json;
 using System.Transactions;
+using entities.enums;
 
 public class facadeSupplier
 {
@@ -15,6 +16,40 @@ public class facadeSupplier
     {
         _logger = new log();
         _repositorySupplier = new repositorySupplier();
+    }
+
+    public bool existSupplierByBusinessNameAndRfc(string businessName, string rfc)
+    {
+        try
+        {
+            var supplier = _repositorySupplier.existSupplierByBusinessNameAndRfc(businessName.Trim().ToUpper(), rfc.Trim().ToUpper());
+            if (supplier == null || supplier.id <= 0 || supplier.status != (int)statusType.ACTIVE)
+                return false;
+
+            return true;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public bool existSupplierByBusinessNameAndRfcAndId(string businessName, string rfc, int supplierId)
+    {
+        try
+        {
+            var supplier = _repositorySupplier.existSupplierByBusinessNameAndRfc(businessName.Trim().ToUpper(), rfc.Trim().ToUpper());
+            if (supplier == null || supplier.id <= 0 || supplier.status != (int)statusType.ACTIVE || supplier.id == supplierId)
+                return false;
+
+            return true;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
     }
 
     public List<supplierModel> getSuppliers()

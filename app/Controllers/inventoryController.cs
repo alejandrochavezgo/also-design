@@ -27,6 +27,19 @@ public class inventoryController : Controller
         _clientFactory = clientFactory;
     }
 
+    [HttpGet("inventory/list")]
+    public IActionResult list()
+    {
+        try
+        {
+            return View();
+        }
+        catch (Exception e)
+        {
+            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+        }
+    }
+
     [HttpGet("inventory/getItemByTerm")]
     public async Task<IActionResult> getItemByTerm(string description)
     {
@@ -48,6 +61,19 @@ public class inventoryController : Controller
             clientHttp.Dispose();
 
             return Json(results);
+        }
+        catch (Exception e)
+        {
+            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+        }
+    }
+
+    [HttpGet("inventory/add")]
+    public IActionResult add()
+    {
+        try
+        {
+            return View();
         }
         catch (Exception e)
         {

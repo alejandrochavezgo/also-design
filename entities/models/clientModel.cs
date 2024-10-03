@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace entities.models;
 
 public class clientModel

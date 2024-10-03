@@ -84,7 +84,7 @@ $(document).on('click', '#addItem', function() {
                 '<td class="text-start">' +
                     '<input class="itemId" hidden value="0">' +
                     '<textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Description"></textarea>' +
-                    '<textarea class="form-control fw-medium mb-1 bg-light border-0" rows="2" placeholder="Material"></textarea>' +
+                    '<textarea class="form-control fw-medium mb-1 bg-light border-0 quotation-item" rows="2" placeholder="Search material..."></textarea>' +
                     '<textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Details"></textarea>' +
                     '<input class="form-control mb-1" type="file">' +
                     '<textarea class="form-control fw-medium bg-light border-0" rows="4" placeholder="Notes"></textarea>' +
@@ -98,7 +98,7 @@ $(document).on('click', '#addItem', function() {
                 '</td>' +
                 '<td>' +
                     '<select class="form-select">' +
-                        '<option value="1">PZA</option>' +
+                        '<option value="EA">EA</option>' +
                     '</select>' +
                 '</td>' +
                 '<td class="text-end">' +
@@ -112,6 +112,7 @@ $(document).on('click', '#addItem', function() {
         updateAddAndRemoveButtons();
         initializeInputNumericalMasks();
         initializeCounter(rowCounter);
+        initializeItemAutocomplete('.quotation-item:last');
         updatePurchaseOrderAmounts();
     } catch (exception) {
         Swal.fire({
@@ -197,6 +198,66 @@ function initializeSupplierAutocomplete() {
                 $.each(ui.item.contactPhones, function(index, value) {
                     $('#seSupplierContactPhones').append($('<option>').text(value).attr('value', value));
                 });
+            }
+        });
+    } catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: false,
+            footer: '',
+            showCloseButton: true
+        });
+    }
+}
+
+function initializeItemAutocomplete(element) {
+    try {
+        $(element).autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: '/inventory/getItemByTerm',
+                    method: 'GET',
+                    dataType: 'json',
+                    data: {
+                        description: request.term
+                    },
+                    success: function(data) {
+                        response($.map(data, function(item) {
+                            return {
+                                label: item.description,
+                                value: item.description,
+                                id: item.id,
+                                description: item.description,
+                                code: item.code,
+                                unit: item.unit,
+                                unitValue: item.unitValue
+                            };
+                        }));
+                    },
+                    error: function(error) {
+                        Swal.fire({
+                            title: 'Error!!',
+                            html: error.responseText,
+                            icon: 'error',
+                            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                            buttonsStyling: !1,
+                            footer: '',
+                            showCloseButton:!1
+                        });
+                    }
+                });
+            },
+            minLength: 2,
+            select: function(event, ui) {
+                var row = $(this).closest('tr');
+                row.find('.quotation-item').val(ui.item.code + ' - ' + ui.item.value);
+                row.find('td:nth-child(5) select').val(ui.item.unit);
+                row.find('td:nth-child(6) input').val('$' + ui.item.unitValue.toFixed(2));
+                row.find('td:nth-child(7)').text('$' + (ui.item.unitValue * row.find('.product-quantity').val()).toFixed(2));
+                updatePurchaseOrderAmounts();
             }
         });
     } catch (exception) {
@@ -340,6 +401,9 @@ function updatePurchaseOrder() {
                 totalValue: parseFloat($(row).find('.total-value').text().replace('$', '').trim())
             };
 
+            if (!item.description || !item.material || !item.unit)
+                return true;
+
             let imageFile = $(row).find('input[type="file"]')[0].files[0];
             if (imageFile) {
                 formData.append('image_' + index, imageFile);
@@ -383,6 +447,11 @@ function updatePurchaseOrder() {
             generalNotes: $('textarea[placeholder="Notes"]').eq(1).val(),
             items: items
         };
+
+        if(!isValidForm(purchaseOrder))
+            return;
+
+        $('#loader').show();
         formData.append('purchaseOrder', JSON.stringify(purchaseOrder));
 
         fetch('update', {
@@ -404,6 +473,7 @@ function updatePurchaseOrder() {
                     footer: '',
                     showCloseButton: !1
                 });
+                $('#loader').hide();
                 return;
             }
 
@@ -416,8 +486,9 @@ function updatePurchaseOrder() {
                 footer: '',
                 showCloseButton: !1
             }).then(function (t) {
-                window.location.href = 'list';
+                location.reload(true);
             });
+            $('#loader').hide();
         })
         .catch(error => {
             Swal.fire({
@@ -429,6 +500,7 @@ function updatePurchaseOrder() {
                 footer: '',
                 showCloseButton: true
             });
+            $('#loader').hide();
         });
     } catch (exception) {
         Swal.fire({
@@ -440,6 +512,7 @@ function updatePurchaseOrder() {
             footer: '',
             showCloseButton: true
         });
+        $('#loader').hide();
     }
 }
 
@@ -449,10 +522,40 @@ $(document).on('click', '.delete-image', function() {
     $(this).remove();
 });
 
+function isValidForm(purchaseOrder) {
+    try {
+        if (!purchaseOrder.supplier.id || !purchaseOrder.supplier.mainContactName || !purchaseOrder.supplier.mainContactPhone ||
+            !purchaseOrder.payment.id || !purchaseOrder.user.id || !purchaseOrder.currency.id || purchaseOrder.items.length == 0) {
+            Swal.fire({
+                title: 'Error!!',
+                html: 'The fields Supplier, Payment Type, Currency and Items cannot be empty.',
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: !1,
+                footer: '',
+                showCloseButton: !1
+            });
+            return false;
+        }
+        return true;
+    } catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: !1,
+            footer: '',
+            showCloseButton: !1
+        });
+    }
+}
+
 $(document).ready(function() {
     updateAddAndRemoveButtons();
     initializeSupplierAutocomplete();
     initializeInputTaxMasks();
     initializeInputNumericalMasks();
     initializeCounter(1);
+    initializeItemAutocomplete('.quotation-item');
 });

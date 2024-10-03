@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using common.configurations;
 using System.Text;
 using providerData.helpers;
+using helpers;
 
 [authorization]
 public class supplierController : Controller
@@ -167,7 +168,7 @@ public class supplierController : Controller
     {
         try
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || !supplierFormHelper.isAddFormValid(supplier))
                 {
                     return Json(new
                     { 
@@ -183,10 +184,12 @@ public class supplierController : Controller
 
             if(!responsePost.IsSuccessStatusCode)
             {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
                 return Json(new
                 {
                     isSuccess = false,
-                    message = $"{responsePost.ReasonPhrase}"
+                    message = $"{message}"
                 });
             }
             clientHttp.Dispose();
@@ -212,7 +215,7 @@ public class supplierController : Controller
     {
         try
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || !supplierFormHelper.isUpdateFormValid(supplier))
                 {
                     return Json(new
                     { 
@@ -228,10 +231,12 @@ public class supplierController : Controller
 
             if(!responsePost.IsSuccessStatusCode)
             {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
                 return Json(new
                 {
                     isSuccess = false,
-                    message = $"{responsePost.ReasonPhrase}"
+                    message = $"{message}"
                 });
             }
             clientHttp.Dispose();

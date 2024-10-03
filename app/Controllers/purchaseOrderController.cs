@@ -9,7 +9,7 @@ using authorization;
 using System.Net.Http.Headers;
 using common.configurations;
 using System.Text;
-using providerData.helpers;
+using helpers;
 using System.Text.RegularExpressions;
 
 [authorization]
@@ -149,7 +149,7 @@ public class purchaseOrderController : Controller
             }
 
             var purchaseOrder = JsonConvert.DeserializeObject<purchaseOrderModel>(purchaseOrderJson);
-            if (purchaseOrder == null || !ModelState.IsValid)
+            if (purchaseOrder == null || !ModelState.IsValid || !purchaseOrderFormHelper.isAddFormValid(purchaseOrder))
             {
                 return Json(new
                 {
@@ -173,7 +173,7 @@ public class purchaseOrderController : Controller
                 if (match.Success)
                 {
                     int index = int.Parse(match.Groups[1].Value);
-                    purchaseOrder.items![index].imagePath = filePath;
+                    purchaseOrder!.items![index].imagePath = filePath;
                 }
             }
 
@@ -184,10 +184,12 @@ public class purchaseOrderController : Controller
 
             if(!responsePost.IsSuccessStatusCode)
             {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
                 return Json(new
                 {
                     isSuccess = false,
-                    message = $"{responsePost.ReasonPhrase}"
+                    message = $"{message}"
                 });
             }
             clientHttp.Dispose();
@@ -195,7 +197,7 @@ public class purchaseOrderController : Controller
             return Json(new
             {
                 isSuccess = true,
-                message = "Purchase order added successfully."
+                message = "Purchase Order added successfully."
             });
         }
         catch (Exception exception)
@@ -325,7 +327,7 @@ public class purchaseOrderController : Controller
             }
 
             var purchaseOrder = JsonConvert.DeserializeObject<purchaseOrderModel>(purchaseOrderJson);
-            if (purchaseOrder == null || !ModelState.IsValid)
+            if (purchaseOrder == null || !ModelState.IsValid || !purchaseOrderFormHelper.isUpdateFormValid(purchaseOrder))
             {
                 return Json(new
                 {
@@ -360,10 +362,12 @@ public class purchaseOrderController : Controller
 
             if(!responsePost.IsSuccessStatusCode)
             {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
                 return Json(new
                 {
                     isSuccess = false,
-                    message = $"{responsePost.ReasonPhrase}"
+                    message = $"{message}"
                 });
             }
             clientHttp.Dispose();

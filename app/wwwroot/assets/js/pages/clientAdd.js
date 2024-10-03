@@ -32,6 +32,10 @@ function reset() {
 
 function addClient() {
     try {
+        if(!isValidForm())
+            return;
+
+        $('#loader').show();
         fetch('add', {
             method: 'post',
             headers: {
@@ -51,9 +55,7 @@ function addClient() {
                 status: $('#seStatus').val()
             })
         })
-        .then(response => {
-            return response.json();
-        })
+        .then(response => {return response.json()})
         .then(data => {
             if (!data.isSuccess) {
                 Swal.fire({
@@ -65,6 +67,7 @@ function addClient() {
                     footer: '',
                     showCloseButton: !1
                 });
+                $('#loader').hide();
                 return;
             }
 
@@ -79,6 +82,7 @@ function addClient() {
             }).then(function (t) {
                 window.location.href = 'list';
             });
+            $('#loader').hide();
         })
         .catch(error => {
             Swal.fire({
@@ -90,9 +94,47 @@ function addClient() {
                 footer: '',
                 showCloseButton: !1
             });
+            $('#loader').hide();
         });
+    } catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: !1,
+            footer: '',
+            showCloseButton: !1
+        });
+        $('#loader').hide();
     }
-    catch (exception) {
+}
+
+function isValidForm() {
+    try {
+        var businessName = $('#inBusinessName').val();
+        var rfc = $('#inRfc').val();
+        var address = $('#inAddress').val();
+        var zipCode = $('#inZipCode').val();
+        var status = $('#seStatus').val();
+        var city = $('#inCity').val();
+        var state = $('#inState').val();
+        var country = $('#inCountry').val();
+
+        if (!businessName || !rfc || !address || !zipCode || !status || !city || !state || !country) {
+            Swal.fire({
+                title: 'Error!!',
+                html: 'The fields Bussiness Name, RFC, Address, ZIP Code, Status, City, State and Country cannot be empty.',
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: !1,
+                footer: '',
+                showCloseButton: !1
+            });
+            return false;
+        }
+        return true;
+    } catch (exception) {
         Swal.fire({
             title: 'Error!!',
             html: exception,

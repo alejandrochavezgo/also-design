@@ -5,6 +5,7 @@ using api.authorization;
 using api.services;
 using business.facade;
 using providerData.entitiesData;
+using common.helpers;
 using Newtonsoft.Json;
 
 [ApiController]
@@ -39,7 +40,7 @@ public class purchaseOrderController : ControllerBase
     {
         try
         {
-            if(purchaseOrder == null)
+            if(purchaseOrder == null || !new purchaseOrderFormHelper().isAddFormValid(purchaseOrder))
                 return BadRequest("Missing data.");
 
             if (!_facadePurchaseOrder.addPurchaseOrder(purchaseOrder))
@@ -58,8 +59,8 @@ public class purchaseOrderController : ControllerBase
     {
         try
         {
-            if(purchaseOrder == null)
-                return BadRequest("Missing data.");
+            if(purchaseOrder == null || !new purchaseOrderFormHelper().isUpdateFormValid(purchaseOrder))
+                return BadRequest("The Purchase Order was not modified.");
 
             if (!_facadePurchaseOrder.updatePurchaseOrder(purchaseOrder))
                 return BadRequest("Purchase order not updated.");

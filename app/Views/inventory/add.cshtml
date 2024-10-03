@@ -1,0 +1,253 @@
+@{
+    ViewData["title"] = "Add Inventory | Also Design";
+}
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Add Item</h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item color-495057">Inventory</li>
+                            <li class="breadcrumb-item color-495057">Add Item</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Item information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-3">
+                                <label for="inItemCode" class="form-label">Item Code</label>
+                                <input type="text" class="form-control uppercase-input" id="inItemCode" placeholder="Enter item code">
+                            </div>
+                            <div class="col-5">
+                                <label for="inItemName" class="form-label">Item Name</label>
+                                <input type="text" class="form-control uppercase-input" id="inItemName" placeholder="Enter item name">
+                            </div>
+                            <div class="col-4">
+                                <label for="seStatus" class="form-label">Status</label>
+                                <select class="form-select" id="seStatus">
+                                    <option value="1">ACTIVE</option>
+                                    <option value="2">INACTIVE</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-12">
+                                <label for="taDescription" class="form-label">Description</label>
+                                <textarea class="form-control fw-medium mb-1 bg-light border-0 height-65px" placeholder="Notes" id="taDescription"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Technical Specifications</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="form-label" for="seMaterial">Material</label>
+                                <select class="form-select" id="seMaterial">
+                                    <option value="">Select material</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label for="seFinishType" class="form-label">Finish Type</label>
+                                <select class="form-select" id="seFinishType">
+                                    <option value="">Select finish type</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-3">
+                                <label for="inDiameter" class="form-label">Diameter</label>
+                                <input type="text" class="form-control uppercase-input numerical-mask" id="inDiameter" value="0.00">
+                            </div>
+                            <div class="col-3">
+                                <label for="seUnitDiameter" class="form-label">Unit</label>
+                                <select class="form-select" id="seUnitDiameter">
+                                    <option value="">Select unit</option>
+                                    <option value="mm">Millimeter (mm)</option>
+                                    <option value="cm">Centimeter (cm)</option>
+                                    <option value="m">Meter (m)</option>
+                                    <option value="km">Kilometer (km)</option>
+                                    <option value="in">Inch (in)</option>
+                                    <option value="ft">Foot (ft)</option>
+                                    <option value="yd">Yard (yd)</option>
+                                    <option value="mi">Mile (mi)</option>
+                                </select>
+                            </div>
+                            <div class="col-3">
+                                <label for="inLength" class="form-label">Length</label>
+                                <input type="text" class="form-control uppercase-input numerical-mask" id="inLength" value="0.00">
+                            </div>
+                            <div class="col-3">
+                                <label for="seUnitLength" class="form-label">Unit</label>
+                                <select class="form-select" id="seUnitLength">
+                                    <option value="">Select unit</option>
+                                    <option value="mm">Millimeter (mm)</option>
+                                    <option value="cm">Centimeter (cm)</option>
+                                    <option value="m">Meter (m)</option>
+                                    <option value="km">Kilometer (km)</option>
+                                    <option value="in">Inch (in)</option>
+                                    <option value="ft">Foot (ft)</option>
+                                    <option value="yd">Yard (yd)</option>
+                                    <option value="mi">Mile (mi)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-3">
+                                <label for="inWeight" class="form-label">Weight</label>
+                                <input type="text" class="form-control numerical-mask" id="inWeight" value="0.00">
+                            </div>
+                            <div class="col-3">
+                                <label for="inUnitWeight" class="form-label">Unit</label>
+                                <select class="form-select" id="inUnitWeight">
+                                    <option value="">Select unit</option>
+                                    <option value="g">Gram (g)</option>
+                                    <option value="kg">Kilogram (kg)</option>
+                                    <option value="t">Ton (t)</option>
+                                    <option value="mg">Milligram (mg)</option>
+                                    <option value="µg">Microgram (µg)</option>
+                                    <option value="qq">Quintal (qq)</option>
+                                    <option value="oz">Ounce (oz)</option>
+                                    <option value="lb">Pound (lb)</option>
+                                </select>
+                            </div>
+                            <div class="col-3">
+                                <label for="inTolerance" class="form-label">Tolerance</label>
+                                <input type="text" class="form-control uppercase-input numerical-mask" id="inTolerance" value="0.00">
+                            </div>
+                            <div class="col-3">
+                                <label for="seUnitTolerance" class="form-label">Unit</label>
+                                <select class="form-select" id="seUnitTolerance">
+                                    <option value="">Select unit</option>
+                                    <option value="um">Micrometer (µm)</option>
+                                    <option value="mm">Millimeter (mm)</option>
+                                    <option value="in">Inch (in)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Associated Documents</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="inBluePrints" class="form-label">Blueprints</label>
+                                <input class="form-control mb-1" type="file">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 pt-27px">
+                                <label for="inTechnicalSpecifications" class="form-label">Technical Specifications</label>
+                                <input class="form-control mb-1" type="file">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Additional Remarks</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="taNotes" class="form-label">Notes</label>
+                                <textarea class="form-control fw-medium mb-1 bg-light border-0 height-261px" rows="1" placeholder="Notes" id="taNotes"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Inventory Management</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-3">
+                                <label class="form-label" for="seWarehouseLocation">Warehouse Location</label>
+                                <select class="form-select" id="seWarehouseLocation">
+                                    <option value="">Select warehouse location</option>
+                                </select>
+                            </div>
+                            <div class="col-3">
+                                <label for="inQuantity" class="form-label">Initial Quantity</label>
+                                <input type="text" class="form-control uppercase-input numerical-mask" id="inQuantity" value="0">
+                            </div>
+                            <div class="col-3">
+                                <label for="inReorderQty" class="form-label">Re-order Quantity</label>
+                                <input type="text" class="form-control uppercase-input numerical-mask" id="inReorderQty" value="0">
+                            </div>
+                            <div class="col-3">
+                                <label for="seUnit" class="form-label">Unit</label>
+                                <select class="form-select" id="seUnit">
+                                    <option value="">Select unit</option>
+                                    <option value="EA">Each (EA)</option>
+                                    <option value="BOX">Box (BOX)</option>
+                                    <option value="PKG">Package (PKG)</option>
+                                    <option value="SET">Set (SET)</option>
+                                    <option value="PAL">Pallet (PAL)</option>
+                                    <option value="LB">Pound (LB)</option>
+                                    <option value="KG">Kilogram (KG)</option>
+                                    <option value="M">Meter (M)</option>
+                                    <option value="L">Liter (L)</option>
+                                    <option value="FT">Foot (FT)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-4">
+                                <label for="seCurrency" class="form-label">Currency</label>
+                                <select class="form-select" id="seCurrency">
+                                    <option value="1">MXN</option>
+                                    <option value="2">USD</option>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label for="inUnitValue" class="form-label">Unit Value</label>
+                                <input type="text" class="form-control text-end" id="inUnitValue" value="$0.00">
+                            </div>
+                            <div class="col-4">
+                                <label for="inTotalValue" class="form-label">Total Value</label>
+                                <input type="text" class="form-control text-end numerical-mask" readonly id="inTotalValue" value="$0.00">
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-warning w-100per" onclick="reset()">Clear</button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-success w-100per" onclick="addClient()">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script src="../assets/js/pages/inventoryAdd.js"></script>
+}
