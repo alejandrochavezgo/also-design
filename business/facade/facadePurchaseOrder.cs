@@ -69,11 +69,18 @@ public class facadePurchaseOrder
                 var purchaseOrderIdUpdated = _repositoryPurchaseOrder.updatePurchaseOrder(purchaseOrder);
 
                 foreach (var item in purchaseOrder.items)
-                {
-                    item.imagePath = string.IsNullOrEmpty(item.imagePath) ? string.Empty : item.imagePath;
-                    if(!(_repositoryPurchaseOrder.updatePurchaseOrderItem(item) > 0))
-                        throw new Exception($"Error at updating the purchase order item.");
-                }
+                    if(item.id > 0)
+                    {
+                        item.imagePath = string.IsNullOrEmpty(item.imagePath) ? string.Empty : item.imagePath;
+                        if(!(_repositoryPurchaseOrder.updatePurchaseOrderItem(item) > 0))
+                            throw new Exception($"Error at updating the purchase order item.");
+                    }
+                    else
+                    {
+                        item.imagePath = string.IsNullOrEmpty(item.imagePath) ? string.Empty : item.imagePath;
+                        if(!(_repositoryPurchaseOrder.addPurchaseOrderItem(item, purchaseOrderIdUpdated) > 0))
+                            throw new Exception($"Error at saving the purchase order item.");
+                    }
 
                 transactionScope.Complete();
                 return true;

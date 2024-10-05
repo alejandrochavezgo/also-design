@@ -69,11 +69,18 @@ public class facadeQuotation
                 var quotationIdUpdated = _repositoryQuotation.updateQuotation(quotation);
 
                 foreach (var item in quotation.items)
-                {
-                    item.imagePath = string.IsNullOrEmpty(item.imagePath) ? string.Empty : item.imagePath;
-                    if(!(_repositoryQuotation.updateQuotationItem(item) > 0))
-                        throw new Exception($"Error at updating the quotation item.");
-                }
+                    if (item.id > 0)
+                    {
+                        item.imagePath = string.IsNullOrEmpty(item.imagePath) ? string.Empty : item.imagePath;
+                        if(!(_repositoryQuotation.updateQuotationItem(item) > 0))
+                            throw new Exception($"Error at updating the quotation item.");
+                    }
+                    else
+                    {
+                        item.imagePath = string.IsNullOrEmpty(item.imagePath) ? string.Empty : item.imagePath;
+                        if(!(_repositoryQuotation.addQuotationItem(item, quotationIdUpdated) > 0))
+                            throw new Exception($"Error at saving the new quotation item.");
+                    }
 
                 transactionScope.Complete();
                 return true;

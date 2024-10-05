@@ -134,7 +134,7 @@ public class purchaseOrderController : Controller
     }
 
     [HttpPost("purchaseOrder/add")]
-    public async Task<JsonResult> Add(IFormCollection form)
+    public async Task<JsonResult> add(IFormCollection form)
     {
         try
         {

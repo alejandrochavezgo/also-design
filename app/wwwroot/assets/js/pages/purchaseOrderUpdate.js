@@ -82,7 +82,7 @@ $(document).on('click', '#addItem', function() {
                         '</span>' +
                     '</td>' +
                 '<td class="text-start">' +
-                    '<input class="itemId" hidden value="0">' +
+                    '<input class="item-id" hidden value="0">' +
                     '<textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Description"></textarea>' +
                     '<textarea class="form-control fw-medium mb-1 bg-light border-0 quotation-item" rows="2" placeholder="Search material..."></textarea>' +
                     '<textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Details"></textarea>' +
@@ -361,7 +361,6 @@ function initializeCounter(counter) {
                 updatePurchaseOrderAmounts();
             }
         }
-
         function decrementValue(event) {
             var input = event.target.nextElementSibling;
             var minValue = input.getAttribute("min");
@@ -384,17 +383,24 @@ function initializeCounter(counter) {
     }
 }
 
+function initializeAllCounters() {
+    $('#tbItems tr').each(function(index, row) {
+        initializeCounter(index + 1);
+    });
+}
+
 function updatePurchaseOrder() {
     try {
         let formData = new FormData();
         let items = [];
         $('#tbItems tr').each(function(index, row) {
             let item = {
-                id: $(row).find('.itemId').val(),
+                id: $(row).find('.item-id').val(),
                 description: $(row).find('textarea').eq(0).val(),
                 material: $(row).find('textarea').eq(1).val(),
                 details: $(row).find('textarea').eq(2).val(),
                 notes: $(row).find('textarea').eq(3).val(),
+                imagePath: $(row).find('.image-path').val(),
                 quantity: parseInt($(row).find('.product-quantity').val(), 10),
                 unit: $(row).find('select').val(),
                 unitValue: parseFloat($(row).find('.subtotal-value').val().replace('$', '').trim()),
@@ -453,7 +459,6 @@ function updatePurchaseOrder() {
 
         $('#loader').show();
         formData.append('purchaseOrder', JSON.stringify(purchaseOrder));
-
         fetch('update', {
             method: 'post',
             headers: {
@@ -519,16 +524,17 @@ function updatePurchaseOrder() {
 $(document).on('click', '.delete-image', function() {
     var $row = $(this).closest('tr');
     $row.find('.image-item').remove();
+    $row.find('.image-path').val('');
     $(this).remove();
 });
 
 function isValidForm(purchaseOrder) {
     try {
         if (!purchaseOrder.supplier.id || !purchaseOrder.supplier.mainContactName || !purchaseOrder.supplier.mainContactPhone ||
-            !purchaseOrder.payment.id || !purchaseOrder.user.id || !purchaseOrder.currency.id || purchaseOrder.items.length == 0) {
+            !purchaseOrder.payment.id || !purchaseOrder.user.id || !purchaseOrder.user.employee.mainContactPhone || !purchaseOrder.currency.id || purchaseOrder.items.length == 0) {
             Swal.fire({
                 title: 'Error!!',
-                html: 'The fields Supplier, Payment Type, Currency and Items cannot be empty.',
+                html: 'The fields Supplier, Payment Type, User Phone Contact, Currency and Items cannot be empty.',
                 icon: 'error',
                 confirmButtonClass: 'btn btn-danger w-xs mt-2',
                 buttonsStyling: !1,
@@ -556,6 +562,6 @@ $(document).ready(function() {
     initializeSupplierAutocomplete();
     initializeInputTaxMasks();
     initializeInputNumericalMasks();
-    initializeCounter(1);
+    initializeAllCounters();
     initializeItemAutocomplete('.quotation-item');
 });

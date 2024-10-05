@@ -6,6 +6,8 @@ using api.services;
 using business.facade;
 using providerData.entitiesData;
 using Newtonsoft.Json;
+using common.helpers;
+using entities.models;
 
 [ApiController]
 [authorize]
@@ -39,7 +41,7 @@ public class quotationController : ControllerBase
     {
         try
         {
-            if(quotation == null)
+            if(quotation == null || !new quotationFormHelper().isAddFormValid(quotation))
                 return BadRequest("Missing data.");
 
             if (!_facadeQuotation.addQuotation(quotation))
@@ -58,7 +60,7 @@ public class quotationController : ControllerBase
     {
         try
         {
-            if(quotation == null)
+            if(quotation == null || !new quotationFormHelper().isUpdateFormValid(quotation))
                 return BadRequest("Missing data.");
 
             if (!_facadeQuotation.updateQuotation(quotation))

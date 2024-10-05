@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using common.configurations;
 using System.Text;
 using providerData.helpers;
+using helpers;
 using System.Text.RegularExpressions;
 
 [authorization]
@@ -149,7 +150,7 @@ public class quotationController : Controller
             }
 
             var quotation = JsonConvert.DeserializeObject<quotationModel>(quotationJson);
-            if (quotation == null || !ModelState.IsValid)
+            if (quotation == null || !ModelState.IsValid || !quotationFormHelper.isAddFormValid(quotation))
             {
                 return Json(new
                 {
@@ -184,10 +185,12 @@ public class quotationController : Controller
 
             if(!responsePost.IsSuccessStatusCode)
             {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
                 return Json(new
                 {
                     isSuccess = false,
-                    message = $"{responsePost.ReasonPhrase}"
+                    message = $"{message}"
                 });
             }
             clientHttp.Dispose();
@@ -278,6 +281,7 @@ public class quotationController : Controller
             ViewData["employee.profession"] = resultUser.employee!.profession;
             ViewData["employee.jobPosition"] = resultUser.employee!.jobPosition;
             ViewData["employee.contactPhones"] = resultUser.employee!.contactPhones;
+            ViewData["employee.mainContactPhone"] = result!.user!.employee!.mainContactPhone;
             ViewData["quotation.id"] = result!.id;
             ViewData["client.businessName"] = result!.client!.businessName;
             ViewData["client.id"] = result!.client!.id;
@@ -324,7 +328,7 @@ public class quotationController : Controller
             }
 
             var quotation = JsonConvert.DeserializeObject<quotationModel>(quotationJson);
-            if (quotation == null || !ModelState.IsValid)
+            if (quotation == null || !ModelState.IsValid || !quotationFormHelper.isUpdateFormValid(quotation))
             {
                 return Json(new
                 {
@@ -359,10 +363,12 @@ public class quotationController : Controller
 
             if(!responsePost.IsSuccessStatusCode)
             {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
                 return Json(new
                 {
                     isSuccess = false,
-                    message = $"{responsePost.ReasonPhrase}"
+                    message = $"{message}"
                 });
             }
             clientHttp.Dispose();

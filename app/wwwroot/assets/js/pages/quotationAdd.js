@@ -40,7 +40,6 @@ function updateQuotationAmounts() {
         var taxRate = parseFloat($('#inQuotationTax').val()) || 0;
         var taxAmount = subTotal * (taxRate / 100) || 0;
         var totalAmount = subTotal + taxAmount || 0;
-
         $('#tdQuotationSubTotal').text('$' + subTotal.toFixed(2));
         $('#tdQuotationTaxAmount').text('$' + taxAmount.toFixed(2));
         $('#thQuotationTotalAmount').text('$' + totalAmount.toFixed(2));
@@ -330,6 +329,9 @@ function addQuotation() {
                 totalValue: parseFloat($(row).find('.total-value').text().replace('$', '').trim())
             };
 
+            if (!item.description || !item.material || !item.unit)
+                return true;
+
             let imageFile = $(row).find('input[type="file"]')[0].files[0];
             if (imageFile) {
                 formData.append('image_' + index, imageFile);
@@ -363,8 +365,12 @@ function addQuotation() {
             generalNotes: $('textarea[placeholder="Notes"]').eq(1).val(),
             items: items
         };
-        formData.append('quotation', JSON.stringify(quotation));
 
+        if(!isValidForm(quotation))
+            return;
+
+        $('#loader').show();
+        formData.append('quotation', JSON.stringify(quotation));
         fetch('add', {
             method: 'post',
             headers: {
@@ -384,6 +390,7 @@ function addQuotation() {
                     footer: '',
                     showCloseButton: !1
                 });
+                $('#loader').hide();
                 return;
             }
 
@@ -398,6 +405,7 @@ function addQuotation() {
             }).then(function (t) {
                 window.location.href = 'list';
             });
+            $('#loader').hide();
         })
         .catch(error => {
             Swal.fire({
@@ -409,6 +417,7 @@ function addQuotation() {
                 footer: '',
                 showCloseButton: true
             });
+            $('#loader').hide();
         });
     } catch (exception) {
         Swal.fire({
@@ -419,6 +428,36 @@ function addQuotation() {
             buttonsStyling: false,
             footer: '',
             showCloseButton: true
+        });
+        $('#loader').hide();
+    }
+}
+
+function isValidForm(quotation) {
+    try {
+        if (!quotation.client.id || !quotation.client.mainContactName || !quotation.client.mainContactPhone ||
+            !quotation.payment.id || !quotation.user.id || !quotation.user.employee.mainContactPhone || !quotation.currency.id || quotation.items.length == 0) {
+            Swal.fire({
+                title: 'Error!!',
+                html: 'The fields Client, Payment Type, User Phone Contact, Currency and Items cannot be empty.',
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: !1,
+                footer: '',
+                showCloseButton: !1
+            });
+            return false;
+        }
+        return true;
+    } catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: !1,
+            footer: '',
+            showCloseButton: !1
         });
     }
 }

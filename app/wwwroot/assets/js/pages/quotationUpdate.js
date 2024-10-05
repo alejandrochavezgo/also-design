@@ -82,7 +82,7 @@ $(document).on('click', '#addItem', function() {
                         '</span>' +
                     '</td>' +
                 '<td class="text-start">' +
-                    '<input class="itemId" hidden value="0">' +
+                    '<input class="item-id" hidden value="0">' +
                     '<textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Description"></textarea>' +
                     '<textarea class="form-control fw-medium mb-1 bg-light border-0" rows="2" placeholder="Material"></textarea>' +
                     '<textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Details"></textarea>' +
@@ -300,7 +300,6 @@ function initializeCounter(counter) {
                 updateQuotationAmounts();
             }
         }
-
         function decrementValue(event) {
             var input = event.target.nextElementSibling;
             var minValue = input.getAttribute("min");
@@ -323,22 +322,32 @@ function initializeCounter(counter) {
     }
 }
 
+function initializeAllCounters() {
+    $('#tbItems tr').each(function(index, row) {
+        initializeCounter(index + 1);
+    });
+}
+
 function updateQuotation() {
     try {
         let formData = new FormData();
         let items = [];
         $('#tbItems tr').each(function(index, row) {
             let item = {
-                id: $(row).find('.itemId').val(),
+                id: $(row).find('.item-id').val(),
                 description: $(row).find('textarea').eq(0).val(),
                 material: $(row).find('textarea').eq(1).val(),
                 details: $(row).find('textarea').eq(2).val(),
                 notes: $(row).find('textarea').eq(3).val(),
+                imagePath: $(row).find('.image-path').val(),
                 quantity: parseInt($(row).find('.product-quantity').val(), 10),
                 unit: $(row).find('select').val(),
                 unitValue: parseFloat($(row).find('.subtotal-value').val()),
                 totalValue: parseFloat($(row).find('.total-value').text().replace('$', '').trim())
             };
+
+            if (!item.description || !item.material || !item.unit)
+                return true;
 
             let imageFile = $(row).find('input[type="file"]')[0].files[0];
             if (imageFile) {
@@ -383,8 +392,12 @@ function updateQuotation() {
             generalNotes: $('textarea[placeholder="Notes"]').eq(1).val(),
             items: items
         };
-        formData.append('quotation', JSON.stringify(quotation));
 
+        if(!isValidForm(quotation))
+            return;
+
+        $('#loader').show();
+        formData.append('quotation', JSON.stringify(quotation));
         fetch('update', {
             method: 'post',
             headers: {
@@ -404,6 +417,7 @@ function updateQuotation() {
                     footer: '',
                     showCloseButton: !1
                 });
+                $('#loader').hide();
                 return;
             }
 
@@ -416,8 +430,9 @@ function updateQuotation() {
                 footer: '',
                 showCloseButton: !1
             }).then(function (t) {
-                window.location.href = 'list';
+                location.reload(true);
             });
+            $('#loader').hide();
         })
         .catch(error => {
             Swal.fire({
@@ -429,6 +444,7 @@ function updateQuotation() {
                 footer: '',
                 showCloseButton: true
             });
+            $('#loader').hide();
         });
     } catch (exception) {
         Swal.fire({
@@ -440,19 +456,50 @@ function updateQuotation() {
             footer: '',
             showCloseButton: true
         });
+        $('#loader').hide();
     }
 }
 
 $(document).on('click', '.delete-image', function() {
     var $row = $(this).closest('tr');
     $row.find('.image-item').remove();
+    $row.find('.image-path').val('');
     $(this).remove();
 });
+
+function isValidForm(quotation) {
+    try {
+        if (!quotation.client.id || !quotation.client.mainContactName || !quotation.client.mainContactPhone ||
+            !quotation.payment.id || !quotation.user.id || !quotation.user.employee.mainContactPhone || !quotation.currency.id || quotation.items.length == 0) {
+            Swal.fire({
+                title: 'Error!!',
+                html: 'The fields Client, Payment Type, User Phone Contact, Currency and Items cannot be empty.',
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: !1,
+                footer: '',
+                showCloseButton: !1
+            });
+            return false;
+        }
+        return true;
+    } catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: !1,
+            footer: '',
+            showCloseButton: !1
+        });
+    }
+}
 
 $(document).ready(function() {
     updateAddAndRemoveButtons();
     initializeClientAutocomplete();
     initializeInputTaxMasks();
     initializeInputNumericalMasks();
-    initializeCounter(1);
+    initializeAllCounters();
 });
