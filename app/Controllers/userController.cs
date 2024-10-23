@@ -54,7 +54,8 @@ public class userController : Controller
                 }
 
             user.passwordHash = userSecurityHelper.generateHash(_userManager,
-            new applicationUser(){
+            new applicationUser()
+            {
                 UserName = user.username,
                 NormalizedUserName = user.username,
                 Password = user.password,
@@ -70,10 +71,12 @@ public class userController : Controller
 
             if(!responsePost.IsSuccessStatusCode)
             {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
                 return Json(new
                 {
                     isSuccess = false,
-                    message = $"{responsePost.ReasonPhrase}"
+                    message = $"{message}"
                 });
             }
             clientHttp.Dispose();
@@ -107,7 +110,9 @@ public class userController : Controller
 
             if(!responsePost.IsSuccessStatusCode)
             {
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = responsePost.ReasonPhrase });
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
             }
 
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
@@ -162,10 +167,12 @@ public class userController : Controller
 
             if(!responsePost.IsSuccessStatusCode)
             {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
                 return Json(new
                 {
                     isSuccess = false,
-                    message = $"{responsePost.ReasonPhrase}"
+                    message = $"{message}"
                 });
             }
             clientHttp.Dispose();
@@ -198,10 +205,12 @@ public class userController : Controller
 
             if(!responseGet.IsSuccessStatusCode)
             {
+                var errorMessage = await responseGet.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responseGet.ReasonPhrase : errorMessage;
                 return Json(new
                 {
                     isSuccess = false,
-                    message = $"{responseGet.ReasonPhrase}"
+                    message = $"{message}"
                 });
             }
 

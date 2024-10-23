@@ -68,7 +68,9 @@ public class clientController : Controller
 
             if(!responsePost.IsSuccessStatusCode)
             {
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = responsePost.ReasonPhrase });
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
             }
 
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
@@ -108,10 +110,12 @@ public class clientController : Controller
 
             if(!responseGet.IsSuccessStatusCode)
             {
+                var errorMessage = await responseGet.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responseGet.ReasonPhrase : errorMessage;
                 return Json(new
                 {
                     isSuccess = false,
-                    message = $"{responseGet.ReasonPhrase}"
+                    message = $"{message}"
                 });
             }
 
@@ -149,7 +153,9 @@ public class clientController : Controller
 
             if(!responseGet.IsSuccessStatusCode)
             {
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = responseGet.ReasonPhrase });
+                var errorMessage = await responseGet.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responseGet.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
             }
 
             var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();

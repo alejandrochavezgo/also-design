@@ -4,33 +4,7 @@ document.querySelectorAll('.uppercase-input').forEach(input => {
     });
 });
 
-function reset() {
-    try {
-        $('#inBusinessName').val('');
-        $('#inRfc').val('');
-        $('#inAddress').val('');
-        $('#inZipCode').val('');
-        $('#inCity').val('');
-        $('#inState').val('');
-        $('#inCountry').val('');
-        $('#inContactEmails').val('');
-        $('#inContactPhones').val('');
-        $('#inContactNames').val('');
-        $('#seStatus').val(1);
-    } catch (exception) {
-        Swal.fire({
-            title: 'Error!!',
-            html: exception,
-            icon: 'error',
-            confirmButtonClass: 'btn btn-danger w-xs mt-2',
-            buttonsStyling: !1,
-            footer: '',
-            showCloseButton:!1
-        });
-    }
-}
-
-function addSupplier() {
+function add() {
     try {
         if(!isValidForm())
             return;
@@ -55,9 +29,7 @@ function addSupplier() {
                 status: $('#seStatus').val()
             })
         })
-        .then(response => {
-            return response.json();
-        })
+        .then(response => {return response.json();})
         .then(data => {
             if (!data.isSuccess) {
                 Swal.fire({

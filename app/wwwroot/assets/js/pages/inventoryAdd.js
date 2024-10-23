@@ -14,7 +14,6 @@ $('#inUnitValue').on('input', function() {
     var value = $(this).val().replace(/[^0-9.]/g, '');
     var decimalIndex = value.indexOf('.');
     if (decimalIndex !== -1) {
-        // Si hay un punto, corta todo después de la segunda aparición
         value = value.substring(0, decimalIndex + 1) + value.substring(decimalIndex + 1).replace(/\./g, '');
     }
 
@@ -77,6 +76,243 @@ function initializeInputNumericalMasks()
     }
 }
 
+async function initializeCatalogs()
+{
+    try {
+        const response = await fetch('getCatalogs');
+        if (!response ||!response.ok) {
+            Swal.fire({
+                title: 'Error!!',
+                html: `HTTP error! Status: ${response.status}`,
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: false,
+                footer: '',
+                showCloseButton: true
+            });
+            return;
+        }
+
+        const catalogs = await response.json();
+        if (!catalogs || !catalogs.isSuccess || catalogs.results.length !== 9) {
+            Swal.fire({
+                title: 'Error!!',
+                html: 'Catalogs not downloaded. Please reload the page.',
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: false,
+                footer: '',
+                showCloseButton: true
+            });
+            return;
+        }
+
+        var selectMapping = {
+            seStatus: 0,
+            seMaterial: 1,
+            seFinishType: 2,
+            seUnitDiameter: 3,
+            seUnitLength: 3,
+            seUnitWeight: 4,
+            seUnitTolerance: 5,
+            seWarehouseLocation: 6,
+            seUnit: 7,
+            seCurrency: 8
+        };
+
+        for (var selectId in selectMapping) {
+            var index = selectMapping[selectId];
+            var $select = $('#' + selectId);
+            $select.empty().append('<option value="">Select option</option>');
+        
+            if (selectId === 'seUnitDiameter' || selectId === 'seUnitLength') {
+                catalogs.results[index].forEach(function(item) {
+                    $select.append(
+                        $('<option>', {
+                            value: item.id,
+                            text: item.description
+                        })
+                    );
+                });
+            } else {
+                catalogs.results[index].forEach(function(item) {
+                    $select.append(
+                        $('<option>', {
+                            value: item.id,
+                            text: item.description
+                        })
+                    );
+                });
+            }
+        }
+    } catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: false,
+            footer: '',
+            showCloseButton: true
+        });
+    }
+}
+
+function add() {
+    try {
+        let formData = new FormData();
+        let inventoryItem = {
+            itemCode: $('#inItemCode').val(),
+            itemName: $('#inItemName').val(),
+            status: $('#seStatus').val(),
+            description: $('#taDescription').val(),
+            material: $('#seMaterial').val(),
+            finishType: $('#seFinishType').val(),
+            diameter: parseFloat($('#inDiameter').val()),
+            unitDiameter: $('#seUnitDiameter').val(),
+            length: parseFloat($('#inLength').val()),
+            unitLength: $('#seUnitLength').val(),
+            weight: parseFloat($('#inWeight').val()),
+            unitWeight: $('#seUnitWeight').val(),
+            tolerance: parseFloat($('#inTolerance').val()),
+            unitTolerance: $('#seUnitTolerance').val(),
+            warehouseLocation: $('#seWarehouseLocation').val(),
+            quantity: parseFloat($('#inQuantity').val()),
+            reorderQty: parseFloat($('#inReorderQty').val()),
+            unit: $('#seUnit').val(),
+            currency: $('#seCurrency').val(),
+            unitValue: parseFloat($('#inUnitValue').val().replace('$', '').trim()),
+            totalValue: parseFloat($('#inTotalValue').val().replace('$', '').trim()),
+            notes: $('#taNotes').val()
+        };
+
+        if(!isValidForm(inventoryItem))
+            return;
+
+        let itemImageFile = $('#inItemImage')[0].files[0];
+        let bluePrintFile = $('#inBluePrints')[0].files[0];
+        let techSpecFile = $('#inTechnicalSpecifications')[0].files[0];
+        if (itemImageFile) formData.append('itemImage', itemImageFile);
+        if (bluePrintFile) formData.append('bluePrints', bluePrintFile);
+        if (techSpecFile) formData.append('technicalSpecifications', techSpecFile);
+
+        $('#loader').show();
+        formData.append('inventoryItem', JSON.stringify(inventoryItem));
+        fetch('add', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json'
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.isSuccess) {
+                Swal.fire({
+                    title: 'Error!!',
+                    html: data.message,
+                    icon: 'error',
+                    confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                    buttonsStyling: !1,
+                    footer: '',
+                    showCloseButton: !1
+                });
+                $('#loader').hide();
+                return;
+            }
+
+            Swal.fire({
+                title: 'Success',
+                html: data.message,
+                icon: 'success',
+                confirmButtonClass: 'btn btn-success w-xs mt-2',
+                buttonsStyling: !1,
+                footer: '',
+                showCloseButton: !1
+            }).then(function (t) {
+                window.location.href = 'list';
+            });
+            $('#loader').hide();
+        })
+        .catch(error => {
+            Swal.fire({
+                title: 'Error!',
+                text: error,
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: false,
+                footer: '',
+                showCloseButton: true
+            });
+            $('#loader').hide();
+        });
+    } catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: false,
+            footer: '',
+            showCloseButton: true
+        });
+        $('#loader').hide();
+    }
+}
+
+function isValidForm(inventoryItem) {
+    try {
+        if (!inventoryItem.itemCode ||
+            !inventoryItem.itemName ||
+            !inventoryItem.status ||
+            !inventoryItem.description ||
+            !inventoryItem.notes ||
+            !inventoryItem.material ||
+            !inventoryItem.finishType ||
+            isNaN(inventoryItem.diameter) ||
+            !inventoryItem.unitDiameter ||
+            isNaN(inventoryItem.length) ||
+            !inventoryItem.unitLength ||
+            isNaN(inventoryItem.weight) ||
+            !inventoryItem.unitWeight ||
+            isNaN(inventoryItem.tolerance) ||
+            !inventoryItem.unitTolerance ||
+            !inventoryItem.warehouseLocation ||
+            isNaN(inventoryItem.quantity) ||
+            isNaN(inventoryItem.reorderQty) ||
+            !inventoryItem.unit ||
+            !inventoryItem.currency ||
+            isNaN(inventoryItem.unitValue) ||
+            isNaN(inventoryItem.totalValue)) {
+            Swal.fire({
+                title: 'Error!!',
+                html: 'The fields Item Code, Item Name, Status, Description, Notes, Material, Finish Type, Diameter, Diameter Unit, Length, Length Unit, Weight, Weight Unit, Tolerance, Tolerance Unit, Warehouse Location, Quantity, Reorder Quantity, Package Unit, Currency, Unit value, Total Value and Notes cannot be empty.',
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: !1,
+                footer: '',
+                showCloseButton: !1
+            });
+            return false;
+        }
+        return true;
+    } catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: !1,
+            footer: '',
+            showCloseButton: !1
+        });
+    }
+}
+
 $(document).ready(function() {
+    $('#loader').show();
     initializeInputNumericalMasks();
+    initializeCatalogs().then(() => {
+        $('#loader').hide();
+    });
 });

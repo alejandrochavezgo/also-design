@@ -85,16 +85,16 @@ public class userController : ControllerBase
         }
     }
 
-    [HttpPost("add")]
-    public IActionResult add(entities.models.userModel user)
+    [HttpPost("generateUser")]
+    public IActionResult generateUser(entities.models.userModel user)
     {
         try
         {
             if(user == null)
-                return BadRequest("The user was not modified.");
+                return BadRequest("The user was not generated.");
 
-            if (!_facadeUser.addUser(user))
-                return BadRequest("User not mo.");
+            if (!_facadeUser.addUserToEmployee(user))
+                return BadRequest("User not generated.");
 
             return Ok();
         }
@@ -104,13 +104,18 @@ public class userController : ControllerBase
         }
     }
 
-    [allowAnonymous]
-    [HttpGet("getTest")]
-    public IActionResult getTest()
+    [HttpPost("add")]
+    public IActionResult add(entities.models.userModel user)
     {
         try
         {
-            return Ok("I'm OK!");
+            if(user == null)
+                return BadRequest("The user was not created.");
+
+            if (!_facadeUser.addUser(user))
+                return BadRequest("User not created");
+
+            return Ok();
         }
         catch(Exception e)
         {

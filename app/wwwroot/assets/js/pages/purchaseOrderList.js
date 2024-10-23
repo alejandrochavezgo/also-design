@@ -134,6 +134,7 @@ $(document).ready(function () {
                                     '<button type="button" class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="window.location.href=\'/purchaseOrder/update?id=' + purchaseOrder.id + '\'" title="Update"><i class="ri-pencil-fill"></i></button>' +
                                     '<button type="button" class="btn btn-danger btn-icon waves-effect waves-light mx-1" onclick="showDeleteModal(' + purchaseOrder.id  + ')" title="Delete"><i class="ri-delete-bin-2-fill"></i></button>' +
                                     '<button type="button" class="btn btn-info btn-icon waves-effect waves-light mx-1" onclick="downloadPurchaseOrder(' + purchaseOrder.id  + ')" title="Download"><i class="ri-file-download-fill"></i></button>' +
+                                    '<button type="button" class="btn btn-secondary btn-icon waves-effect waves-light mx-1" onclick="window.location.href=\'/purchaseOrder/detail?id=' + purchaseOrder.id + '\'" title="View"><i class="ri-eye-fill"></i></button>' +
                                 '</td>' +
                             '<tr>'
                         tbody.append(row);

@@ -53,10 +53,12 @@ public class purchaseOrderController : Controller
 
             if(!responseGet.IsSuccessStatusCode)
             {
+                var errorMessage = await responseGet.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responseGet.ReasonPhrase : errorMessage;
                 return Json(new
                 {
                     isSuccess = false,
-                    message = $"{responseGet.ReasonPhrase}"
+                    message = $"{message}"
                 });
             }
 
@@ -93,7 +95,9 @@ public class purchaseOrderController : Controller
             var responsePostUser = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:user:getUserById"]}", new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
             if(!responsePostUser.IsSuccessStatusCode)
             {
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = responsePostUser.ReasonPhrase });
+                var errorMessage = await responsePostUser.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePostUser.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostUserAsJson = await responsePostUser.Content.ReadAsStringAsync();
             var resultUser = JsonConvert.DeserializeObject<entities.models.userModel>(responsePostUserAsJson);
@@ -109,7 +113,9 @@ public class purchaseOrderController : Controller
             var responsePostEnterprise = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:enterprise:getEnterpriseFullInformationByIdAndConfigType"]}", new StringContent(JsonConvert.SerializeObject(enterprise), Encoding.UTF8, "application/json"));
             if(!responsePostEnterprise.IsSuccessStatusCode)
             {
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = responsePostEnterprise.ReasonPhrase });
+                var errorMessage = await responsePostEnterprise.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePostEnterprise.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostEnterpriseAsJson = await responsePostEnterprise.Content.ReadAsStringAsync();
             var resultEnterprises = JsonConvert.DeserializeObject<List<entities.models.enterpriseModel>>(responsePostEnterpriseAsJson);
@@ -222,10 +228,12 @@ public class purchaseOrderController : Controller
 
             if(!responsePost.IsSuccessStatusCode)
             {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
                 return Json(new
                 {
                     isSuccess = false,
-                    message = $"{responsePost.ReasonPhrase}"
+                    message = $"{message}"
                 });
             }
             clientHttp.Dispose();
@@ -258,7 +266,9 @@ public class purchaseOrderController : Controller
             var responsePostUser = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:user:getUserById"]}", new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
             if(!responsePostUser.IsSuccessStatusCode)
             {
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = responsePostUser.ReasonPhrase });
+                var errorMessage = await responsePostUser.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePostUser.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostUserAsJson = await responsePostUser.Content.ReadAsStringAsync();
             var resultUser = JsonConvert.DeserializeObject<entities.models.userModel>(responsePostUserAsJson);
@@ -267,7 +277,9 @@ public class purchaseOrderController : Controller
             var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:purchaseOrder:getPurchaseOrderById"]}", new StringContent(JsonConvert.SerializeObject(purchaseOrder), Encoding.UTF8, "application/json"));
             if(!responsePost.IsSuccessStatusCode)
             {
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = responsePost.ReasonPhrase });
+                var errorMessage = await responsePostUser.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePostUser.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<entities.models.purchaseOrderModel>(responsePostAsJson);

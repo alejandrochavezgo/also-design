@@ -567,6 +567,24 @@ public sealed class conversionManager
     }
 
     /// <summary>
+    /// Devuelve la expresión convertida a tipo de datos double.
+    /// </summary>
+    /// <param name="expresion">Expresión que se desea evaluar</param>
+    /// <returns></returns>
+    public static double toDouble(object expresion)
+    {
+        double resultado = 0;
+        if (expresion == null || expresion == DBNull.Value || expresion.ToString().Length.Equals(0))
+            return resultado;
+        try
+        {
+            resultado = double.Parse(expresion.ToString());
+        }
+        catch { resultado = 0; }
+        return resultado;
+    }
+
+    /// <summary>
     /// Devuelve una cadena que contiene solo dígitos
     /// </summary>
     /// <param name="expresion"></param>

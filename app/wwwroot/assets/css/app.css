@@ -57,6 +57,9 @@
 .pr-4px {
   padding-right: 4px;
 }
+.pr-22px {
+  padding-right: 22px;
+}
 .no-support-screen {
   display: none;
 }
@@ -102,6 +105,9 @@
 }
 .w-100per {
   width: 100%;
+}
+.w-50per {
+  width: 50%;
 }
 .mt-18px {
   margin-top: 18px;

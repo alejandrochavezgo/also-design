@@ -150,7 +150,7 @@ function initializeClientAutocomplete() {
             source: function(request, response) {
                 $.ajax({
                     url: '/client/getClientByTerm',
-                    method: 'GET',
+                    method: 'get',
                     dataType: 'json',
                     data: {
                         businessName: request.term
@@ -328,7 +328,7 @@ function initializeAllCounters() {
     });
 }
 
-function updateQuotation() {
+function update() {
     try {
         let formData = new FormData();
         let items = [];

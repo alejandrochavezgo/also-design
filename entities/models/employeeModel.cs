@@ -3,6 +3,7 @@ namespace entities.models;
 public class employeeModel
 {
     public int id { get; set;}
+    public string? code { get; set;}
     public int userId { get; set;}
     public string? gender { get; set;}
     public string? address { get; set;}
@@ -13,4 +14,5 @@ public class employeeModel
     public string? profession { get; set;}
     public string? mainContactPhone { get; set;}
     public List<string>? contactPhones { get; set; }
+    public bool hasUser { get; set; }
 }

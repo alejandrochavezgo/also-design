@@ -6,6 +6,10 @@ document.querySelectorAll('.uppercase-input').forEach(input => {
 
 function update() {
     try {
+        if(!isValidForm())
+            return;
+
+        $('#loader').show();
         fetch('update', {
             method: 'post',
             headers: {
@@ -14,7 +18,6 @@ function update() {
             body: JSON.stringify({
                 id: $('#inUserId').val(),
                 email: $('#inUserEmail').val(),
-                password: $('#inUserPassword').val(),
                 firstname: $('#inUserFirstname').val(),
                 lastname: $('#inUserLastname').val(),
                 status: $('#seUserStatus').val(),
@@ -31,9 +34,7 @@ function update() {
                 }
             })
         })
-        .then(response => {
-            return response.json();
-        })
+        .then(response => {return response.json();})
         .then(data => {
             if(!data.isSuccess) {
                 Swal.fire({
@@ -45,6 +46,7 @@ function update() {
                     footer: '',
                     showCloseButton:!1
                 });
+                $('#loader').hide();
                 return;
             }
 
@@ -59,6 +61,7 @@ function update() {
             }).then(function(t) {
                 location.reload(true);
             });
+            $('#loader').hide();
         })
         .catch(error => {
             Swal.fire({
@@ -70,6 +73,7 @@ function update() {
                 footer: '',
                 showCloseButton:!1
             });
+            $('#loader').hide();
         });
     }
     catch(exception) {
@@ -81,6 +85,51 @@ function update() {
             buttonsStyling: !1,
             footer: '',
             showCloseButton:!1
+        });
+        $('#loader').hide();
+    }
+}
+
+function isValidForm() {
+    try {
+        var userId = $('#inUserId').val();
+        var employeeId = $('#inEmployeeId').val();
+        var email = $('#inUserEmail').val();
+        var firstname = $('#inUserFirstname').val();
+        var lastname = $('#inUserLastname').val();
+        var status = $('#seUserStatus').val();
+        var gender = $('#seEmployeeGender').val();
+        var address = $('#inEmployeeAddress').val();
+        var city = $('#inEmployeeCity').val();
+        var state = $('#inEmployeeState').val();
+        var zipcode = $('#inEmployeeZipcode').val();
+        var jobPosition = $('#inEmployeeJobPosition').val();
+        var profession = $('#inEmployeeProfession').val();
+        var contactPhones = $('#inEmployeeContactPhones').val();
+
+        if (!userId || !employeeId || !email || !firstname || !lastname || !status || !gender || !address ||
+            !address || !city || !state || !zipcode || !jobPosition || !profession || !contactPhones) {
+            Swal.fire({
+                title: 'Error!!',
+                html: 'The fields Email, First Name, Last Name, Status, Gender, Address, City, State, ZipCode, Job Position, Profession and Contact Phones cannot be empty.',
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: !1,
+                footer: '',
+                showCloseButton: !1
+            });
+            return false;
+        }
+        return true;
+    } catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: !1,
+            footer: '',
+            showCloseButton: !1
         });
     }
 }

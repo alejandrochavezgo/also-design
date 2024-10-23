@@ -4,63 +4,37 @@ document.querySelectorAll('.uppercase-input').forEach(input => {
     });
 });
 
-function reset() {
-    try {
-        $('#inEmail').val('');
-        $('#inFirstname').val('');
-        $('#inLastname').val('');
-        $('#inUsername').val('');
-        $('#inPassword').val('');
-        $('#seStatus').val(1);
-        $('#seGender').val('M');
-        $('#inAddress').val('');
-        $('#inCity').val('');
-        $('#inState').val('');
-        $('#inZipcode').val('');
-        $('#inJobPosition').val('');
-        $('#inContactPhones').val('');
-    } catch (exception) {
-        Swal.fire({
-            title: 'Error!!',
-            html: exception,
-            icon: 'error',
-            confirmButtonClass: 'btn btn-danger w-xs mt-2',
-            buttonsStyling: !1,
-            footer: '',
-            showCloseButton:!1
-        });
-    }
-}
-
 function add() {
     try {
+        if(!isValidForm())
+            return;
+
+        $('#loader').show();
         fetch('add', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                email: $('#inEmail').val(),
-                firstname: $('#inFirstname').val(),
-                lastname: $('#inLastname').val(),
-                status: $('#seStatus').val(),
+                email: $('#inUserEmail').val(),
+                firstname: $('#inUserFirstname').val(),
+                lastname: $('#inUserLastname').val(),
+                status: $('#seUserStatus').val(),
                 username: $('#inUsername').val(),
                 password: $('#inPassword').val(),
                 employee: {
-                    gender: $('#seGender').val(),
-                    address: $('#inAddress').val(),
-                    city: $('#inCity').val(),
-                    state: $('#inState').val(),
-                    zipcode: $('#inZipcode').val(),
-                    jobPosition: $('#inJobPosition').val(),
-                    profession: $('#inProfession').val(),
-                    contactPhones: $('#inContactPhones').val().split(',')
+                    gender: $('#seEmployeeGender').val(),
+                    address: $('#inEmployeeAddress').val(),
+                    city: $('#inEmployeeCity').val(),
+                    state: $('#inEmployeeState').val(),
+                    zipcode: $('#inEmployeeZipcode').val(),
+                    jobPosition: $('#inEmployeeJobPosition').val(),
+                    profession: $('#inEmployeeProfession').val(),
+                    contactPhones: $('#inEmployeeContactPhones').val().split(',')
                 }
             })
         })
-        .then(response => {
-            return response.json();
-        })
+        .then(response => {return response.json();})
         .then(data => {
             if(!data.isSuccess) {
                 Swal.fire({
@@ -72,6 +46,7 @@ function add() {
                     footer: '',
                     showCloseButton:!1
                 });
+                $('#loader').hide();
                 return;
             }
 
@@ -86,6 +61,7 @@ function add() {
             }).then(function(t) {
                 window.location.href = 'list';
             });
+            $('#loader').hide();
         })
         .catch(error => {
             Swal.fire({
@@ -97,6 +73,7 @@ function add() {
                 footer: '',
                 showCloseButton:!1
             });
+            $('#loader').hide();
         });
     }
     catch(exception) {
@@ -108,6 +85,52 @@ function add() {
             buttonsStyling: !1,
             footer: '',
             showCloseButton:!1
+        });
+        $('#loader').hide();
+    }
+}
+
+
+function isValidForm() {
+    try {
+        var email = $('#inUserEmail').val();
+        var firstname = $('#inUserFirstname').val();
+        var lastname = $('#inUserLastname').val();
+        var status = $('#seUserStatus').val();
+        var username = $('#inUsername').val();
+        var password = $('#inPassword').val();
+        var gender = $('#seEmployeeGender').val();
+        var address = $('#inEmployeeAddress').val();
+        var city = $('#inEmployeeCity').val();
+        var state = $('#inEmployeeState').val();
+        var zipcode = $('#inEmployeeZipcode').val();
+        var jobPosition = $('#inEmployeeJobPosition').val();
+        var profession = $('#inEmployeeProfession').val();
+        var contactPhones = $('#inEmployeeContactPhones').val();
+
+        if (!email || !firstname || !lastname || !status || !username || !password || !gender || !address ||
+            !city || !state || !zipcode || !jobPosition || !profession || !contactPhones) {
+            Swal.fire({
+                title: 'Error!!',
+                html: 'The fields Email, First Name, Last Name, Status, Username, Password, Gender, Address, City, State, ZipCode, Job Position, Profession and Contact Phones cannot be empty.',
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: !1,
+                footer: '',
+                showCloseButton: !1
+            });
+            return false;
+        }
+        return true;
+    } catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: !1,
+            footer: '',
+            showCloseButton: !1
         });
     }
 }

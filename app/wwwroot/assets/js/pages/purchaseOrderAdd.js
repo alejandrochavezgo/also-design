@@ -374,7 +374,7 @@ function initializeCounter(counter) {
     }
 }
 
-function addPurchaseOrder() {
+function add() {
     try {
         let formData = new FormData();
         let items = [];

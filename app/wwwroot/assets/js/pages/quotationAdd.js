@@ -313,7 +313,7 @@ function initializeCounter(counter) {
     }
 }
 
-function addQuotation() {
+function add() {
     try {
         let formData = new FormData();
         let items = [];

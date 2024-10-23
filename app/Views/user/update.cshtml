@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">User Client</h4>
+                    <h4 class="mb-sm-0">Update User</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item color-495057">User</li>
@@ -21,21 +21,30 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="alert-custom alert-success alert-borderless" role="alert">
-                            This web module allows for easy and quick user creation, managing user information securely and efficiently.
-                        </div>
+                        <h5 class="card-title">User Information</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <input type="text" class="form-control" id="inUserId" value="@ViewData["user.id"]" hidden>
                             <div class="col-6">
+                                <input type="text" class="form-control" id="inUserId" value="@ViewData["user.id"]" hidden>
+                                <input type="text" class="form-control" id="inEmployeeId" value="@ViewData["employee.id"]" hidden>
+                                <label for="inUserFirstname" class="form-label">Firstname</label>
+                                <input type="text" class="form-control uppercase-input" id="inUserFirstname" placeholder="Enter firstname" value="@ViewData["user.firstname"]">
+                            </div>
+                            <div class="col-6">
+                                <label for="inUserLastname" class="form-label">Last Name</label>
+                                <input type="text" class="form-control uppercase-input" id="inUserLastname" placeholder="Enter lastname" value="@ViewData["user.lastname"]">
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-4">
                                 <label for="inUserEmail" class="form-label">Email</label>
                                 <input type="text" class="form-control uppercase-input" id="inUserEmail" placeholder="Enter email" value="@ViewData["user.email"]">
                             </div>
-                            <div class="col-6">
+                            <div class="col-4">
                                 <label for="seUserStatus" class="form-label">Status</label>
                                 <select class="form-select" id="seUserStatus">
                                     <option value="1">ACTIVE</option>
@@ -43,17 +52,7 @@
                                     <option value="3">LOCKED</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="row pt-27px">
-                            <div class="col-5">
-                                <label for="inUserFirstname" class="form-label">Firstname</label>
-                                <input type="text" class="form-control uppercase-input" id="inUserFirstname" placeholder="Enter firstname" value="@ViewData["user.firstname"]">
-                            </div>
-                            <div class="col-5">
-                                <label for="inUserLastname" class="form-label">Last Name</label>
-                                <input type="text" class="form-control uppercase-input" id="inUserLastname" placeholder="Enter lastname" value="@ViewData["user.lastname"]">
-                            </div>
-                            <div class="col-2">
+                            <div class="col-4">
                                 <label for="seEmployeeGender" class="form-label">Gender</label>
                                 <select class="form-select" id="seEmployeeGender">
                                     <option value="M">M</option>
@@ -61,9 +60,19 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row pt-27px">
-                            <input type="text" class="form-control" id="inEmployeeId" value="@ViewData["employee.id"]" hidden>
-                            <div class="col-4">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">User Contact Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-5">
                                 <label for="inEmployeeAddress" class="form-label">Address</label>
                                 <input type="text" class="form-control uppercase-input" id="inEmployeeAddress" placeholder="Enter address" value="@ViewData["employee.address"]">
                             </div>
@@ -75,17 +84,17 @@
                                 <label for="inEmployeeState" class="form-label">State</label>
                                 <input type="text" class="form-control uppercase-input" id="inEmployeeState" placeholder="Enter state" value="@ViewData["employee.state"]">
                             </div>
+                        </div>
+                        <div class="row pt-27px">
                             <div class="col-2">
                                 <label for="inEmployeeZipcode" class="form-label">Zip Code</label>
                                 <input type="text" class="form-control uppercase-input" id="inEmployeeZipcode" placeholder="Enter zip code" value="@ViewData["employee.zipcode"]">
                             </div>
-                        </div>
-                        <div class="row pt-27px">
-                            <div class="col-4">
+                            <div class="col-3">
                                 <label for="inEmployeeJobPosition" class="form-label">Job Position</label>
                                 <input type="text" class="form-control uppercase-input" id="inEmployeeJobPosition" placeholder="Enter job position" value="@ViewData["employee.jobPosition"]">
                             </div>
-                            <div class="col-4">
+                            <div class="col-3">
                                 <label for="inEmployeeProfession" class="form-label">Profession</label>
                                 <input type="text" class="form-control uppercase-input" id="inEmployeeProfession" placeholder="Enter profession (ING, LIC, etc.)" value="@ViewData["employee.profession"]">
                             </div>
@@ -95,7 +104,10 @@
                             </div>
                         </div>
                         <div class="row pt-27px">
-                            <div class="col-12">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-warning w-100per" onclick="window.location.reload(true)">Refresh</button>
+                            </div>
+                            <div class="col-6">
                                 <button type="button" class="btn btn-success w-100per" onclick="update()">Update</button>
                             </div>
                         </div>

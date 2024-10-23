@@ -16,7 +16,7 @@ function update() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                id: $('#inId').val(),
+                id: $('#inClientId').val(),
                 businessName: $('#inBusinessName').val(),
                 rfc: $('#inRfc').val(),
                 address: $('#inAddress').val(),
@@ -30,9 +30,7 @@ function update() {
                 status: $('#seStatus').val()
             })
         })
-        .then(response => {
-            return response.json();
-        })
+        .then(response => { return response.json();})
         .then(data => {
             if (!data.isSuccess) {
                 Swal.fire({
@@ -90,7 +88,7 @@ function update() {
 
 function isValidForm() {
     try {
-        var id = $('#inId').val();
+        var id = $('#inClientId').val();
         var businessName = $('#inBusinessName').val();
         var rfc = $('#inRfc').val();
         var address = $('#inAddress').val();

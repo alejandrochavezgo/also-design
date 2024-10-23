@@ -1,0 +1,85 @@
+<form id="formNuevaPieza">
+    <h3>Información Básica de la Pieza</h3>
+    <label for="codigoPieza">Código de la Pieza:</label>
+    <input type="text" id="codigoPieza" name="codigoPieza" required>
+
+    <label for="nombrePieza">Nombre de la Pieza:</label>
+    <input type="text" id="nombrePieza" name="nombrePieza" required>
+
+    <label for="descripcionPieza">Descripción:</label>
+    <textarea id="descripcionPieza" name="descripcionPieza"></textarea>
+
+    <h3>Especificaciones Técnicas</h3>
+    <label for="materialPieza">Material:</label>
+    <select id="materialPieza" name="materialPieza">
+        <option value="acero">Acero</option>
+        <option value="aluminio">Aluminio</option>
+        <option value="laton">Latón</option>
+        <!-- Más opciones -->
+    </select>
+
+    <label for="diametroPieza">Diámetro (mm):</label>
+    <input type="number" id="diametroPieza" name="diametroPieza" step="0.01">
+
+    <label for="longitudPieza">Longitud (mm):</label>
+    <input type="number" id="longitudPieza" name="longitudPieza" step="0.01">
+
+    <label for="pesoPieza">Peso (kg):</label>
+    <input type="number" id="pesoPieza" name="pesoPieza" step="0.01">
+
+    <label for="acabadoPieza">Tipo de Acabado:</label>
+    <input type="text" id="acabadoPieza" name="acabadoPieza">
+
+    <label for="toleranciaPieza">Tolerancia (μm):</label>
+    <input type="number" id="toleranciaPieza" name="toleranciaPieza" step="0.01">
+
+    <h3>Proceso de Fabricación</h3>
+    <label for="maquinaPieza">Máquina:</label>
+    <select id="maquinaPieza" name="maquinaPieza">
+        <option value="tornoA">Torno A</option>
+        <option value="tornoB">Torno B</option>
+        <!-- Más opciones -->
+    </select>
+
+    <label for="herramientasPieza">Herramientas Utilizadas:</label>
+    <input type="text" id="herramientasPieza" name="herramientasPieza">
+
+    <label for="tiempoProduccionPieza">Tiempo Estimado de Producción (min):</label>
+    <input type="number" id="tiempoProduccionPieza" name="tiempoProduccionPieza">
+
+    <label for="cantidadProducirPieza">Cantidad a Producir:</label>
+    <input type="number" id="cantidadProducirPieza" name="cantidadProducirPieza">
+
+    <h3>Gestión de Inventario</h3>
+    <label for="cantidadInicialPieza">Cantidad Inicial:</label>
+    <input type="number" id="cantidadInicialPieza" name="cantidadInicialPieza">
+
+    <label for="ubicacionPieza">Ubicación en el Almacén:</label>
+    <input type="text" id="ubicacionPieza" name="ubicacionPieza">
+
+    <label for="stockMinimoPieza">Stock Mínimo:</label>
+    <input type="number" id="stockMinimoPieza" name="stockMinimoPieza">
+
+    <label for="proveedorPieza">Proveedor:</label>
+    <select id="proveedorPieza" name="proveedorPieza">
+        <option value="proveedor1">Proveedor 1</option>
+        <option value="proveedor2">Proveedor 2</option>
+        <!-- Más opciones -->
+    </select>
+
+    <label for="precioUnitarioPieza">Precio Unitario (moneda local):</label>
+    <input type="number" id="precioUnitarioPieza" name="precioUnitarioPieza" step="0.01">
+
+    <h3>Documentos Asociados</h3>
+    <label for="planosPieza">Planos:</label>
+    <input type="file" id="planosPieza" name="planosPieza" accept=".pdf,.cad">
+
+    <label for="especificacionesPieza">Especificaciones Técnicas:</label>
+    <input type="file" id="especificacionesPieza" name="especificacionesPieza" accept=".pdf,.doc,.docx">
+
+    <h3>Observaciones Adicionales</h3>
+    <label for="notasPieza">Notas:</label>
+    <textarea id="notasPieza" name="notasPieza"></textarea>
+
+    <button type="submit">Guardar</button>
+</form>

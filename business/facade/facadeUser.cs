@@ -86,6 +86,21 @@ public class facadeUser
         }
     }
 
+    public bool addUserToEmployee(userModel user)
+    {
+        try
+            {
+                user.creationDate = DateTime.Now;
+                user.username = user.username.Trim().ToUpper();
+                return _repositoryUser.addUserToEmployee(user);
+            }
+            catch (Exception exception)
+            {
+                _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+                throw exception;
+            }
+    }
+
     public bool addUser(userModel user)
     {
         using (var transactionScope = new TransactionScope())
