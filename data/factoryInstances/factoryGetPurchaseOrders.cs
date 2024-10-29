@@ -3,6 +3,7 @@ namespace data.factoryInstances;
 using System.Data;
 using common.conversions;
 using common.logging;
+using entities.enums;
 using entities.models;
 using Newtonsoft.Json;
 
@@ -61,12 +62,26 @@ internal class factoryGetPurchaseOrders: baseMethod<factoryGetPurchaseOrders, pu
             var status = string.Empty;
             switch (statusId)
             {
-                case 1:
+                case (int)statusType.ACTIVE:
+                    status = "primary";
+                    break;
+                case (int)statusType.PENDING:
+                    status = "warning";
+                    break;
+                case (int)statusType.APPROVED:
+                    status = "secondary";
+                    break;
+                case (int)statusType.PARTIALLY_FULFILLED:
+                    status = "info";
+                    break;
+                case (int)statusType.FULFILLED:
                     status = "success";
                     break;
-                case 2:
+                case (int)statusType.REJECTED:
+                case (int)statusType.CANCELLED:
                     status = "danger";
                     break;
+                case (int)statusType.CLOSED:
                 default:
                     status = "dark";
                     break;
@@ -87,11 +102,29 @@ internal class factoryGetPurchaseOrders: baseMethod<factoryGetPurchaseOrders, pu
             var status = string.Empty;
             switch (statusId)
             {
-                case 1:
+                case (int)statusType.ACTIVE:
                     status = "active";
                     break;
-                case 2:
-                    status = "inactive";
+                case (int)statusType.PENDING:
+                    status = "pending";
+                    break;
+                case (int)statusType.APPROVED:
+                    status = "approved";
+                    break;
+                case (int)statusType.PARTIALLY_FULFILLED:
+                    status = "partially fulfilled";
+                    break;
+                case (int)statusType.FULFILLED:
+                    status = "fulfilled";
+                    break;
+                case (int)statusType.REJECTED:
+                    status = "rejected";
+                    break;
+                case (int)statusType.CANCELLED:
+                    status = "cancelled";
+                    break;
+                case (int)statusType.CLOSED:
+                    status = "closed";
                     break;
                 default:
                     status = "undefined";

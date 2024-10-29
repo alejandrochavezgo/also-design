@@ -7,6 +7,7 @@ using common.configurations;
 using common.logging;
 using data.factoryInstances;
 using data.providerData;
+using entities.enums;
 using entities.models;
 using Newtonsoft.Json;
 
@@ -19,12 +20,12 @@ public class repositoryInventory : baseRepository
         _logger = new log();
     }
 
-    public List<inventoryModel> getItemByTerm(string description)
+    public List<inventoryListModel> getItemByTerm(string term)
     {
         try
         {
             return factoryGetItemByTerm.getList((DbDataReader)_providerDB.GetDataReader("sp_getInventoryByTerm", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@description", DbType.String, description),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@term", DbType.String, term),
             }));
         }
         catch (SqlException SqlException)
@@ -165,24 +166,6 @@ public class repositoryInventory : baseRepository
         }
     }
 
-    public List<catalogModel> getPackingUnitTypesCatalog()
-    {
-        try
-        {
-            return factoryGetCatalog.getList((DbDataReader)_providerDB.GetDataReader("sp_getPackingUnitTypesCatalog", new DbParameter[] {}));
-        }
-        catch (SqlException SqlException)
-        {
-            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
-            throw SqlException;
-        }
-        catch (Exception exception)
-        {
-            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
-            throw exception;
-        }
-    }
-
     public List<catalogModel> getCurrencyTypesCatalog()
     {
         try
@@ -241,18 +224,13 @@ public class repositoryInventory : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB, "@tolerance", DbType.Double, inventoryItem.tolerance!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@unitTolerance", DbType.Int32, inventoryItem.unitTolerance!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@warehouseLocation", DbType.Int32, inventoryItem.warehouseLocation!),
-                dataFactory.getObjParameter(configurationManager.providerDB, "@quantity", DbType.Int32, inventoryItem.quantity!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@reorderQty", DbType.Int32, inventoryItem.reorderQty!),
-                dataFactory.getObjParameter(configurationManager.providerDB, "@unit", DbType.Int32, inventoryItem.unit!),
-                dataFactory.getObjParameter(configurationManager.providerDB, "@currency", DbType.Int32, inventoryItem.currency!),
-                dataFactory.getObjParameter(configurationManager.providerDB, "@unitValue", DbType.Decimal, inventoryItem.unitValue!),
-                dataFactory.getObjParameter(configurationManager.providerDB, "@totalValue", DbType.Decimal, inventoryItem.totalValue!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@creationDate", DbType.DateTime, inventoryItem.creationDate!),
-                dataFactory.getObjParameter(configurationManager.providerDB, "@lastRestockDate", DbType.DateTime, inventoryItem.lastRestockDate!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@notes", DbType.String, inventoryItem.notes!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@itemImagePath", DbType.String, inventoryItem.itemImagePath!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@bluePrintsPath", DbType.String, inventoryItem.bluePrintsPath!),
-                dataFactory.getObjParameter(configurationManager.providerDB, "@technicalSpecificationsPath", DbType.String, inventoryItem.technicalSpecificationsPath!)
+                dataFactory.getObjParameter(configurationManager.providerDB, "@technicalSpecificationsPath", DbType.String, inventoryItem.technicalSpecificationsPath!),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@quantity", DbType.Double, inventoryItem.quantity!)
             });
             return Convert.ToInt32(inventoryItemIdAdded.Value) > 0 ? true : false;
         }
@@ -275,6 +253,46 @@ public class repositoryInventory : baseRepository
             return factoryGetItemInventoryById.get((DbDataReader)_providerDB.GetDataReader("sp_getInventoryItemById", new DbParameter[]
             {
                 dataFactory.getObjParameter(configurationManager.providerDB,"@inventoryItemId", DbType.Int32, id)
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<catalogModel> getPackingUnitTypesCatalog()
+    {
+        try
+        {
+            return factoryGetCatalog.getList((DbDataReader)_providerDB.GetDataReader("sp_getPackingUnitTypesCatalog", new DbParameter[]{}));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<inventoryMovementModel> getInventoryMovementsByPurchaseOrderIdAndInventoryId(int purchaseOrderId, int inventoryItemId)
+    {
+        try
+        {
+            return factoryGetInventoryMovements.getList((DbDataReader)_providerDB.GetDataReader("sp_getInventoryMovementsByPurchaseOrderIdAndInventoryId", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@purchaseOrderId", DbType.Int32, purchaseOrderId),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@inventoryItemId", DbType.Int32, inventoryItemId)
             }));
         }
         catch (SqlException SqlException)
@@ -312,12 +330,7 @@ public class repositoryInventory : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB, "@tolerance", DbType.Double, inventoryItem.tolerance!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@unitTolerance", DbType.Int32, inventoryItem.unitTolerance!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@warehouseLocation", DbType.Int32, inventoryItem.warehouseLocation!),
-                dataFactory.getObjParameter(configurationManager.providerDB, "@quantity", DbType.Int32, inventoryItem.quantity!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@reorderQty", DbType.Int32, inventoryItem.reorderQty!),
-                dataFactory.getObjParameter(configurationManager.providerDB, "@unit", DbType.Int32, inventoryItem.unit!),
-                dataFactory.getObjParameter(configurationManager.providerDB, "@currency", DbType.Int32, inventoryItem.currency!),
-                dataFactory.getObjParameter(configurationManager.providerDB, "@unitValue", DbType.Decimal, inventoryItem.unitValue!),
-                dataFactory.getObjParameter(configurationManager.providerDB, "@totalValue", DbType.Decimal, inventoryItem.totalValue!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@modificationDate", DbType.DateTime, inventoryItem.modificationDate!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@notes", DbType.String, inventoryItem.notes!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@itemImagePath", DbType.String, inventoryItem.itemImagePath!),
@@ -325,6 +338,63 @@ public class repositoryInventory : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB, "@technicalSpecificationsPath", DbType.String, inventoryItem.technicalSpecificationsPath!)
             });
             return Convert.ToInt32(inventoryItemIdUpdated.Value) > 0 ? true : false;
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public int addEntry(int inventoryItemId, double quantity, DateTime entryDateTime)
+    {
+        try
+        {
+            var entryIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@entryIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+            base._providerDB.ExecuteNonQuery("sp_addInventoryEntry", new DbParameter[] {
+                entryIdAdded,
+                dataFactory.getObjParameter(configurationManager.providerDB, "@inventoryItemId", DbType.Int32, inventoryItemId),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@quantity", DbType.Double, quantity),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@entryDateTime", DbType.DateTime, entryDateTime)
+            });
+            return Convert.ToInt32(entryIdAdded.Value);
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public int addMovement(int inventoryItemId, inventoryMovementType inventoryMovementType, int purchaseOrderId, int userId, double quantity, int unit, string comments, decimal unitValue, decimal totalValue, DateTime entryDateTime)
+    {
+        try
+        {
+            var movementIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@movementIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+            base._providerDB.ExecuteNonQuery("sp_addInventoryMovement", new DbParameter[] {
+                movementIdAdded,
+                dataFactory.getObjParameter(configurationManager.providerDB, "@inventoryItemId", DbType.Int32, inventoryItemId),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@inventoryMovementType", DbType.Int32, (int)inventoryMovementType),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@purchaseOrderId", DbType.Int32, purchaseOrderId),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@userId", DbType.Int32, userId),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@quantity", DbType.Double, quantity),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@unit", DbType.Int32, unit),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@comments", DbType.String, comments),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@unitValue", DbType.Decimal, unitValue),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@totalValue", DbType.Decimal, totalValue),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@entryDateTime", DbType.DateTime, entryDateTime)
+            });
+            return Convert.ToInt32(movementIdAdded.Value);
         }
         catch (SqlException SqlException)
         {

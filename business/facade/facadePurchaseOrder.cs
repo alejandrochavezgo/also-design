@@ -11,11 +11,13 @@ public class facadePurchaseOrder
 {
     private log _logger;
     private repositoryPurchaseOrder _repositoryPurchaseOrder;
+    private repositoryTrace _repositoryTrace;
 
     public facadePurchaseOrder()
     {
         _logger = new log();
         _repositoryPurchaseOrder = new repositoryPurchaseOrder();
+        _repositoryTrace = new repositoryTrace();
     }
 
     public List<purchaseOrderModel> getPurchaseOrders()
@@ -110,17 +112,233 @@ public class facadePurchaseOrder
         }
     }
 
+    public bool updateStatusByPurchaseOrderId(changeStatusModel changeStatus)
+    {
+        using (TransactionScope transactionScope = new TransactionScope())
+        {
+            try
+            {
+                var purchaseOrder = _repositoryPurchaseOrder.getPurchaseOrderById(changeStatus.purchaseOrderId);
+                if (purchaseOrder == null || (purchaseOrder.status == changeStatus.newStatusId && purchaseOrder.status != (int)statusType.PARTIALLY_FULFILLED))
+                {
+                    transactionScope.Dispose();
+                    return false;
+                }
+
+                var trace = 0;
+                var today = DateTime.Now;
+                var quantityPendingItems = 0;
+                var quantityCompletedItems = 0;
+                var _facadeTrace = new facadeTrace();
+                var _facadeInventory = new facadeInventory();
+                if (changeStatus.newStatusId == (int)statusType.PARTIALLY_FULFILLED)
+                {
+                    //is partial filling
+                    //que se agregue al inventario la cantidad
+                    //que se agregue el movimiento del inventario
+                    //que se agregue la traza
+                    var purchaseOrderItems = getPendingPurchaseOrderItemsByPurchaseOrderId(purchaseOrder.id);
+                    if (purchaseOrderItems == null || purchaseOrderItems.Count == 0)
+                    {
+                        transactionScope.Dispose();
+                        return false;
+                    }
+
+                    quantityPendingItems = purchaseOrderItems.Count;
+                    foreach (var purchaseOrderItem in changeStatus.purchaseOrderItems)
+                    {
+                        var purchaseOrderItemFromDatabase = purchaseOrderItems.FirstOrDefault(x => x.inventoryItemId == purchaseOrderItem.inventoryItemId);
+                        var inventoryMovements = _facadeInventory.getInventoryMovementsByPurchaseOrderIdAndInventoryId(purchaseOrder.id, purchaseOrderItem.inventoryItemId);
+                        var newQuantity = 0d;
+                        var maxQuantityAllowed = 0d;
+                        if (purchaseOrderItemFromDatabase != null && inventoryMovements != null)
+                        {
+                            newQuantity = (inventoryMovements.Sum(x => x.quantity) + changeStatus.purchaseOrderItems.Sum(x => x.quantity));
+                            maxQuantityAllowed = purchaseOrderItemFromDatabase.quantity;
+                            if (newQuantity > maxQuantityAllowed)
+                            {
+                                transactionScope.Dispose();
+                                return false;
+                            }
+                        }
+
+                        var entry = _facadeInventory.addEntry(purchaseOrderItem.inventoryItemId, purchaseOrderItem.quantity, today);
+                        var movement = _facadeInventory.addMovement(purchaseOrderItem.inventoryItemId, inventoryMovementType.PARTIAL_RECEIPT, purchaseOrder.id, changeStatus.userId, purchaseOrderItem.quantity, purchaseOrderItem.unit, changeStatus.comments, purchaseOrderItem.unitValue, purchaseOrderItem.totalValue, today);
+                        trace = _facadeTrace.addTrace(new traceModel
+                        {
+                            entityType = entityType.INVENTORY,
+                            entityId = purchaseOrderItem.inventoryItemId,
+                            traceType = traceType.PARTIAL_MATERIAL_RECEIPT,
+                            userId = changeStatus.userId,
+                            comments = changeStatus.comments,
+                            beforeChange = string.Empty,
+                            afterChange = string.Empty
+                        });
+
+                        if (newQuantity > 0 && maxQuantityAllowed > 0 && newQuantity == maxQuantityAllowed)
+                        {
+                            quantityCompletedItems++;
+                        }
+
+                        if (entry <= 0|| movement <= 0 || trace <= 0)
+                        {
+                            transactionScope.Dispose();
+                            return false;
+                        }
+                    }
+                }
+                else if (changeStatus.newStatusId == (int)statusType.FULFILLED)
+                {
+                    //is filling
+                    //se obtienen las cantidades de la PO
+                    //que se agregue al inventario la cantidad
+                    //que se agregue el movimiento del inventario
+                    //que se agregue la traza
+                    var purchaseOrderItems = changeStatus.currentStatusId == (int)statusType.PARTIALLY_FULFILLED ? getPendingPurchaseOrderItemsByPurchaseOrderId(purchaseOrder.id) : _repositoryPurchaseOrder.getPurchaseOrderItemsByPurchaseOrderId(purchaseOrder.id);
+                    if (purchaseOrderItems == null || purchaseOrderItems.Count == 0)
+                    {
+                        transactionScope.Dispose();
+                        return false;
+                    }
+
+                    foreach (var purchaseOrderItem in purchaseOrderItems)
+                    {
+                        var quantity = 0d;
+                        var inventoryMovements = _facadeInventory.getInventoryMovementsByPurchaseOrderIdAndInventoryId(purchaseOrder.id, purchaseOrderItem.inventoryItemId);
+                        if (inventoryMovements != null)
+                        {
+                            quantity = purchaseOrderItem.quantity - inventoryMovements.Sum(x => x.quantity);
+                        }
+
+                        var entry = _facadeInventory.addEntry(purchaseOrderItem.inventoryItemId, quantity, today);
+                        var movement = _facadeInventory.addMovement(purchaseOrderItem.inventoryItemId, inventoryMovementType.RECEIPT, purchaseOrder.id, changeStatus.userId, quantity, purchaseOrderItem.unit, changeStatus.comments, purchaseOrderItem.unitValue, purchaseOrderItem.totalValue, today);
+                        trace = _facadeTrace.addTrace(new traceModel
+                        {
+                            entityType = entityType.INVENTORY,
+                            entityId = purchaseOrderItem.inventoryItemId,
+                            traceType = traceType.MATERIAL_RECEIPT,
+                            userId = changeStatus.userId,
+                            comments = changeStatus.comments,
+                            beforeChange = string.Empty,
+                            afterChange = string.Empty
+                        });
+
+                        if (entry <= 0|| movement <= 0 || trace <= 0)
+                        {
+                            transactionScope.Dispose();
+                            return false;
+                        }
+                    }
+                }
+
+                //agregar traza del cambio de status para la PO
+                trace = _facadeTrace.addTrace(new traceModel
+                {
+                    entityType = entityType.PURCHASE_ORDER,
+                    entityId = purchaseOrder.id,
+                    traceType = traceType.CHANGE_STATUS,
+                    userId = changeStatus.userId,
+                    comments = changeStatus.comments,
+                    beforeChange = $"{purchaseOrder.status}",
+                    afterChange = $"{changeStatus.newStatusId}"
+                });
+
+                if(changeStatus.newStatusId == (int)statusType.PARTIALLY_FULFILLED && quantityCompletedItems > 0 && quantityPendingItems > 0 && quantityCompletedItems == quantityPendingItems)
+                {
+                    trace = _facadeTrace.addTrace(new traceModel
+                    {
+                        entityType = entityType.PURCHASE_ORDER,
+                        entityId = purchaseOrder.id,
+                        traceType = traceType.CHANGE_STATUS,
+                        userId = changeStatus.userId,
+                        comments = "AUTO-FULFILLED",
+                        beforeChange = $"{changeStatus.newStatusId}",
+                        afterChange = $"{(int)statusType.FULFILLED}"
+                    });
+                    changeStatus.newStatusId = (int)statusType.FULFILLED;
+                }
+
+                if (_repositoryPurchaseOrder.updateStatusByPurchaseOrderId(purchaseOrder.id, changeStatus.newStatusId) && trace > 0)
+                {
+                    transactionScope.Complete();
+                    return true;
+                }
+                else
+                {
+                    transactionScope.Dispose();
+                    return false;
+                }
+            }
+            catch (Exception exception)
+            {
+                transactionScope.Dispose();
+                _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+                return false;
+            }
+        }
+    }
+
+    public List<List<catalogModel>> getStatusCatalog()
+    {
+        try
+        {
+            var catalogs = new List<List<catalogModel>>();
+            var purchaseOrderStatus = new HashSet<int> {1, 6, 7, 9, 10, 8, 12};
+            catalogs.Add(new repositoryInventory().getStatusTypesCatalog().Where(x => purchaseOrderStatus.Contains(x.id)).ToList());
+            return catalogs;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public purchaseOrderModel getPurchaseOrderById(int id)
     {
         try
         {
             var purchaseOrder = _repositoryPurchaseOrder.getPurchaseOrderById(id);
-            purchaseOrder.items = _repositoryPurchaseOrder.getPurchaseOrderItemsByIdPurchaseOrder(id);
-
+            purchaseOrder.items = _repositoryPurchaseOrder.getPurchaseOrderItemsByPurchaseOrderId(id);
             var _repositorySupplier = new repositorySupplier();
             purchaseOrder.supplier.contactNames = _repositorySupplier.getContactNamesBySupplierId(purchaseOrder.supplier.id);
             purchaseOrder.supplier.contactPhones = _repositorySupplier.getContactPhonesBySupplierId(purchaseOrder.supplier.id);
             return purchaseOrder;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<purchaseOrderItemsModel> getPurchaseOrderItemsByPurchaseOrderId(int id)
+    {
+        try
+        {
+            return _repositoryPurchaseOrder.getPurchaseOrderItemsByPurchaseOrderId(id);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<purchaseOrderItemsModel> getPendingPurchaseOrderItemsByPurchaseOrderId(int purchaseOrderId)
+    {
+        try
+        {
+            var _facadeInventory = new facadeInventory();
+            var purchaseOrderItems = _repositoryPurchaseOrder.getPurchaseOrderItemsByPurchaseOrderId(purchaseOrderId);
+            if (purchaseOrderItems != null)
+                foreach (var purchaseOrderItem in purchaseOrderItems)
+                {
+                    var inventoryMovements = _facadeInventory.getInventoryMovementsByPurchaseOrderIdAndInventoryId(purchaseOrderId, purchaseOrderItem.inventoryItemId);
+                    if (inventoryMovements != null && inventoryMovements.Sum(x => x.quantity) == purchaseOrderItem.quantity)
+                        purchaseOrderItems.Remove(purchaseOrderItem);
+                }
+            return purchaseOrderItems;
         }
         catch (Exception exception)
         {

@@ -7,6 +7,7 @@ using common.configurations;
 using common.logging;
 using data.factoryInstances;
 using data.providerData;
+using entities.enums;
 using entities.models;
 using Newtonsoft.Json;
 
@@ -58,11 +59,11 @@ public class repositoryPurchaseOrder : baseRepository
         }
     }
 
-    public List<purchaseOrderItemsModel> getPurchaseOrderItemsByIdPurchaseOrder(int id)
+    public List<purchaseOrderItemsModel> getPurchaseOrderItemsByPurchaseOrderId(int id)
     {
         try
         {
-            return factoryGetPurchaseOrderItemsByIdPurchaseOrder.getList((DbDataReader)_providerDB.GetDataReader("sp_getPurchaseOrderItemsByIdPurchaseOrder", new DbParameter[]
+            return factoryGetPurchaseOrderItemsByIdPurchaseOrder.getList((DbDataReader)_providerDB.GetDataReader("sp_getPurchaseOrderItemsByPurchaseOrderId", new DbParameter[]
             {
                 dataFactory.getObjParameter(configurationManager.providerDB,"@purchaseOrderId", DbType.Int32, id),
             }));
@@ -166,14 +167,15 @@ public class repositoryPurchaseOrder : baseRepository
                 purchaseOrderItemIdAdded,
                 dataFactory.getObjParameter(configurationManager.providerDB,"@purchaseOrderId", DbType.Int32, purchaseOrderId),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@quantity", DbType.Int32, purchaseOrderItem.quantity),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@unit", DbType.String, purchaseOrderItem.unit!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@unit", DbType.Int32, purchaseOrderItem.unit),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@unitValue", DbType.Decimal, purchaseOrderItem.unitValue),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@totalValue", DbType.Decimal, purchaseOrderItem.totalValue),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@description", DbType.String, purchaseOrderItem.description!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@material", DbType.String, purchaseOrderItem.material!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@details", DbType.String, purchaseOrderItem.details!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@imagePath", DbType.String, purchaseOrderItem.imagePath!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@notes", DbType.String, purchaseOrderItem.notes!)
+                dataFactory.getObjParameter(configurationManager.providerDB,"@notes", DbType.String, purchaseOrderItem.notes!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@inventoryItemId", DbType.Int32, purchaseOrderItem.inventoryItemId)
             });
 
             return Convert.ToInt32(purchaseOrderItemIdAdded.Value);
@@ -200,14 +202,15 @@ public class repositoryPurchaseOrder : baseRepository
                 purchaseOrderItemIdUpdated,
                 dataFactory.getObjParameter(configurationManager.providerDB,"@purchaseOrderItemId", DbType.Int32, purchaseOrderItem.id),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@quantity", DbType.Int32, purchaseOrderItem.quantity),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@unit", DbType.String, purchaseOrderItem.unit!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@unit", DbType.Int32, purchaseOrderItem.unit),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@unitValue", DbType.Decimal, purchaseOrderItem.unitValue),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@totalValue", DbType.Decimal, purchaseOrderItem.totalValue),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@description", DbType.String, purchaseOrderItem.description!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@material", DbType.String, purchaseOrderItem.material!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@details", DbType.String, purchaseOrderItem.details!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@imagePath", DbType.String, purchaseOrderItem.imagePath!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@notes", DbType.String, purchaseOrderItem.notes!)
+                dataFactory.getObjParameter(configurationManager.providerDB,"@notes", DbType.String, purchaseOrderItem.notes!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@inventoryItemId", DbType.Int32, purchaseOrderItem.inventoryItemId)
             });
 
             return Convert.ToInt32(purchaseOrderItemIdUpdated.Value);
@@ -232,6 +235,31 @@ public class repositoryPurchaseOrder : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB,"@purchaseOrderId", DbType.Int32, id),
             });
             return true;
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public bool updateStatusByPurchaseOrderId(int purchaseOrderId, int status)
+    {
+        try
+        {
+            var idPurchaseOrderUpdated = dataFactory.getObjParameter(configurationManager.providerDB, "@idPurchaseOrderUpdated", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+            base._providerDB.ExecuteNonQuery("sp_updateStatusByPurchaseOrderId", new DbParameter[] {
+                idPurchaseOrderUpdated,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@purchaseOrderId", DbType.Int32, purchaseOrderId),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@newStatus", DbType.Int32, status)
+            });
+
+            return Convert.ToInt32(idPurchaseOrderUpdated.Value) > 0 ? true : false;
         }
         catch (SqlException SqlException)
         {

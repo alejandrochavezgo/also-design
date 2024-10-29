@@ -176,13 +176,11 @@ public class clientController : Controller
         try
         {
             if (!ModelState.IsValid || !clientFormHelper.isAddFormValid(client))
-                {
-                    return Json(new
-                    { 
-                        isSuccess = false,
-                        message = "Invalid data."
-                    });
-                }
+                return Json(new
+                { 
+                    isSuccess = false,
+                    message = "Invalid data."
+                });
 
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
@@ -223,13 +221,11 @@ public class clientController : Controller
         try
         {
             if (!ModelState.IsValid || !clientFormHelper.isUpdateFormValid(client))
+                return Json(new
                 {
-                    return Json(new
-                    {
-                        isSuccess = false,
-                        message = "Invalid data."
-                    });
-                }
+                    isSuccess = false,
+                    message = "Invalid data."
+                });
 
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);

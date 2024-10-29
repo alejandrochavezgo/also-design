@@ -43,6 +43,47 @@ public class inventoryController : Controller
         }
     }
 
+    [HttpGet("inventory/getcCatalogByName")]
+    public async Task<JsonResult> getcCatalogByName(string name)
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var catalog = new catalogModel { description = name.ToUpper() };
+            var responsePostCatalog = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:inventory:getCatalogByName"]}", new StringContent(JsonConvert.SerializeObject(catalog), Encoding.UTF8, "application/json"));
+            var contentResponsePostCatalog = await responsePostCatalog.Content.ReadAsStringAsync();
+
+            if(!responsePostCatalog.IsSuccessStatusCode)
+            {
+                var message = string.IsNullOrEmpty(contentResponsePostCatalog) ? responsePostCatalog.ReasonPhrase : contentResponsePostCatalog;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = "message"
+                });
+            }
+            var results = JsonConvert.DeserializeObject<IEnumerable<entities.models.catalogModel>>(contentResponsePostCatalog);
+            clientHttp.Dispose();
+
+            return Json(new
+            {
+                isSuccess = true,
+                message = "Ok.",
+                results
+            });
+        }
+        catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
     [HttpGet("inventory/getCatalogs")]
     public async Task<IActionResult> getCatalogs()
     {
@@ -137,16 +178,18 @@ public class inventoryController : Controller
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
-            var client = new inventoryModel { description = description };
-            var responseGet = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:inventory:getItemByTerm"]}", new StringContent(JsonConvert.SerializeObject(client), Encoding.UTF8, "application/json"));
+            var inventoryItem = new inventoryListModel { itemName = description };
+            var responseGet = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:inventory:getItemByTerm"]}", new StringContent(JsonConvert.SerializeObject(inventoryItem), Encoding.UTF8, "application/json"));
 
             if(!responseGet.IsSuccessStatusCode)
             {
+                var errorMessage = await responseGet.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responseGet.ReasonPhrase : errorMessage;
                 return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = responseGet.ReasonPhrase });
             }
 
             var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<List<entities.models.inventoryModel>>(responseGetAsJson);
+            var results = JsonConvert.DeserializeObject<List<entities.models.inventoryListModel>>(responseGetAsJson);
             clientHttp.Dispose();
 
             return Json(results);
@@ -295,12 +338,7 @@ public class inventoryController : Controller
             ViewData["tolerance"] = result!.tolerance;
             ViewData["unitTolerance"] = result!.unitTolerance;
             ViewData["warehouseLocation"] = result!.warehouseLocation;
-            ViewData["quantity"] = result!.quantity;
             ViewData["reorderQty"] = result!.reorderQty;
-            ViewData["unit"] = result!.unit;
-            ViewData["currency"] = result!.currency;
-            ViewData["unitValue"] = result!.unitValue;
-            ViewData["totalValue"] = result!.totalValue;
             ViewData["notes"] = result!.notes;
             ViewData["itemImageString"] = $"data:image/jpg;base64,{Convert.ToBase64String(System.IO.File.ReadAllBytes(result.itemImagePath!))}";
             ViewData["hasBluePrints"] = !string.IsNullOrEmpty(result.bluePrintsPath);

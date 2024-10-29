@@ -4,6 +4,7 @@ using common.logging;
 using data.repositories;
 using entities.models;
 using Newtonsoft.Json;
+using entities.enums;
 
 public class facadeInventory
 {
@@ -16,11 +17,11 @@ public class facadeInventory
         _repositoryInventory = new repositoryInventory();
     }
 
-    public List<inventoryModel> getItemByTerm(string description)
+    public List<inventoryListModel> getItemByTerm(string term)
     {
         try
         {
-            return _repositoryInventory.getItemByTerm(description);
+            return _repositoryInventory.getItemByTerm(term);
         }
         catch (Exception exception)
         {
@@ -46,8 +47,9 @@ public class facadeInventory
     {
         try
         {
-            inventoryItem.creationDate = DateTime.Now;
-            inventoryItem.lastRestockDate = DateTime.Now;
+            var today = DateTime.Now;
+            inventoryItem.quantity = 0;
+            inventoryItem.creationDate = today;
             inventoryItem.itemImagePath = string.IsNullOrEmpty(inventoryItem.itemImagePath) ? string.Empty : inventoryItem.itemImagePath;
             inventoryItem.bluePrintsPath = string.IsNullOrEmpty(inventoryItem.bluePrintsPath) ? string.Empty : inventoryItem.bluePrintsPath;
             inventoryItem.technicalSpecificationsPath = string.IsNullOrEmpty(inventoryItem.technicalSpecificationsPath) ? string.Empty : inventoryItem.technicalSpecificationsPath;
@@ -72,8 +74,6 @@ public class facadeInventory
             catalogs.Add(_repositoryInventory.getWeightUnitTypesCatalog());
             catalogs.Add(_repositoryInventory.getToleranceUnitTypesCatalog());
             catalogs.Add(_repositoryInventory.getWarehouseUnitTypesCatalog());
-            catalogs.Add(_repositoryInventory.getPackingUnitTypesCatalog());
-            catalogs.Add(_repositoryInventory.getCurrencyTypesCatalog());
             return catalogs;
         }
         catch (Exception exception)
@@ -88,6 +88,68 @@ public class facadeInventory
         try
         {
             return _repositoryInventory.getItemInventoryById(id);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<catalogModel> getCatalogByName(string name)
+    {
+        try
+        {
+            var catalog = new List<catalogModel>();
+            switch (name.ToUpper())
+            {
+                case "PACKINGUNITTYPES":
+                    catalog = _repositoryInventory.getPackingUnitTypesCatalog();
+                    break;
+                default:
+                    catalog = null;
+                    break;
+            }
+            return catalog;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<inventoryMovementModel> getInventoryMovementsByPurchaseOrderIdAndInventoryId(int purchaseOrderId, int inventoryItemId)
+    {
+        try
+        {
+            return _repositoryInventory.getInventoryMovementsByPurchaseOrderIdAndInventoryId(purchaseOrderId, inventoryItemId);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public int addEntry(int inventoryItemId, double quantity, DateTime entryDateTime)
+    {
+        try
+        {
+            return _repositoryInventory.addEntry(inventoryItemId, quantity, entryDateTime);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public int addMovement(int inventoryItemId, inventoryMovementType inventoryMovementType, int purchaseOrderId, int userId, double quantity, int unit, string comments, decimal unitValue, decimal totalValue, DateTime entryDateTime)
+    {
+        try
+        {
+            return _repositoryInventory.addMovement(inventoryItemId, inventoryMovementType, purchaseOrderId, userId, quantity, unit, comments, unitValue, totalValue, entryDateTime);
         }
         catch (Exception exception)
         {

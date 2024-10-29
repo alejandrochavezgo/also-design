@@ -72,8 +72,8 @@ $(document).on('click', '#addItem', function() {
                         '</span>' +
                     '</td>' +
                 '<td class="text-start">' +
-                    '<textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Description"></textarea>' +
-                    '<textarea class="form-control fw-medium mb-1 bg-light border-0 quotation-item" rows="2" placeholder="Search material..."></textarea>' +
+                    '<textarea class="form-control fw-medium mb-1 bg-light border-0 purchaseorder-description" rows="3" placeholder="Description"></textarea>' +
+                    '<textarea class="form-control fw-medium mb-1 bg-light border-0 purchaseorder-item" rows="2" placeholder="Search material..."></textarea>' +
                     '<textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Details"></textarea>' +
                     '<input class="form-control mb-1" type="file">' +
                     '<textarea class="form-control fw-medium bg-light border-0" rows="4" placeholder="Notes"></textarea>' +
@@ -86,9 +86,19 @@ $(document).on('click', '#addItem', function() {
                     '</div>' +
                 '</td>' +
                 '<td>' +
-                    '<select class="form-select">' +
-                        '<option value="EA">EA</option>' +
-                    '</select>' +
+                '<select class="form-select">' + 
+                    '<option value="">Select option</option>' +
+                    '<option value="1">EACH (EA)</option>' +
+                    '<option value="2">BOX (BOX)</option>' +
+                    '<option value="3">PACKAGE (PKG)</option>' +
+                    '<option value="4">SET (SET)</option>' +
+                    '<option value="5">PALLET (PAL)</option>' +
+                    '<option value="6">POUND (LB)</option>' +
+                    '<option value="7">KILOGRAM (KG)</option>' +
+                    '<option value="8">METER (M)</option>' +
+                    '<option value="9">LITER (L)</option>' +
+                    '<option value="10">FOOT (FT)</option>' +
+                '</select>' +
                 '</td>' +
                 '<td class="text-end">' +
                     '<input class="form-control text-end numerical-mask subtotal-value" value="0.00" />' +
@@ -101,7 +111,7 @@ $(document).on('click', '#addItem', function() {
         updateAddAndRemoveButtons();
         initializeInputNumericalMasks();
         initializeCounter(rowCounter);
-        initializeItemAutocomplete('.quotation-item:last');
+        initializeItemAutocomplete('.purchaseorder-item:last');
         updatePurchaseOrderAmounts();
     } catch (exception) {
         Swal.fire({
@@ -139,8 +149,8 @@ function initializeSupplierAutocomplete() {
         $('#inSupplierBusinessName').autocomplete({
             source: function(request, response) {
                 $.ajax({
-                    url: '/supplier/getSupplierByTerm',
-                    method: 'GET',
+                    url: '/supplier/getSuppliersByTerm',
+                    method: 'get',
                     dataType: 'json',
                     data: {
                         businessName: request.term
@@ -208,7 +218,7 @@ function initializeItemAutocomplete(element) {
             source: function(request, response) {
                 $.ajax({
                     url: '/inventory/getItemByTerm',
-                    method: 'GET',
+                    method: 'get',
                     dataType: 'json',
                     data: {
                         description: request.term
@@ -216,13 +226,11 @@ function initializeItemAutocomplete(element) {
                     success: function(data) {
                         response($.map(data, function(item) {
                             return {
-                                label: item.description,
-                                value: item.description,
+                                label: item.itemCode + " - " + item.itemName,
+                                value: item.itemCode + " - " + item.itemName,
                                 id: item.id,
-                                description: item.description,
-                                code: item.code,
-                                unit: item.unit,
-                                unitValue: item.unitValue
+                                description: item.itemDescription,
+                                code: item.itemCode
                             };
                         }));
                     },
@@ -242,10 +250,8 @@ function initializeItemAutocomplete(element) {
             minLength: 2,
             select: function(event, ui) {
                 var row = $(this).closest('tr');
-                row.find('.quotation-item').val(ui.item.code + ' - ' + ui.item.value);
-                row.find('td:nth-child(5) select').val(ui.item.unit);
-                row.find('td:nth-child(6) input').val('$' + ui.item.unitValue.toFixed(2));
-                row.find('td:nth-child(7)').text('$' + (ui.item.unitValue * row.find('.product-quantity').val()).toFixed(2));
+                row.find('.purchaseorder-description').val(ui.item.description);
+                row.find('.purchaseorder-item').attr('inventorItemId', ui.item.id);
                 updatePurchaseOrderAmounts();
             }
         });
@@ -276,10 +282,9 @@ function initializeInputNumericalMasks()
                     $(this).val('0');
                 }
             }
-
             updatePurchaseOrderAmounts();
         });
-        
+
         $('.numerical-mask').on('blur', function() {
             var value = $(this).val();
             if (value === '' || isNaN(parseFloat(value))) {
@@ -380,6 +385,7 @@ function add() {
         let items = [];
         $('#tbItems tr').each(function(index, row) {
             let item = {
+                inventoryItemId: $(row).find('.purchaseorder-item').attr('inventoritemid'),
                 description: $(row).find('textarea').eq(0).val(),
                 material: $(row).find('textarea').eq(1).val(),
                 details: $(row).find('textarea').eq(2).val(),
@@ -529,5 +535,5 @@ $(document).ready(function() {
     initializeInputTaxMasks();
     initializeInputNumericalMasks();
     initializeCounter(1);
-    initializeItemAutocomplete('.quotation-item');
+    initializeItemAutocomplete('.purchaseorder-item');
 });

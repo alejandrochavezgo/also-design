@@ -3,6 +3,7 @@ namespace entities.models;
 public class purchaseOrderItemsModel
 {
     public int id { get; set; }
+    public int inventoryItemId { get; set; }
     public int purchaseOrderId { get; set; }
     public string? description { get; set; }
     public string? material { get; set; }
@@ -12,8 +13,8 @@ public class purchaseOrderItemsModel
     public string? notes { get; set; }
     public bool hasOriginalImage { get; set; }
     public bool hasNewImage { get; set; }
-    public int quantity { get; set; }
-    public string? unit { get; set; }
+    public double quantity { get; set; }
+    public int unit { get; set; }
     public decimal unitValue { get; set; }
     public decimal totalValue { get; set; }
 }

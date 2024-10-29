@@ -54,6 +54,22 @@ public class purchaseOrderController : ControllerBase
         }
     }
 
+    [HttpPost("getPurchaseOrderItemsByPurchaseOrderId")]
+    public IActionResult getPurchaseOrderItemsByPurchaseOrderId(entities.models.purchaseOrderModel purchaseOrder)
+    {
+        try
+        {
+            if(purchaseOrder == null || purchaseOrder.id <= 0)
+                return BadRequest("Missing data.");
+
+            return Ok(_facadePurchaseOrder.getPurchaseOrderItemsByPurchaseOrderId(purchaseOrder.id));
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
     [HttpPost("update")]
     public IActionResult update(entities.models.purchaseOrderModel purchaseOrder)
     {
@@ -85,6 +101,38 @@ public class purchaseOrderController : ControllerBase
                 return BadRequest("Purchase order can't be deleted.");
 
             return Ok();
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
+    [HttpPost("updateStatusByPurchaseOrderId")]
+    public IActionResult updateStatusByPurchaseOrderId(entities.models.changeStatusModel changeStatus)
+    {
+        try
+        {
+            if(changeStatus == null || !new purchaseOrderFormHelper().isUpdateFormValid(changeStatus))
+                return BadRequest("The status was not modified.");
+
+            if (!_facadePurchaseOrder.updateStatusByPurchaseOrderId(changeStatus))
+                return BadRequest("The status was not change.");
+
+            return Ok();
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
+    [HttpGet("getStatusCatalog")]
+    public IActionResult getStatusCatalog()
+    {
+        try
+        {
+            return Ok(_facadePurchaseOrder.getStatusCatalog());
         }
         catch(Exception e)
         {

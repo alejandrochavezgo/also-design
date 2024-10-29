@@ -139,8 +139,8 @@ public class supplierController : Controller
         }
     }
 
-    [HttpGet("supplier/getSupplierByTerm")]
-    public async Task<IActionResult> getSupplierByTerm(string businessName)
+    [HttpGet("supplier/getSuppliersByTerm")]
+    public async Task<IActionResult> getSuppliersByTerm(string businessName)
     {
         try
         {
@@ -148,7 +148,7 @@ public class supplierController : Controller
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
             var supplier = new supplierModel { businessName = businessName };
-            var responseGet = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:supplier:getSupplierByTerm"]}", new StringContent(JsonConvert.SerializeObject(supplier), Encoding.UTF8, "application/json"));
+            var responseGet = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:supplier:getSuppliersByTerm"]}", new StringContent(JsonConvert.SerializeObject(supplier), Encoding.UTF8, "application/json"));
 
             if(!responseGet.IsSuccessStatusCode)
             {
@@ -175,13 +175,11 @@ public class supplierController : Controller
         try
         {
             if (!ModelState.IsValid || !supplierFormHelper.isAddFormValid(supplier))
-                {
-                    return Json(new
-                    { 
-                        isSuccess = false,
-                        message = "Invalid data."
-                    });
-                }
+                return Json(new
+                { 
+                    isSuccess = false,
+                    message = "Invalid data."
+                });
 
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
@@ -222,13 +220,11 @@ public class supplierController : Controller
         try
         {
             if (!ModelState.IsValid || !supplierFormHelper.isUpdateFormValid(supplier))
-                {
-                    return Json(new
-                    { 
-                        isSuccess = false,
-                        message = "Invalid data."
-                    });
-                }
+                return Json(new
+                { 
+                    isSuccess = false,
+                    message = "Invalid data."
+                });
 
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);

@@ -58,29 +58,51 @@
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <td colspan="9" class="text-center">
-                                            We have nothing to show.
-                                        </td>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Code</th>
-                                            <th>Supplier</th>
-                                            <th>User Creator</th>
-                                            <th>Payment Type</th>
-                                            <th>Total</th>
-                                            <th>Currency</th>
-                                            <th>Status</th>
-                                            <th>Creation Date</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </tfoot>
+                                    <tbody></tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="updateStatusModal"  tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalgridLabel">Change Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="javascript:void(0);">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label for="inCurrentStatus" class="form-label">Current Status</label>
+                            <input id="inCurrentStatus" type="text" class="form-control text-center color-fff" disabled>
+                        </div>
+                        <div class="col-6">
+                            <label for="seStatus" class="form-label">New Status</label>
+                            <select id="seStatus" class="form-select"></select>
+                        </div>
+                        <div class="col-12">
+                            <label for="taComments" class="form-label">Comments</label>
+                            <textarea id="taComments" class="form-control fw-medium mb-1 bg-light border-0 uppercase-input" rows="4"></textarea>
+                        </div>
+                        <div id="dvPurchaseOrderItemsTitle" class="col-12">
+                            <label class="form-label">Purchase Order Items</label>
+                        </div>
+                        <div id="dvPurchaseOrderItems" class="mt-0"></div>
+                        <div class="col-12">
+                            <div class="hstack gap-2 justify-content-end">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="updateStatus()">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

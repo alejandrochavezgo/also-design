@@ -6,6 +6,7 @@ $(document).ready(function () {
             type: 'get',
             dataType: 'json',
             success: function (data) {
+                console.log(data);
                 $('#dvTotalItems').html('Total items: ' + data.results.length);
                 const payload = data.results.map(item => [
                     item.itemName,

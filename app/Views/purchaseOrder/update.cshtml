@@ -141,8 +141,8 @@
                                                                 <td class="text-start">
                                                                     <input class="item-id" hidden value="@item.id">
                                                                     <input class="image-path" hidden value="@item.imagePath">
-                                                                    <textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Description">@item.description</textarea>
-                                                                    <textarea class="form-control fw-medium mb-1 bg-light border-0 quotation-item" rows="2" placeholder="Search material...">@item.material</textarea>
+                                                                    <textarea class="form-control fw-medium mb-1 bg-light border-0 purchaseorder-description" rows="3" placeholder="Description">@item.description</textarea>
+                                                                    <textarea class="form-control fw-medium mb-1 bg-light border-0 purchaseorder-item" rows="2" placeholder="Search material..." inventoritemid="@item.inventoryItemId">@item.material</textarea>
                                                                     <textarea class="form-control fw-medium mb-1 bg-light border-0" rows="3" placeholder="Details">@item.details</textarea>
                                                                     <input class="form-control mb-1 fileInput" id="fileInput" type="file">
                                                                     @if (!string.IsNullOrEmpty(item.imageString))
@@ -161,17 +161,19 @@
                                                                 </td>
                                                                 <td>
                                                                     <select class="form-select">
-                                                                        <option value="EA">Each (EA)</option>
-                                                                        <option value="BOX">Box (BOX)</option>
-                                                                        <option value="PKG">Package (PKG)</option>
-                                                                        <option value="SET">Set (SET)</option>
-                                                                        <option value="PAL">Pallet (PAL)</option>
-                                                                        <option value="LB">Pound (LB)</option>
-                                                                        <option value="KG">Kilogram (KG)</option>
-                                                                        <option value="M">Meter (M)</option>
-                                                                        <option value="L">Liter (L)</option>
-                                                                        <option value="FT">Foot (FT)</option>
+                                                                        <option value="">Select option</option>
+                                                                        <option value="1">EACH (EA)</option>
+                                                                        <option value="2">BOX (BOX)</option>
+                                                                        <option value="3">PACKAGE (PKG)</option>
+                                                                        <option value="4">SET (SET)</option>
+                                                                        <option value="5">PALLET (PAL)</option>
+                                                                        <option value="6">POUND (LB)</option>
+                                                                        <option value="7">KILOGRAM (KG)</option>
+                                                                        <option value="8">METER (M)</option>
+                                                                        <option value="9">LITER (L)</option>
+                                                                        <option value="10">FOOT (FT)</option>
                                                                     </select>
+                                                                    <input class="unitSelected" value="@item.unit" hidden>
                                                                 </td>
                                                                 <td class="text-end">
                                                                     <input class="form-control text-end numerical-mask subtotal-value" value="@item.unitValue.ToString("F2")" />
@@ -232,7 +234,7 @@
                         </div>
                         <div class="row pt-27px">
                             <div class="col-12">
-                                <button type="button" class="btn btn-success w-100per" onclick="updatePurchaseOrder()">Update</button>
+                                <button type="button" class="btn btn-success w-100per" onclick="update()">Update</button>
                             </div>
                         </div>
                     </div>
@@ -247,6 +249,13 @@
         $('#seSupplierContactNames').val("@ViewData["supplier.mainContactName"]");
         $('#seSupplierContactPhones').val("@ViewData["supplier.mainContactPhone"]");
         $('#seEmployeeContactPhone').val("@ViewData["employee.mainContactPhone"]");
+        $('#tbItems tr').each(function() {
+            const hiddenInput = $(this).find('input.unitSelected');
+            const selectElement = $(this).find('select.form-select');
+            if (hiddenInput.length && selectElement.length) {
+                selectElement.val(hiddenInput.val());
+            }
+        });
     </script>
     <script src="../assets/js/pages/purchaseOrderUpdate.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>

@@ -6,21 +6,20 @@ using common.logging;
 using entities.models;
 using Newtonsoft.Json;
 
-internal class factoryGetItemByTerm: baseMethod<factoryGetItemByTerm, inventoryModel>
+internal class factoryGetItemByTerm: baseMethod<factoryGetItemByTerm, inventoryListModel>
 {
     private log _logger = new log();
     
-    protected override inventoryModel _getEntity(IDataReader dr)
+    protected override inventoryListModel _getEntity(IDataReader dr)
     {
         try
         {
-            return new inventoryModel
+            return new inventoryListModel
             {
                 id = conversionManager.toInt(dr["IDINVENTORY"]),
-                description = conversionManager.toString(dr["DESCRIPTION"]),
-                code = conversionManager.toString(dr["CODE"]),
-                unit = conversionManager.toString(dr["UNIT"]),
-                unitValue = conversionManager.toDecimal(dr["UNITVALUE"])
+                itemCode = conversionManager.toString(dr["CODE"]),
+                itemName = conversionManager.toString(dr["NAME"]),
+                itemDescription = conversionManager.toString(dr["DESCRIPTION"])
             };
         }
         catch (Exception exception)

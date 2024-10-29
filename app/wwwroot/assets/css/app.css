@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@media all and (max-width: 1200px) {
+@media all and (max-width: 1350px) {
   .hideMobileContent {
     display:none;
   }
@@ -87,8 +87,20 @@
 .pl-12px {
   padding-left: 12px;
 }
+.pl-1x05r {
+  padding-left: calc(1rem * .5);
+}
+.pr-1x05r {
+  padding-right: calc(1rem * .5);
+}
+.pb-05r {
+  padding-bottom: .5rem;
+}
 .color-495057 {
   color: #495057;
+}
+.color-fff {
+  color: #ffffff;
 }
 .alert-custom {
   padding: .8rem;
@@ -112,6 +124,9 @@
 .mt-18px {
   margin-top: 18px;
 }
+.mt-0 {
+  margin-top: 0;
+}
 .ml-13px {
   margin-left: 13px;
 }
@@ -120,6 +135,9 @@
 }
 .pl-0 {
   padding-left: 0;
+}
+.pt-1-5r {
+  padding-top: 1.5rem;
 }
 .mt-24npx {
   margin-top: -24px;

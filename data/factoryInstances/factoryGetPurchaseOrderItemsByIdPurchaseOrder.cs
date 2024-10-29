@@ -24,9 +24,10 @@ internal class factoryGetPurchaseOrderItemsByIdPurchaseOrder: baseMethod<factory
                 imagePath = conversionManager.toString(dr["IMAGEPATH"]),
                 notes = conversionManager.toString(dr["NOTES"]),
                 quantity = conversionManager.toInt(dr["QUANTITY"]),
-                unit = conversionManager.toString(dr["UNIT"]),
+                unit = conversionManager.toInt(dr["IDPACKINGUNITTYPE"]),
                 unitValue = conversionManager.toDecimal(dr["UNITVALUE"]),
-                totalValue = conversionManager.toDecimal(dr["TOTALVALUE"])
+                totalValue = conversionManager.toDecimal(dr["TOTALVALUE"]),
+                inventoryItemId = conversionManager.toInt(dr["IDINVENTORY"])
             };
         }
         catch (Exception exception)

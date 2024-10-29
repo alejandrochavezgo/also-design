@@ -83,6 +83,46 @@ public class purchaseOrderController : Controller
         }
     }
 
+    [HttpGet("purchaseOrder/getPurchaseOrderItemsByPurchaseOrderId")]
+    public async Task<JsonResult> getPurchaseOrderItemsByPurchaseOrderId(int id)
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var purchaseOrder = new purchaseOrderModel { id = id };
+            var responsePostPurchaseOrder = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:purchaseOrder:getPurchaseOrderItemsByPurchaseOrderId"]}", new StringContent(JsonConvert.SerializeObject(purchaseOrder), Encoding.UTF8, "application/json"));
+            var contentResponsePostPurchaseOrder = await responsePostPurchaseOrder.Content.ReadAsStringAsync();
+            if(!responsePostPurchaseOrder.IsSuccessStatusCode)
+            {
+                var message = string.IsNullOrEmpty(contentResponsePostPurchaseOrder) ? responsePostPurchaseOrder.ReasonPhrase : contentResponsePostPurchaseOrder;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = "message"
+                });
+            }
+            var results = JsonConvert.DeserializeObject<IEnumerable<entities.models.purchaseOrderItemsModel>>(contentResponsePostPurchaseOrder);
+            clientHttp.Dispose();
+
+            return Json(new
+            {
+                isSuccess = true,
+                message = "Ok.",
+                results
+            });
+        }
+        catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
     [HttpGet("purchaseOrder/add")]
     public async Task<IActionResult> add()
     {
@@ -254,6 +294,94 @@ public class purchaseOrderController : Controller
         }
     }
 
+    [HttpPost("purchaseOrder/updateStatusByPurchaseOrderId")]
+    public async Task<JsonResult> updateStatusByPurchaseOrderId([FromBody] changeStatusModel changeStatus)
+    {
+        try
+        {
+            if (!ModelState.IsValid || !purchaseOrderFormHelper.isUpdateFormValid(changeStatus))
+                return Json(new
+                { 
+                    isSuccess = false,
+                    message = "Invalid data."
+                });
+
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            changeStatus.userId = userCookie.id;
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:purchaseOrder:updateStatusByPurchaseOrderId"]}", new StringContent(JsonConvert.SerializeObject(changeStatus), Encoding.UTF8, "application/json"));
+
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{message}"
+                });
+            }
+            clientHttp.Dispose();
+
+            return Json(new
+            { 
+                isSuccess = true,
+                message = "Status updated successfully."
+            });
+        }
+        catch(Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
+    [HttpGet("purchaseOrder/getStatusCatalog")]
+    public async Task<IActionResult> getStatusCatalog()
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responseGet = await clientHttp.GetAsync($"{configurationManager.appSettings["api:routes:purchaseOrder:getStatusCatalog"]}");
+
+            if(!responseGet.IsSuccessStatusCode)
+            {
+                var errorMessage = await responseGet.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responseGet.ReasonPhrase : errorMessage;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{message}"
+                });
+            }
+
+            var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
+            var results = JsonConvert.DeserializeObject<IEnumerable<IEnumerable<entities.models.catalogModel>>>(responseGetAsJson);
+            clientHttp.Dispose();
+
+            return Json(new
+            {
+                isSuccess = true,
+                message = "Ok.",
+                results
+            });
+        }
+        catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
     [HttpGet("purchaseOrder/update")]
     public async Task<IActionResult> update(int id)
     {
@@ -330,23 +458,19 @@ public class purchaseOrderController : Controller
         {
             var purchaseOrderJson = form["purchaseOrder"].FirstOrDefault();
             if (string.IsNullOrEmpty(purchaseOrderJson))
-            {
                 return Json(new
                 {
                     isSuccess = false,
                     message = "Purchase order data is missing."
                 });
-            }
 
             var purchaseOrder = JsonConvert.DeserializeObject<purchaseOrderModel>(purchaseOrderJson);
             if (purchaseOrder == null || !ModelState.IsValid || !purchaseOrderFormHelper.isUpdateFormValid(purchaseOrder))
-            {
                 return Json(new
                 {
                     isSuccess = false,
                     message = "Invalid data."
                 });
-            }
 
             var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", "images", "purchaseOrderItems");
             var files = form.Files;

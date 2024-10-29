@@ -23,11 +23,11 @@ public class inventoryController : ControllerBase
     }
 
     [HttpPost("getItemByTerm")]
-    public IActionResult getItemByTerm(entities.models.inventoryModel inventory)
+    public IActionResult getItemByTerm(entities.models.inventoryListModel inventoryItem)
     {
         try
         {
-            return Ok(_facadeInventory.getItemByTerm(inventory.description!));
+            return Ok(_facadeInventory.getItemByTerm(inventoryItem.itemName!));
         }
         catch(Exception e)
         {
@@ -86,6 +86,22 @@ public class inventoryController : ControllerBase
         try
         {
             return Ok(_facadeInventory.getItemInventoryById(inventoryItem.id));
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
+    [HttpPost("getCatalogByName")]
+    public IActionResult getCatalogByName(entities.models.catalogModel catalog)
+    {
+        try
+        {
+            if (catalog == null || string.IsNullOrEmpty(catalog.description))
+                return BadRequest("Missing data.");
+
+            return Ok(_facadeInventory.getCatalogByName(catalog.description));
         }
         catch(Exception e)
         {

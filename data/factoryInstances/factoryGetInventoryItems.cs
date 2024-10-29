@@ -14,12 +14,13 @@ internal class factoryGetInventoryItems: baseMethod<factoryGetInventoryItems, in
     {
         try
         {
+            var lastRestockDate = conversionManager.toValidDate(dr["LASTRESTOCKDATE"]) <= DateTime.MinValue ? "-" : conversionManager.toValidDate(dr["LASTRESTOCKDATE"]).ToString("yyyy-MM-dd hh:mm:ss");
             return new inventoryListModel
             {
                 itemName = conversionManager.toString(dr["NAME"]),
                 itemCode = conversionManager.toString(dr["CODE"]),
                 itemImagePath = conversionManager.toString(dr["ITEMIMAGEPATH"]),
-                idQuantityLastRestockDate = $"{conversionManager.toInt(dr["IDINVENTORY"])}&{conversionManager.toString(dr["QUANTITY"])}&{conversionManager.toValidDate(dr["LASTRESTOCKDATE"]).ToString("yyyy-MM-dd hh:mm:ss")}"
+                idQuantityLastRestockDate = $"{conversionManager.toInt(dr["IDINVENTORY"])}&{conversionManager.toString(dr["QUANTITY"])}&{lastRestockDate}"
             };
         }
         catch (Exception exception)
