@@ -18,7 +18,7 @@ public class purchaseOrderFormHelper
     {
         try
         {
-            if (purchaseOrder.supplier!.id <= 0 || string.IsNullOrEmpty(purchaseOrder.supplier!.mainContactName) || string.IsNullOrEmpty(purchaseOrder.supplier!.mainContactPhone) ||
+            if (purchaseOrder.status != (int)statusType.ACTIVE || purchaseOrder.supplier!.id <= 0 || string.IsNullOrEmpty(purchaseOrder.supplier!.mainContactName) || string.IsNullOrEmpty(purchaseOrder.supplier!.mainContactPhone) ||
                 purchaseOrder.payment!.id <= 0 || purchaseOrder.user!.id <= 0 || string.IsNullOrEmpty(purchaseOrder.user.employee!.mainContactPhone) || purchaseOrder.currency!.id <= 0 || purchaseOrder.items!.Count == 0)
                 return false;
 

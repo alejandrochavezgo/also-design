@@ -67,6 +67,13 @@ public class facadePurchaseOrder
         {
             try
             {
+                var purchaseOrderFromDatabase = _repositoryPurchaseOrder.getPurchaseOrderById(purchaseOrder.id);
+                if (purchaseOrderFromDatabase != null && purchaseOrderFromDatabase.status != (int)statusType.ACTIVE)
+                {
+                    transactionScope.Dispose();
+                    return false;
+                }
+
                 purchaseOrder.modificationDate = DateTime.Now;
                 var purchaseOrderIdUpdated = _repositoryPurchaseOrder.updatePurchaseOrder(purchaseOrder);
 
@@ -153,7 +160,7 @@ public class facadePurchaseOrder
                         var maxQuantityAllowed = 0d;
                         if (purchaseOrderItemFromDatabase != null && inventoryMovements != null)
                         {
-                            newQuantity = (inventoryMovements.Sum(x => x.quantity) + changeStatus.purchaseOrderItems.Sum(x => x.quantity));
+                            newQuantity = (inventoryMovements.Sum(x => x.quantity) + purchaseOrderItem.quantity);
                             maxQuantityAllowed = purchaseOrderItemFromDatabase.quantity;
                             if (newQuantity > maxQuantityAllowed)
                             {
@@ -331,13 +338,15 @@ public class facadePurchaseOrder
         {
             var _facadeInventory = new facadeInventory();
             var purchaseOrderItems = _repositoryPurchaseOrder.getPurchaseOrderItemsByPurchaseOrderId(purchaseOrderId);
+            var purchaseOrderItemsToRemove = new List<purchaseOrderItemsModel>();
             if (purchaseOrderItems != null)
                 foreach (var purchaseOrderItem in purchaseOrderItems)
                 {
                     var inventoryMovements = _facadeInventory.getInventoryMovementsByPurchaseOrderIdAndInventoryId(purchaseOrderId, purchaseOrderItem.inventoryItemId);
                     if (inventoryMovements != null && inventoryMovements.Sum(x => x.quantity) == purchaseOrderItem.quantity)
-                        purchaseOrderItems.Remove(purchaseOrderItem);
+                        purchaseOrderItemsToRemove.Add(purchaseOrderItem);
                 }
+            purchaseOrderItems.RemoveAll(purchaseOrderItem => purchaseOrderItemsToRemove.Contains(purchaseOrderItem));
             return purchaseOrderItems;
         }
         catch (Exception exception)

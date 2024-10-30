@@ -117,16 +117,18 @@ async function showUpdateStatusModal(purchaseOrderId, status, statusName, status
             return;
         }
 
-        const packingUnitTypeCatalog = await getPackingUnitTypeCatalog();
-        if (!packingUnitTypeCatalog) {
-            $('#loader').hide();
-            return;
-        }
+        if (status == '6' || status == '9') {
+            const packingUnitTypeCatalog = await getPackingUnitTypeCatalog();
+            if (!packingUnitTypeCatalog) {
+                $('#loader').hide();
+                return;
+            }
 
-        const purchaseOrderItemsLoaded = await getPurchaseOrderItems(purchaseOrderId, packingUnitTypeCatalog);
-        if (!purchaseOrderItemsLoaded) {
-            $('#loader').hide();
-            return;
+            const purchaseOrderItemsLoaded = await getPurchaseOrderItems(purchaseOrderId, packingUnitTypeCatalog);
+            if (!purchaseOrderItemsLoaded) {
+                $('#loader').hide();
+                return;
+            }
         }
 
         $('#updateStatusModal').modal('show');
@@ -241,8 +243,9 @@ async function getPurchaseOrderItems(purchaseOrderId, packingUnitTypeCatalog) {
             return `<option value="${unit.id}">${unit.description}</option>`;
         }).join('');
 
+        let purchaseOrderItemsHtml = '';
         purchaseOrderItems.results.forEach(purchaseOrderItem => {
-            const purchaseOrderItemHtml = `
+            purchaseOrderItemsHtml += `
                 <div class="row pl-1x05r pr-1x05r" inventoryitemid="${purchaseOrderItem.inventoryItemId}">
                     <div class="col-12 pb-05r">
                         <span class="badge badge-soft-dark badge-border purchaseorder-item-title">${purchaseOrderItem.material}</span>
@@ -269,10 +272,14 @@ async function getPurchaseOrderItems(purchaseOrderId, packingUnitTypeCatalog) {
                 </div>
                 <div class="row pl-1x05r pr-1x05r pt-1-5r"></div>
             `;
-            container.innerHTML += purchaseOrderItemHtml;
-            const selectElement = container.querySelector('.purchaseorder-item-unittype:last-of-type');
-            selectElement.value = purchaseOrderItem.unit;
         });
+        container.innerHTML += purchaseOrderItemsHtml;
+        const selectElements = container.querySelectorAll('.purchaseorder-item-unittype');
+        if (selectElements.length > 0) {
+            selectElements.forEach((selectElement, index) => {
+                selectElement.value = purchaseOrderItems.results[index].unit;
+            });
+        }
         initializeInputNumericalMasks();
         return true;
     } catch(exception) {
@@ -430,12 +437,13 @@ function updateStatus()
 
 function isValidForm(purchaseOrderItems) {
     try {
+        var currentStatusId = $('#inCurrentStatus').attr('status')
         var purchaseOrderId = $('#inCurrentStatus').attr('purchaseOrderId');
         var currentStatusName = $('#inCurrentStatus').val();
         var newStatusId = $('#seStatus').val();
         var newStatusName = $('#seStatus option:selected').text();
         var comments = $('#taComments').val();
-        if (!purchaseOrderId || !currentStatusName || !newStatusId || !comments || (currentStatusName == newStatusName && (currentStatusName != 'PARTIALLY FULFILLED' && newStatusName != 'PARTIALLY FULFILLED')) || purchaseOrderItems.length == 0) {
+        if (!currentStatusId || !purchaseOrderId || !currentStatusName || !newStatusId || !comments || (currentStatusName == newStatusName && (currentStatusName != 'PARTIALLY FULFILLED' && newStatusName != 'PARTIALLY FULFILLED')) || (purchaseOrderItems.length == 0 && currentStatusId == '9')) {
             Swal.fire({
                 title: 'Error!!',
                 html: 'The Status and Comments fields cannot be empty. And the new status must be different from the current except when is PARTIALLY FULFILLED.',
@@ -492,7 +500,6 @@ function initializeDatatable()
                 "url": "getAll",
                 "type": "get",
                 "dataSrc": function(data) {
-                    console.log(data);
                     if (!data.isSuccess) {
                         Swal.fire({
                             title: 'Error!!',
@@ -520,11 +527,11 @@ function initializeDatatable()
                 { "data": "creationDateAsString" },
                 { "data": "id", "render": function(data, type, row) {
                     return `
-                        <button type="button" class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/purchaseOrder/update?id=${data}'" title="Update"><i class="ri-pencil-fill"></i></button>
-                        <button type="button" class="btn btn-primary btn-icon secondary waves-effect waves-light mx-1" onclick="showUpdateStatusModal(${data}, '${row.status}', '${row.statusName}', '${row.statusColor}')" title="Update Status"><i class="ri-exchange-fill"></i></button>
+                        ${row.status == 1 ? `<button type="button" class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/purchaseOrder/update?id=${data}'" title="Update"><i class="ri-pencil-fill"></i></button>` : ''}
+                        ${row.status != 11 ? `<button type="button" class="btn btn-primary btn-icon secondary waves-effect waves-light mx-1" onclick="showUpdateStatusModal(${data}, '${row.status}', '${row.statusName}', '${row.statusColor}')" title="Update Status"><i class="ri-exchange-fill"></i></button>` : ''}
                         <button type="button" class="btn btn-secondary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/purchaseOrder/detail?id=${data}'" title="View"><i class="ri-eye-fill"></i></button>
                         <button type="button" class="btn btn-info btn-icon waves-effect waves-light mx-1" onclick="downloadPurchaseOrder(${data})" title="Download"><i class="ri-file-download-fill"></i></button>
-                        <button type="button" class="btn btn-danger btn-icon waves-effect waves-light mx-1" onclick="showDeleteModal(${data})" title="Delete"><i class="ri-delete-bin-2-fill"></i></button>
+                        ${row.status == 1 ? `<button type="button" class="btn btn-danger btn-icon waves-effect waves-light mx-1" onclick="showDeleteModal(${data})" title="Delete"><i class="ri-delete-bin-2-fill"></i></button>` : ''}
                     `;
                 }}
             ],

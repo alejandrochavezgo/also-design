@@ -7,6 +7,7 @@ using business.facade;
 using providerData.entitiesData;
 using common.helpers;
 using Newtonsoft.Json;
+using entities.enums;
 
 [ApiController]
 [authorize]
@@ -54,15 +55,15 @@ public class purchaseOrderController : ControllerBase
         }
     }
 
-    [HttpPost("getPurchaseOrderItemsByPurchaseOrderId")]
-    public IActionResult getPurchaseOrderItemsByPurchaseOrderId(entities.models.purchaseOrderModel purchaseOrder)
+    [HttpPost("getPendingPurchaseOrderItemsByPurchaseOrderId")]
+    public IActionResult getPendingPurchaseOrderItemsByPurchaseOrderId(entities.models.purchaseOrderModel purchaseOrder)
     {
         try
         {
             if(purchaseOrder == null || purchaseOrder.id <= 0)
                 return BadRequest("Missing data.");
 
-            return Ok(_facadePurchaseOrder.getPurchaseOrderItemsByPurchaseOrderId(purchaseOrder.id));
+            return Ok(_facadePurchaseOrder.getPendingPurchaseOrderItemsByPurchaseOrderId(purchaseOrder.id));
         }
         catch(Exception e)
         {
@@ -94,7 +95,7 @@ public class purchaseOrderController : ControllerBase
     {
         try
         {
-            if(purchaseOrder == null)
+            if(purchaseOrder == null || purchaseOrder.status != (int)statusType.ACTIVE)
                 return BadRequest("Missing data.");
 
             if (!_facadePurchaseOrder.deletePurchaseOrderById(purchaseOrder.id))

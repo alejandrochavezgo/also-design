@@ -549,6 +549,10 @@
       "PackagePath": "staticwebassets/assets/images/info.png"
     },
     {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/inventoryItems/01e9fbfb-2630-4610-840f-15804d618128.jpg",
+      "PackagePath": "staticwebassets/assets/images/inventoryItems/01e9fbfb-2630-4610-840f-15804d618128.jpg"
+    },
+    {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/inventoryItems/09e88fec-3cb3-4059-8d03-025f69cc536d.png",
       "PackagePath": "staticwebassets/assets/images/inventoryItems/09e88fec-3cb3-4059-8d03-025f69cc536d.png"
     },
@@ -569,8 +573,20 @@
       "PackagePath": "staticwebassets/assets/images/inventoryItems/2f39389e-7969-40d8-9a01-1b30a8c9c899.png"
     },
     {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/inventoryItems/367d28dd-d319-4ee5-970d-a620d1fb4e59.avif",
+      "PackagePath": "staticwebassets/assets/images/inventoryItems/367d28dd-d319-4ee5-970d-a620d1fb4e59.avif"
+    },
+    {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/inventoryItems/39835016-bb7c-4e40-b40d-7d496cd0f609.html",
       "PackagePath": "staticwebassets/assets/images/inventoryItems/39835016-bb7c-4e40-b40d-7d496cd0f609.html"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/inventoryItems/3cd3fe2c-c868-4d01-a87e-3d2394da1014.html",
+      "PackagePath": "staticwebassets/assets/images/inventoryItems/3cd3fe2c-c868-4d01-a87e-3d2394da1014.html"
+    },
+    {
+      "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/inventoryItems/4f1094b8-179a-4bb1-b66f-9424372e7986.html",
+      "PackagePath": "staticwebassets/assets/images/inventoryItems/4f1094b8-179a-4bb1-b66f-9424372e7986.html"
     },
     {
       "Id": "/Users/alejandrochavezgomez/Documents/developments/freelance/also-design/software-v1/also-design-v2/app/wwwroot/assets/images/inventoryItems/78254380-27b6-47a6-9816-c5bfb3c5c315.png",

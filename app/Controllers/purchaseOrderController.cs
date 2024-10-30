@@ -11,6 +11,7 @@ using common.configurations;
 using System.Text;
 using helpers;
 using System.Text.RegularExpressions;
+using entities.enums;
 
 [authorization]
 public class purchaseOrderController : Controller
@@ -92,7 +93,7 @@ public class purchaseOrderController : Controller
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
             var purchaseOrder = new purchaseOrderModel { id = id };
-            var responsePostPurchaseOrder = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:purchaseOrder:getPurchaseOrderItemsByPurchaseOrderId"]}", new StringContent(JsonConvert.SerializeObject(purchaseOrder), Encoding.UTF8, "application/json"));
+            var responsePostPurchaseOrder = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:purchaseOrder:getPendingPurchaseOrderItemsByPurchaseOrderId"]}", new StringContent(JsonConvert.SerializeObject(purchaseOrder), Encoding.UTF8, "application/json"));
             var contentResponsePostPurchaseOrder = await responsePostPurchaseOrder.Content.ReadAsStringAsync();
             if(!responsePostPurchaseOrder.IsSuccessStatusCode)
             {
@@ -261,6 +262,13 @@ public class purchaseOrderController : Controller
     {
         try
         {
+            if (purchaseOrder!.status != (int)statusType.ACTIVE)
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = "Only purchase orders with an ACTIVE status can be deleted."
+                });
+
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
@@ -412,6 +420,9 @@ public class purchaseOrderController : Controller
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<entities.models.purchaseOrderModel>(responsePostAsJson);
             clientHttp.Dispose();
+
+            if (result!.status != (int)statusType.ACTIVE)
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = "Only purchase orders with an ACTIVE status can be updated." });
 
             ViewData["user.id"] = resultUser!.id;
             ViewData["user.email"] = resultUser!.email;

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<style>
+    body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #0e0e0e;
+}
+
+.rain {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+}
+
+.raindrop {
+    position: absolute;
+    width: 2px;
+    height: 15px;
+    background: rgba(255, 255, 255, 0.6);
+    bottom: 100%;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(100vh);
+    }
+}
+
+</style>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rain Animation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="rain"></div>
+    <script>
+        const rainContainer = document.querySelector('.rain');
+const numberOfRaindrops = 200;
+
+function createRaindrop() {
+    const raindrop = document.createElement('div');
+    raindrop.classList.add('raindrop');
+    raindrop.style.left = `${Math.random() * 100}%`;
+    raindrop.style.animationDuration = `${0.5 + Math.random() * 0.5}s`;
+    raindrop.style.opacity = Math.random();
+    return raindrop;
+}
+
+for (let i = 0; i < numberOfRaindrops; i++) {
+    const raindrop = createRaindrop();
+    rainContainer.appendChild(raindrop);
+}
+
+    </script>
+</body>
+</html>
