@@ -20,6 +20,22 @@ public class facadePurchaseOrder
         _repositoryTrace = new repositoryTrace();
     }
 
+    public List<List<catalogModel>> getAllPurchaseOrderCatalogs()
+    {
+        try
+        {
+            var catalogs = new List<List<catalogModel>>();
+            catalogs.Add(_repositoryPurchaseOrder.getPaymentTypesCatalog());
+            catalogs.Add(_repositoryPurchaseOrder.getCurrencyTypesCatalog());
+            return catalogs;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public List<purchaseOrderModel> getPurchaseOrders()
     {
         try

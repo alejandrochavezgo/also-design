@@ -41,6 +41,47 @@ public class supplierController : Controller
         }
     }
 
+    [HttpGet("supplier/getCatalogs")]
+    public async Task<IActionResult> getCatalogs()
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responseGet = await clientHttp.GetAsync($"{configurationManager.appSettings["api:routes:supplier:getAllSupplierCatalogs"]}");
+            if(!responseGet.IsSuccessStatusCode)
+            {
+                var errorMessage = await responseGet.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responseGet.ReasonPhrase : errorMessage;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{message}"
+                });
+            }
+
+            var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
+            var results = JsonConvert.DeserializeObject<IEnumerable<IEnumerable<entities.models.catalogModel>>>(responseGetAsJson);
+            clientHttp.Dispose();
+
+            return Json(new
+            {
+                isSuccess = true,
+                message = "Ok.",
+                results
+            });
+        }
+        catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
     [HttpGet("supplier/add")]
     public IActionResult add()
     {
@@ -250,6 +291,50 @@ public class supplierController : Controller
             });
         }
         catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
+    [HttpPost("supplier/delete")]
+    public async Task<JsonResult> delete([FromBody] supplierModel supplier)
+    {
+        try
+        {
+            if (!ModelState.IsValid || supplierFormHelper.isUpdateFormValid(supplier))
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = "To delete a supplier, they must first be active."
+                });
+
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:supplier:delete"]}", new StringContent(JsonConvert.SerializeObject(supplier), Encoding.UTF8, "application/json"));
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{message}"
+                });
+            }
+            clientHttp.Dispose();
+
+            return Json(new
+            { 
+                isSuccess = true,
+                message = "Purchase order deleted successfully."
+            });
+        }
+        catch(Exception exception)
         {
             return Json(new
             {

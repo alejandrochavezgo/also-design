@@ -19,6 +19,42 @@ public class repositoryUser : baseRepository
         _logger = new log();
     }
 
+    public List<catalogModel> getGenderTypesCatalog()
+    {
+        try
+        {
+            return factoryGetCatalog.getList((DbDataReader)_providerDB.GetDataReader("sp_getGenderTypesCatalog", new DbParameter[] {}));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<catalogModel> getStatusTypesCatalog()
+    {
+        try
+        {
+            return factoryGetCatalog.getList((DbDataReader)_providerDB.GetDataReader("sp_getStatusTypesCatalog", new DbParameter[] {}));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public List<userModel> getUsers()
     {
         try

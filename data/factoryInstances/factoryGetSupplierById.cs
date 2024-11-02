@@ -51,6 +51,9 @@ internal class factoryGetSupplierById: baseMethod<factoryGetSupplierById, suppli
                 case 2:
                     status = "danger";
                     break;
+                case 3:
+                    status = "dark";
+                    break;
                 default:
                     status = "dark";
                     break;
@@ -76,6 +79,9 @@ internal class factoryGetSupplierById: baseMethod<factoryGetSupplierById, suppli
                     break;
                 case 2:
                     status = "inactive";
+                    break;
+                case 3:
+                    status = "locked";
                     break;
                 default:
                     status = "undefined";

@@ -58,6 +58,60 @@ public class repositoryQuotation : baseRepository
         }
     }
 
+    public List<catalogModel> getPaymentTypesCatalog()
+    {
+        try
+        {
+            return factoryGetCatalog.getList((DbDataReader)_providerDB.GetDataReader("sp_getPaymentTypesCatalog", new DbParameter[]{}));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<catalogModel> getPackingUnitTypesCatalog()
+    {
+        try
+        {
+            return factoryGetCatalog.getList((DbDataReader)_providerDB.GetDataReader("sp_getPackingUnitTypesCatalog", new DbParameter[]{}));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<catalogModel> getCurrencyTypesCatalog()
+    {
+        try
+        {
+            return factoryGetCatalog.getList((DbDataReader)_providerDB.GetDataReader("sp_getCurrencyTypesCatalog", new DbParameter[]{}));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public List<quotationItemsModel> getQuotationItemsByIdQuotation(int id)
     {
         try

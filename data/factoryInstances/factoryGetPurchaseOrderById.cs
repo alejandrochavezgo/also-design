@@ -3,6 +3,7 @@ namespace data.factoryInstances;
 using System.Data;
 using common.conversions;
 using common.logging;
+using entities.enums;
 using entities.models;
 using Newtonsoft.Json;
 
@@ -57,11 +58,13 @@ internal class factoryGetPurchaseOrderById: baseMethod<factoryGetPurchaseOrderBy
                 },
                 payment = new paymentModel
                 {
+                    id = conversionManager.toInt(dr["PAYMENTTYPES.IDPAYMENTTYPE"]),
                     description = conversionManager.toString(dr["PAYMENTTYPES.DESCRIPTION"]),
                     isActive = conversionManager.toBoolean(dr["PAYMENTTYPES.IDSTATUS"])
                 },
                 currency = new currencyModel
                 {
+                    id = conversionManager.toInt(dr["CURRENCIES.IDCURRENCY"]),
                     description = conversionManager.toString(dr["CURRENCIES.DESCRIPTION"]),
                     isActive = conversionManager.toBoolean(dr["CURRENCIES.IDSTATUS"])
                 }
@@ -81,12 +84,28 @@ internal class factoryGetPurchaseOrderById: baseMethod<factoryGetPurchaseOrderBy
             var status = string.Empty;
             switch (statusId)
             {
-                case 1:
+                case (int)statusType.ACTIVE:
+                    status = "primary";
+                    break;
+                case (int)statusType.PENDING:
+                    status = "warning";
+                    break;
+                case (int)statusType.APPROVED:
+                    status = "secondary";
+                    break;
+                case (int)statusType.PARTIALLY_FULFILLED:
+                    status = "info";
+                    break;
+                case (int)statusType.FULFILLED:
                     status = "success";
                     break;
-                case 2:
+                case (int)statusType.REJECTED:
+                case (int)statusType.CANCELLED:
+                case (int)statusType.INACTIVE:
                     status = "danger";
                     break;
+                case (int)statusType.CLOSED:
+                case (int)statusType.LOCKED:
                 default:
                     status = "dark";
                     break;
@@ -107,10 +126,34 @@ internal class factoryGetPurchaseOrderById: baseMethod<factoryGetPurchaseOrderBy
             var status = string.Empty;
             switch (statusId)
             {
-                case 1:
+                case (int)statusType.ACTIVE:
                     status = "active";
                     break;
-                case 2:
+                case (int)statusType.PENDING:
+                    status = "pending";
+                    break;
+                case (int)statusType.APPROVED:
+                    status = "approved";
+                    break;
+                case (int)statusType.PARTIALLY_FULFILLED:
+                    status = "partially fulfilled";
+                    break;
+                case (int)statusType.FULFILLED:
+                    status = "fulfilled";
+                    break;
+                case (int)statusType.REJECTED:
+                    status = "rejected";
+                    break;
+                case (int)statusType.CANCELLED:
+                    status = "cancelled";
+                    break;
+                case (int)statusType.CLOSED:
+                    status = "closed";
+                    break;
+                case (int)statusType.LOCKED:
+                    status = "locked";
+                    break;
+                case (int)statusType.INACTIVE:
                     status = "inactive";
                     break;
                 default:

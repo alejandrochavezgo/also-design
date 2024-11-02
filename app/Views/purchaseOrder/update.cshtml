@@ -96,18 +96,11 @@
                             </div>
                             <div class="col-2">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">PAYMENT TYPE</p>
-                                <select class="form-select" id="sePurchaseOrderPaymentType">
-                                    <option value="1">CONTADO</option>
-                                    <option value="2">A CONVENIR</option>
-                                    <option value="3">CRÉDITO</option>
-                                </select>
+                                <select class="form-select" id="sePurchaseOrderPaymentType" option-selected="@ViewData["purchaseOrder.payment.id"]"></select>
                             </div>
                             <div class="col-2">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">CURRENCY</p>
-                                <select class="form-select" id="purchaseOrderCurrencyType">
-                                    <option value="1">MXN</option>
-                                    <option value="2">USD</option>
-                                </select>
+                                <select class="form-select" id="purchaseOrderCurrencyType" option-selected="@ViewData["purchaseOrder.currency.id"]"></select>
                             </div>
                         </div>
                         <div class="row pt-27px">
@@ -249,13 +242,6 @@
         $('#seSupplierContactNames').val("@ViewData["supplier.mainContactName"]");
         $('#seSupplierContactPhones').val("@ViewData["supplier.mainContactPhone"]");
         $('#seEmployeeContactPhone').val("@ViewData["employee.mainContactPhone"]");
-        $('#tbItems tr').each(function() {
-            const hiddenInput = $(this).find('input.unitSelected');
-            const selectElement = $(this).find('select.form-select');
-            if (hiddenInput.length && selectElement.length) {
-                selectElement.val(hiddenInput.val());
-            }
-        });
     </script>
     <script src="../assets/js/pages/purchaseOrderUpdate.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>

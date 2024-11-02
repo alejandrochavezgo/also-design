@@ -86,9 +86,19 @@ $(document).on('click', '#addItem', function() {
                     '</div>' +
                 '</td>' +
                 '<td>' +
-                    '<select class="form-select">' +
-                        '<option value="1">EA</option>' +
-                    '</select>' +
+                    '<select class="form-select">' + 
+                    '<option value="">Select option</option>' +
+                    '<option value="1">EACH (EA)</option>' +
+                    '<option value="2">BOX (BOX)</option>' +
+                    '<option value="3">PACKAGE (PKG)</option>' +
+                    '<option value="4">SET (SET)</option>' +
+                    '<option value="5">PALLET (PAL)</option>' +
+                    '<option value="6">POUND (LB)</option>' +
+                    '<option value="7">KILOGRAM (KG)</option>' +
+                    '<option value="8">METER (M)</option>' +
+                    '<option value="9">LITER (L)</option>' +
+                    '<option value="10">FOOT (FT)</option>' +
+                '</select>' +
                 '</td>' +
                 '<td class="text-end">' +
                     '<input class="form-control text-end numerical-mask subtotal-value" value="0.00" />' +
@@ -139,7 +149,7 @@ function initializeClientAutocomplete() {
             source: function(request, response) {
                 $.ajax({
                     url: '/client/getClientByTerm',
-                    method: 'GET',
+                    method: 'get',
                     dataType: 'json',
                     data: {
                         businessName: request.term
@@ -313,6 +323,68 @@ function initializeCounter(counter) {
     }
 }
 
+async function initializeCatalogs()
+{
+    try {
+        const response = await fetch('getCatalogs');
+        if (!response ||!response.ok) {
+            Swal.fire({
+                title: 'Error!!',
+                html: `HTTP error! Status: ${response.status}`,
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: false,
+                footer: '',
+                showCloseButton: true
+            });
+            return;
+        }
+
+        const catalogs = await response.json();
+        if (!catalogs || !catalogs.isSuccess || catalogs.results.length !== 2) {
+            Swal.fire({
+                title: 'Error!!',
+                html: 'Catalogs not downloaded. Please reload the page.',
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: false,
+                footer: '',
+                showCloseButton: true
+            });
+            return;
+        }
+
+        var selectMapping = {
+            seQuotationPaymentType: 0,
+            quotationCurrencyType: 1
+        };
+
+        for (var selectId in selectMapping) {
+            var index = selectMapping[selectId];
+            var $select = $('#' + selectId);
+            $select.empty().append('<option value="">Select option</option>');
+            catalogs.results[index].forEach(function(item) {
+                $select.append(
+                    $('<option>', {
+                        value: item.id,
+                        text: item.description
+                    })
+                );
+            });
+        }
+    } catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: false,
+            footer: '',
+            showCloseButton: true
+        });
+    }
+}
+
 function add() {
     try {
         let formData = new FormData();
@@ -463,9 +535,13 @@ function isValidForm(quotation) {
 }
 
 $(document).ready(function() {
+    $('#loader').show();
     updateAddAndRemoveButtons();
     initializeClientAutocomplete();
     initializeInputTaxMasks();
     initializeInputNumericalMasks();
     initializeCounter(1);
+    initializeCatalogs().then(() => {
+        $('#loader').hide();
+    });
 });

@@ -30,7 +30,7 @@ internal class factoryGetNonUserById: baseMethod<factoryGetNonUserById, userMode
                     id = conversionManager.toInt(dr["EMPLOYEE.IDEMPLOYEE"]),
                     code = conversionManager.toString(dr["EMPLOYEE.CODE"]),
                     hasUser = conversionManager.toBoolean(dr["EMPLOYEE.HASUSER"]),
-                    gender = conversionManager.toString(dr["EMPLOYEE.GENDER"]),
+                    gender = conversionManager.toInt(dr["EMPLOYEE.IDGENDERTYPE"]),
                     address = conversionManager.toString(dr["EMPLOYEE.ADDRESS"]),
                     city = conversionManager.toString(dr["EMPLOYEE.CITY"]),
                     state = conversionManager.toString(dr["EMPLOYEE.STATE"]),
@@ -61,8 +61,6 @@ internal class factoryGetNonUserById: baseMethod<factoryGetNonUserById, userMode
                     status = "danger";
                     break;
                 case 3:
-                    status = "dark";
-                    break;
                 default:
                     status = "dark";
                     break;

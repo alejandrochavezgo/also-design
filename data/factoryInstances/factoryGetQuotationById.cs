@@ -57,11 +57,13 @@ internal class factoryGetQuotationById: baseMethod<factoryGetQuotationById, quot
                 },
                 payment = new paymentModel
                 {
+                    id = conversionManager.toInt(dr["PAYMENTTYPES.IDPAYMENTTYPE"]),
                     description = conversionManager.toString(dr["PAYMENTTYPES.DESCRIPTION"]),
                     isActive = conversionManager.toBoolean(dr["PAYMENTTYPES.IDSTATUS"])
                 },
                 currency = new currencyModel
                 {
+                    id = conversionManager.toInt(dr["CURRENCIES.IDCURRENCY"]),
                     description = conversionManager.toString(dr["CURRENCIES.DESCRIPTION"]),
                     isActive = conversionManager.toBoolean(dr["CURRENCIES.IDSTATUS"])
                 }

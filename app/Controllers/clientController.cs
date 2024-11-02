@@ -12,6 +12,7 @@ using System.Text;
 using app.helpers;
 using providerData.helpers;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
+using entities.enums;
 
 [authorization]
 public class clientController : Controller
@@ -39,6 +40,47 @@ public class clientController : Controller
         catch (Exception e)
         {
             return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+        }
+    }
+
+    [HttpGet("client/getCatalogs")]
+    public async Task<IActionResult> getCatalogs()
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responseGet = await clientHttp.GetAsync($"{configurationManager.appSettings["api:routes:client:getAllClientCatalogs"]}");
+            if(!responseGet.IsSuccessStatusCode)
+            {
+                var errorMessage = await responseGet.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responseGet.ReasonPhrase : errorMessage;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{message}"
+                });
+            }
+
+            var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
+            var results = JsonConvert.DeserializeObject<IEnumerable<IEnumerable<entities.models.catalogModel>>>(responseGetAsJson);
+            clientHttp.Dispose();
+
+            return Json(new
+            {
+                isSuccess = true,
+                message = "Ok.",
+                results
+            });
+        }
+        catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
         }
     }
 
@@ -107,7 +149,6 @@ public class clientController : Controller
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
             var responseGet = await clientHttp.GetAsync($"{configurationManager.appSettings["api:routes:client:getAll"]}");
-
             if(!responseGet.IsSuccessStatusCode)
             {
                 var errorMessage = await responseGet.Content.ReadAsStringAsync();
@@ -220,7 +261,7 @@ public class clientController : Controller
     {
         try
         {
-            if (!ModelState.IsValid || !clientFormHelper.isUpdateFormValid(client))
+            if (!ModelState.IsValid || !clientFormHelper.isUpdateFormValid(client, true))
                 return Json(new
                 {
                     isSuccess = false,
@@ -251,6 +292,51 @@ public class clientController : Controller
             });
         }
         catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
+    [HttpPost("client/delete")]
+    public async Task<JsonResult> delete([FromBody] clientModel client)
+    {
+        try
+        {
+            if (!ModelState.IsValid || clientFormHelper.isUpdateFormValid(client))
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = "To delete a client, they must first be active."
+                });
+
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:client:delete"]}", new StringContent(JsonConvert.SerializeObject(client), Encoding.UTF8, "application/json"));
+
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{message}"
+                });
+            }
+            clientHttp.Dispose();
+
+            return Json(new
+            { 
+                isSuccess = true,
+                message = "Purchase order deleted successfully."
+            });
+        }
+        catch(Exception exception)
         {
             return Json(new
             {

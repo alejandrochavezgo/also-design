@@ -52,8 +52,6 @@ internal class factoryGetNonUsers: baseMethod<factoryGetNonUsers, userModel>
                     status = "danger";
                     break;
                 case 3:
-                    status = "dark";
-                    break;
                 default:
                     status = "dark";
                     break;

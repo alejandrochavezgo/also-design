@@ -7,6 +7,7 @@ using business.facade;
 using providerData.entitiesData;
 using Newtonsoft.Json;
 using common.helpers;
+using entities.enums;
 
 [ApiController]
 [authorize]
@@ -20,6 +21,19 @@ public class clientController : ControllerBase
     {
         _userService = userService;
         _facadeClient = new facadeClient();
+    }
+
+    [HttpGet("getAllClientCatalogs")]
+    public IActionResult getAllClientCatalogs()
+    {
+        try
+        {
+            return Ok(_facadeClient.getAllClientCatalogs());
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
     }
 
     [HttpGet("getAll")]
@@ -96,6 +110,25 @@ public class clientController : ControllerBase
 
             if (!_facadeClient.addClient(client))
                 return BadRequest("Client not added.");
+
+            return Ok();
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
+    [HttpPost("delete")]
+    public IActionResult delete(entities.models.clientModel client)
+    {
+        try
+        {
+            if(!clientFormHelper.isUpdateFormValid(client, true))
+                return BadRequest("Missing data.");
+
+            if (!_facadeClient.deleteClientById(client.id))
+                return BadRequest("Purchase order can't be deleted.");
 
             return Ok();
         }

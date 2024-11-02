@@ -59,6 +59,22 @@ public class facadeQuotation
         }
     }
 
+    public List<List<catalogModel>> getAllQuotationCatalogs()
+    {
+        try
+        {
+            var catalogs = new List<List<catalogModel>>();
+            catalogs.Add(_repositoryQuotation.getPaymentTypesCatalog());
+            catalogs.Add(_repositoryQuotation.getCurrencyTypesCatalog());
+            return catalogs;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public bool updateQuotation(quotationModel quotation)
     {
         using(var transactionScope = new TransactionScope())

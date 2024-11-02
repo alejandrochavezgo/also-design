@@ -18,6 +18,19 @@ public class facadeSupplier
         _repositorySupplier = new repositorySupplier();
     }
 
+    public List<List<catalogModel>> getAllSupplierCatalogs()
+    {
+        try
+        {
+            return new List<List<catalogModel>>(){ _repositorySupplier.getStatusTypesCatalog().Take(3).ToList() };
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public bool existSupplierByBusinessNameAndRfc(string businessName, string rfc)
     {
         try
@@ -186,6 +199,22 @@ public class facadeSupplier
                 _logger.logError($"{JsonConvert.SerializeObject(exception)}");
                 throw exception;
             }
+        }
+    }
+
+    public bool deleteSupplierById(int id)
+    {
+        try
+        {
+            var supplier = _repositorySupplier.getSupplierById(id);
+            if (supplier == null || supplier.status != (int)statusType.ACTIVE)
+                return false;
+            return _repositorySupplier.deleteSupplierById(id);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
         }
     }
 }

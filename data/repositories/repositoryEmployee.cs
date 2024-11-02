@@ -19,6 +19,42 @@ public class repositoryEmployee : baseRepository
         _logger = new log();
     }
 
+    public List<catalogModel> getGenderTypesCatalog()
+    {
+        try
+        {
+            return factoryGetCatalog.getList((DbDataReader)_providerDB.GetDataReader("sp_getGenderTypesCatalog", new DbParameter[] {}));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<catalogModel> getStatusTypesCatalog()
+    {
+        try
+        {
+            return factoryGetCatalog.getList((DbDataReader)_providerDB.GetDataReader("sp_getStatusTypesCatalog", new DbParameter[] {}));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public int addEmployee(employeeModel employee)
     {
         try
@@ -28,7 +64,7 @@ public class repositoryEmployee : baseRepository
             base._providerDB.ExecuteNonQuery("sp_addEmployee", new DbParameter[] {
                 employeeIdAdded,
                 dataFactory.getObjParameter(configurationManager.providerDB,"@userId", DbType.Int32, employee.userId),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@gender", DbType.String, employee.gender!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@gender", DbType.Int32, employee.gender!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@address", DbType.String, employee.address!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@city", DbType.String,employee.city!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@state", DbType.String, employee.state!),
@@ -106,7 +142,7 @@ public class repositoryEmployee : baseRepository
             base._providerDB.ExecuteNonQuery("sp_updateEmployee", new DbParameter[] {
                 employeeIdUpdated,
                 dataFactory.getObjParameter(configurationManager.providerDB,"@employeeId",DbType.Int32, employee.id),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@gender",DbType.String, employee.gender!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@gender",DbType.Int32, employee.gender!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@address",DbType.String, employee.address!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@zipcode",DbType.String, employee.zipcode!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@city",DbType.String, employee.city!),

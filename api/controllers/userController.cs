@@ -21,6 +21,19 @@ public class userController : ControllerBase
         _facadeUser = new facadeUser();
     }
 
+    [HttpGet("getAllUserCatalogs")]
+    public IActionResult getAllUserCatalogs()
+    {
+        try
+        {
+            return Ok(_facadeUser.getAllUserCatalogs());
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
     [allowAnonymous]
     [HttpPost("authenticate")]
     public IActionResult authenticate(authenticateRequest model)

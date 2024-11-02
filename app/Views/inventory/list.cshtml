@@ -3,8 +3,10 @@
 }
 @section styles
 {
-    <link rel="stylesheet" href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" />
-    <style>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+    @* <link rel="stylesheet" href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" /> *@
+    @* <style>
         input.gridjs-input {
             -webkit-appearance: none !important;
             appearance: none !important;
@@ -38,7 +40,7 @@
         .gridjs-footer {
             box-shadow: none;
         }
-    </style>
+    </style> *@
 }
 <div class="page-content">
     <div class="container-fluid">
@@ -78,7 +80,18 @@
                         </div>
                         <div class="row pt-27px">
                             <div class="col-12">
-                                <div id="dvTableItems"></div>
+                                @* <div id="dvTableItems"></div> *@
+                                <table id="dvTableItems" class="table table-bordered dt-responsive nowrap align-middle mdl-data-table" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Stock</th>
+                                            <th>Last Restock</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -89,7 +102,12 @@
 </div>
 @section scripts
 {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+    @* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script> *@
     <script src="../assets/js/pages/inventoryList.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
 }

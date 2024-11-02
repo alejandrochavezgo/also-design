@@ -21,6 +21,19 @@ public class employeeController : ControllerBase
         _facadeEmployee = new facadeEmployee();
     }
 
+    [HttpGet("getAllEmployeeCatalogs")]
+    public IActionResult getAllEmployeeCatalogs()
+    {
+        try
+        {
+            return Ok(_facadeEmployee.getAllEmployeeCatalogs());
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
     [HttpGet("getAll")]
     public IActionResult getAll()
     {

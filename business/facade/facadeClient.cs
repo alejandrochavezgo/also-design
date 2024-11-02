@@ -18,6 +18,19 @@ public class facadeClient
         _repositoryClient = new repositoryClient();
     }
 
+    public List<List<catalogModel>> getAllClientCatalogs()
+    {
+        try
+        {
+            return new List<List<catalogModel>>(){ _repositoryClient.getStatusTypesCatalog().Take(3).ToList() };
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public bool existClientByBusinessNameAndRfc(string businessName, string rfc)
     {
         try
@@ -186,6 +199,22 @@ public class facadeClient
                 _logger.logError($"{JsonConvert.SerializeObject(exception)}");
                 throw exception;
             }
+        }
+    }
+
+    public bool deleteClientById(int id)
+    {
+        try
+        {
+            var client = _repositoryClient.getClientById(id);
+            if (client == null || client.status != (int)statusType.ACTIVE)
+                return false;
+            return _repositoryClient.deleteClientById(id);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
         }
     }
 }

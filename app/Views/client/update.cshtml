@@ -6,7 +6,6 @@
     var contactEmailsString = emails != null ? string.Join(",", emails!) : "";
     var phones = ViewData["contactPhones"] as List<string> ?? new List<string>();
     var contactPhonesString = emails != null ? string.Join(",", phones!) : "";
-    var status = ViewData["status"];
 }
 <div class="page-content">
     <div class="container-fluid">
@@ -64,10 +63,7 @@
                             </div>
                             <div class="col-3">
                                 <label class="form-label" for="seStatus">Status</label>
-                                <select class="form-select" id="seStatus">
-                                    <option value="1">ACTIVE</option>
-                                    <option value="2">INACTIVE</option>
-                                </select>
+                                <select class="form-select" id="seStatus" option-selected="@ViewData["status"]"></select>
                             </div>
                         </div>
                     </div>
@@ -108,8 +104,5 @@
 </div>
 @section scripts
 {
-    <script type="text/javascript">
-        $('#seStatus').val(@status);
-    </script>
     <script src="../assets/js/pages/clientUpdate.js"></script>
 }

@@ -23,6 +23,19 @@ public class purchaseOrderController : ControllerBase
         _facadePurchaseOrder = new facadePurchaseOrder();
     }
 
+    [HttpGet("getAllPurchaseOrderCatalogs")]
+    public IActionResult getAllPurchaseOrderCatalogs()
+    {
+        try
+        {
+            return Ok(_facadePurchaseOrder.getAllPurchaseOrderCatalogs());
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
     [HttpGet("getAll")]
     public IActionResult getAll()
     {

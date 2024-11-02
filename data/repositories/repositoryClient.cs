@@ -19,6 +19,24 @@ public class repositoryClient : baseRepository
         _logger = new log();
     }
 
+    public List<catalogModel> getStatusTypesCatalog()
+    {
+        try
+        {
+            return factoryGetCatalog.getList((DbDataReader)_providerDB.GetDataReader("sp_getStatusTypesCatalog", new DbParameter[] {}));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public clientModel existClientByBusinessNameAndRfc(string businessName, string rfc)
     {
         try
@@ -310,6 +328,27 @@ public class repositoryClient : baseRepository
             return base._providerDB.ExecuteNonQuery("sp_removeContactNamesEmailsAndPhonesByClientId", new DbParameter[] {
                 dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id)
             });
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public bool deleteClientById(int id)
+    {
+        try
+        {
+            base._providerDB.ExecuteNonQuery("sp_deleteClientById", new DbParameter[] {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
+            });
+            return true;
         }
         catch (SqlException SqlException)
         {

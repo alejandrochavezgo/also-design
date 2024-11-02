@@ -1,5 +1,18 @@
-function showDeleteModal(clientId) {
+function showDeleteModal(clientId, status) {
     try {
+        if (status != '1') {
+            Swal.fire({
+                title: 'Error!!',
+                html: 'To delete a client, they must first be active.',
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: !1,
+                footer: '',
+                showCloseButton: !1
+            });
+            return;
+        }
+
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this.",
@@ -18,7 +31,8 @@ function showDeleteModal(clientId) {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        id: clientId
+                        id: clientId,
+                        status: status
                     })
                 })
                 .then(response => {
@@ -76,96 +90,85 @@ function showDeleteModal(clientId) {
     }
 }
 
-$(document).ready(function () {
+function initializeDatatable() {
     try {
-        $('#tbClients tbody').html(
-            '<tr>' +
-                '<td colspan="9" class="text-center">Rendering results... <img width="30" src="../assets/images/infinity.gif"></td>' +
-            '</tr>');
-
-        $.ajax({
-            url: 'getAll',
-            method: 'get',
-            success: function (data) {
-                if (!data.isSuccess) {
-                    Swal.fire({
-                        title: 'Error!!',
-                        html: data.message,
-                        icon: 'error',
-                        confirmButtonClass: 'btn btn-danger w-xs mt-2',
-                        buttonsStyling: false,
-                        footer: '',
-                        showCloseButton: true
-                    });
-                }
-                
-                var tbody = $('#tbClients tbody');
-                tbody.empty();
-                if (data.results.length > 0) { 
-                    data.results.forEach(function (client) {
-                        var row =
-                            '<tr>' +
-                            '<td>' + client.id + '</td>' +
-                            '<td>' + client.businessName + '</td>' +
-                            '<td>' + client.rfc + '</td>' +
-                            '<td>' + client.city + '</td>' +
-                            '<td>' + client.state + '</td>' +
-                            '<td>' +
-                                '<div class="avatar-group">';
-                        client.contactEmails.forEach(function(email) {
-                            row += '<a class="avatar-group-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="' + email + '">' +
-                                        '<img src="../assets/images/account-circle-custom-717171.png" alt="" class="rounded-circle avatar-xxs">' +
-                                    '</a>';
+        $('#tbClients').DataTable({
+            "ajax": {
+                "url": "getAll",
+                "type": "get",
+                "dataSrc": function(data) {
+                    if (!data.isSuccess) {
+                        Swal.fire({
+                            title: 'Error!!',
+                            html: data.message,
+                            icon: 'error',
+                            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                            buttonsStyling: false,
+                            footer: '',
+                            showCloseButton: true
                         });
-                        row +=      '</div>' +
-                                '</td>' + 
-                                '<td>' +
-                                    '<div class="avatar-group">';
-                        client.contactPhones.forEach(function(phone) {
-                            row += '<a class="avatar-group-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="' + phone + '">' +
-                                        '<img src="../assets/images/phone-custom-717171.png" alt="" class="rounded-circle avatar-xxs">' +
-                                    '</a>';
-                        });
-                            row +=      '</div>' +
-                                    '</td>' +
-                                    '<td><span class="badge rounded-pill badge-soft-' + client.statusColor + '">' + client.statusName + '</span></td>' +
-                                    '<td class="text-center">' +
-                                    '<button type="button" class="btn btn-secondary btn-icon waves-effect waves-light mx-1" onclick="window.location.href=\'/client/detail?id=' + client.id + '\'" title="Details"><i class="ri-eye-fill"></i></button>' +
-                                        '<button type="button" class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="window.location.href=\'/client/update?id=' + client.id + '\'" title="Update"><i class="ri-pencil-fill"></i></button>' +
-                                        '<button type="button" class="btn btn-danger btn-icon waves-effect waves-light mx-1" onclick="showDeleteModal(' + client.id  + ')" title="Delete"><i class="ri-delete-bin-2-fill"></i></button>' +
-                                    '</td>' +
-                                '</tr>';
-                        tbody.append(row);
-                    });
-                } else {
-                    $('#tbClients tbody').html(
-                        '<tr>' +
-                            '<td colspan="9" class="text-center">We have nothing to show.</td>' +
-                        '</tr>');
+                        return [];
+                    }
+                    $('#dvTotalClients').html('Total clients: ' + data.results.length);
+                    return data.results;
                 }
-                $('#dvTotalClients').html('Total clients: ' + data.results.length);
             },
-            error: function (xhr, status, error) {
-                $('#tbClients tbody').html(
-                    '<tr>' +
-                        '<td colspan="9" class="text-center">We have nothing to show.</td>' +
-                    '</tr>');
-                Swal.fire({
-                    title: 'Error!!',
-                    html: error,
-                    icon: 'error',
-                    confirmButtonClass: 'btn btn-danger w-xs mt-2',
-                    buttonsStyling: false,
-                    footer: '',
-                    showCloseButton: true
-                });
-            }
+            "columns": [
+                { "data": "id" },
+                { "data": "businessName" },
+                { "data": "rfc" },
+                { "data": "city" },
+                { "data": "state" },
+                { 
+                    "data": "contactEmails",
+                    "render": function(emails) {
+                        let emailHtml = '<div class="avatar-group">';
+                        emails.forEach(function(email) {
+                            emailHtml += `
+                                <a class="avatar-group-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="${email}">
+                                    <img src="../assets/images/account-circle-custom-717171.png" alt="" class="rounded-circle avatar-xxs">
+                                </a>`;
+                        });
+                        emailHtml += '</div>';
+                        return emailHtml;
+                    }
+                },
+                { 
+                    "data": "contactPhones",
+                    "render": function(phones) {
+                        let phoneHtml = '<div class="avatar-group">';
+                        phones.forEach(function(phone) {
+                            phoneHtml += `
+                                <a class="avatar-group-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="${phone}">
+                                    <img src="../assets/images/phone-custom-717171.png" alt="" class="rounded-circle avatar-xxs">
+                                </a>`;
+                        });
+                        phoneHtml += '</div>';
+                        return phoneHtml;
+                    }
+                },
+                { 
+                    "data": "statusName", 
+                    "render": function(data, type, row) {
+                        return `<span class="badge rounded-pill badge-soft-${row.statusColor}">${data}</span>`;
+                    }
+                },
+                { 
+                    "data": "id",
+                    "render": function(data, type, row) {
+                        return `
+                            <button type="button" class="btn btn-secondary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/client/detail?id=${data}'" title="Details"><i class="ri-eye-fill"></i></button>
+                            <button type="button" class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/client/update?id=${data}'" title="Update"><i class="ri-pencil-fill"></i></button>
+                            <button type="button" class="btn btn-danger btn-icon waves-effect waves-light mx-1" onclick="showDeleteModal(${data}, '${row.status}')" title="Delete"><i class="ri-delete-bin-2-fill"></i></button>
+                        `;
+                    }
+                }
+            ],
+            "order": [[0, 'asc']]
+        }).on('xhr', function() {
+            $('#loader').hide();
         });
-    } catch (exception) {
-        $('#tbClients tbody').html(
-            '<tr>' +
-                '<td colspan="9" class="text-center">We have nothing to show.</td>' +
-            '</tr>');
+    } catch(exception) {
         Swal.fire({
             title: 'Error!!',
             html: exception,
@@ -175,5 +178,11 @@ $(document).ready(function () {
             footer: '',
             showCloseButton: true
         });
+        $('#loader').hide();
     }
+}
+
+$(document).ready(function () {
+    $('#loader').show();
+    initializeDatatable();
 });

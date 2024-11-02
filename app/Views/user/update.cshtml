@@ -1,7 +1,5 @@
 @{
     ViewData["title"] = "Update User | Also Design";
-    var status = ViewData["user.status"];
-    var gender = ViewData["employee.gender"];
     var phones = ViewData["employee.contactPhones"] as List<string> ?? new List<string>();
     var employeeContactPhonesString = phones != null ? string.Join(",", phones!) : "";
 }
@@ -46,18 +44,11 @@
                             </div>
                             <div class="col-4">
                                 <label for="seUserStatus" class="form-label">Status</label>
-                                <select class="form-select" id="seUserStatus">
-                                    <option value="1">ACTIVE</option>
-                                    <option value="2">INACTIVE</option>
-                                    <option value="3">LOCKED</option>
-                                </select>
+                                <select class="form-select" id="seUserStatus" option-selected="@ViewData["user.status"]"></select>
                             </div>
                             <div class="col-4">
                                 <label for="seEmployeeGender" class="form-label">Gender</label>
-                                <select class="form-select" id="seEmployeeGender">
-                                    <option value="M">M</option>
-                                    <option value="H">H</option>
-                                </select>
+                                <select class="form-select" id="seEmployeeGender" option-selected="@ViewData["employee.gender"]"></select>
                             </div>
                         </div>
                     </div>
@@ -119,9 +110,5 @@
 </div>
 @section scripts
 {
-    <script type="text/javascript">
-        $('#seUserStatus').val(@status);
-        $('#seEmployeeGender').val("@gender");
-    </script>
     <script src="../assets/js/pages/userUpdate.js"></script>
 }

@@ -23,6 +23,19 @@ public class quotationController : ControllerBase
         _facadeQuotation = new facadeQuotation();
     }
 
+    [HttpGet("getAllQuotationCatalogs")]
+    public IActionResult getAllQuotationCatalogs()
+    {
+        try
+        {
+            return Ok(_facadeQuotation.getAllQuotationCatalogs());
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
     [HttpGet("getAll")]
     public IActionResult getAll()
     {

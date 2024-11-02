@@ -19,6 +19,22 @@ public class facadeEmployee
         _repositoryEmployee = new repositoryEmployee();
     }
 
+    public List<List<catalogModel>> getAllEmployeeCatalogs()
+    {
+        try
+        {
+            var catalogs = new List<List<catalogModel>>();
+            catalogs.Add(_repositoryEmployee.getStatusTypesCatalog().Take(3).ToList());
+            catalogs.Add(_repositoryEmployee.getGenderTypesCatalog());
+            return catalogs;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public List<userModel> getEmployees()
     {
         try

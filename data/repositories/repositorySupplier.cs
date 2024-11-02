@@ -19,14 +19,11 @@ public class repositorySupplier : baseRepository
         _logger = new log();
     }
 
-    public supplierModel existSupplierByBusinessNameAndRfc(string businessName, string rfc)
+    public List<catalogModel> getStatusTypesCatalog()
     {
         try
         {
-            return factoryExistSupplierByBusinessNameAndRfc.get((DbDataReader)_providerDB.GetDataReader("sp_existSupplierByBusinessNameAndRfc", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@businessName", DbType.String, businessName),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@rfc", DbType.String, rfc)
-            }));
+            return factoryGetCatalog.getList((DbDataReader)_providerDB.GetDataReader("sp_getStatusTypesCatalog", new DbParameter[] {}));
         }
         catch (SqlException SqlException)
         {
@@ -40,11 +37,14 @@ public class repositorySupplier : baseRepository
         }
     }
 
-    public List<clientModel> getClients()
+    public supplierModel existSupplierByBusinessNameAndRfc(string businessName, string rfc)
     {
         try
         {
-            return factoryGetClients.getList((DbDataReader)_providerDB.GetDataReader("sp_getClients", new DbParameter[] {}));
+            return factoryExistSupplierByBusinessNameAndRfc.get((DbDataReader)_providerDB.GetDataReader("sp_existSupplierByBusinessNameAndRfc", new DbParameter[] {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@businessName", DbType.String, businessName),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@rfc", DbType.String, rfc)
+            }));
         }
         catch (SqlException SqlException)
         {
@@ -333,6 +333,27 @@ public class repositorySupplier : baseRepository
             return base._providerDB.ExecuteNonQuery("sp_removeContactNamesEmailsAndPhonesBySupplierId", new DbParameter[] {
                 dataFactory.getObjParameter(configurationManager.providerDB,"@supplierId", DbType.Int32, id)
             });
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public bool deleteSupplierById(int id)
+    {
+        try
+        {
+            base._providerDB.ExecuteNonQuery("sp_deleteSupplierById", new DbParameter[] {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@supplierId", DbType.Int32, id),
+            });
+            return true;
         }
         catch (SqlException SqlException)
         {

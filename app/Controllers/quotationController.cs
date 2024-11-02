@@ -42,6 +42,47 @@ public class quotationController : Controller
         }
     }
 
+    [HttpGet("quotation/getCatalogs")]
+    public async Task<IActionResult> getCatalogs()
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responseGet = await clientHttp.GetAsync($"{configurationManager.appSettings["api:routes:quotation:getAllQuotationCatalogs"]}");
+            if(!responseGet.IsSuccessStatusCode)
+            {
+                var errorMessage = await responseGet.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responseGet.ReasonPhrase : errorMessage;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{message}"
+                });
+            }
+
+            var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
+            var results = JsonConvert.DeserializeObject<IEnumerable<IEnumerable<entities.models.catalogModel>>>(responseGetAsJson);
+            clientHttp.Dispose();
+
+            return Json(new
+            {
+                isSuccess = true,
+                message = "Ok.",
+                results
+            });
+        }
+        catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
     [HttpGet("quotation/getAll")]
     public async Task<JsonResult> getAll()
     {
@@ -307,6 +348,8 @@ public class quotationController : Controller
             ViewData["client.contactPhones"] = result!.client.contactPhones;
             ViewData["quotation.id"] = result!.id;
             ViewData["quotation.code"] = result!.code;
+            ViewData["quotation.payment.id"] = result!.payment!.id;
+            ViewData["quotation.currency.id"] = result!.currency!.id;
             ViewData["quotation.generalNotes"] = result!.generalNotes;
             ViewData["quotation.subtotal"] = result!.subtotal;
             ViewData["quotation.taxRate"] = result!.taxRate;

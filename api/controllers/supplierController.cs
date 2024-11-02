@@ -22,6 +22,19 @@ public class supplierController : ControllerBase
         _facadeSupplier = new facadeSupplier();
     }
 
+    [HttpGet("getAllSupplierCatalogs")]
+    public IActionResult getAllSupplierCatalogs()
+    {
+        try
+        {
+            return Ok(_facadeSupplier.getAllSupplierCatalogs());
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
     [HttpGet("getAll")]
     public IActionResult getAll()
     {
@@ -96,6 +109,25 @@ public class supplierController : ControllerBase
 
             if (!_facadeSupplier.addSupplier(supplier))
                 return BadRequest("Supplier not added.");
+
+            return Ok();
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
+    [HttpPost("delete")]
+    public IActionResult delete(entities.models.supplierModel supplier)
+    {
+        try
+        {
+            if(!supplierFormHelper.isUpdateFormValid(supplier, true))
+                return BadRequest("Missing data.");
+
+            if (!_facadeSupplier.deleteSupplierById(supplier.id))
+                return BadRequest("Purchase order can't be deleted.");
 
             return Ok();
         }
