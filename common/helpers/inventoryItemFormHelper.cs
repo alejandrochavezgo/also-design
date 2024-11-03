@@ -49,4 +49,18 @@ public class inventoryItemFormHelper
             throw exception;
         }
     }
+
+    public static bool isUpdateFormValid(inventoryItemModel inventoryItem, bool isStatusChange)
+    {
+        try
+        {
+            if (inventoryItem == null || inventoryItem.id <= 0 || inventoryItem.quantity > 0)
+                return false;
+            return true;
+        }
+        catch (Exception exception)
+        {
+            throw exception;
+        }
+    }
 }

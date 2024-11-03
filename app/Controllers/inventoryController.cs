@@ -439,4 +439,49 @@ public class inventoryController : Controller
             });
         }
     }
+
+    [HttpPost("inventory/delete")]
+    public async Task<JsonResult> delete([FromBody] inventoryItemModel inventoryItem)
+    {
+        try
+        {
+            if (!ModelState.IsValid || !inventoryItemFormHelper.isUpdateFormValid(inventoryItem, true))
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = "To delete an inventory item, it must be 0.00."
+                });
+
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:inventory:delete"]}", new StringContent(JsonConvert.SerializeObject(inventoryItem), Encoding.UTF8, "application/json"));
+
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{message}"
+                });
+            }
+            clientHttp.Dispose();
+
+            return Json(new
+            { 
+                isSuccess = true,
+                message = "Inventory item deleted successfully."
+            });
+        }
+        catch(Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
 }

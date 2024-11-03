@@ -1,3 +1,94 @@
+function showDeleteModal(inventoryItemId, stock) {
+    try {
+        if (parseFloat(stock) > 0) {
+            Swal.fire({
+                title: 'Error!!',
+                html: 'The stock must be 0.00',
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: !1,
+                footer: '',
+                showCloseButton: !1
+            });
+        }
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this.",
+            icon: "warning",
+            showCancelButton: !0,
+            confirmButtonClass: "btn btn-primary w-xs me-2 mt-2",
+            cancelButtonClass: "btn btn-danger w-xs mt-2",
+            confirmButtonText: "Delete",
+            buttonsStyling: !1,
+            showCloseButton: !0,
+        }).then(function (t) {
+            if (t.value) {
+                fetch('delete', {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: inventoryItemId,
+                        quantity: stock
+                    })
+                })
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data.isSuccess) {
+                        Swal.fire({
+                            title: 'Error!!',
+                            html: data.message,
+                            icon: 'error',
+                            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                            buttonsStyling: !1,
+                            footer: '',
+                            showCloseButton: !1
+                        });
+                        return;
+                    }
+
+                    Swal.fire({
+                        title: 'Success',
+                        html: data.message,
+                        icon: 'success',
+                        confirmButtonClass: 'btn btn-success w-xs mt-2',
+                        buttonsStyling: !1,
+                        footer: '',
+                        showCloseButton: !1
+                    }).then(function (t) {
+                        window.location.href = 'list';
+                    });
+                })
+                .catch(error => {
+                    Swal.fire({
+                        title: 'Error!!',
+                        html: error,
+                        icon: 'error',
+                        confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                        buttonsStyling: !1,
+                        footer: '',
+                        showCloseButton: !1
+                    });
+                });
+            }
+        });
+    } catch(exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: false,
+            footer: '',
+            showCloseButton: true
+        });
+    }
+}
+
 function initializeDatatable() {
     try {
         $('#loader').show();
@@ -56,7 +147,7 @@ function initializeDatatable() {
                         return `
                             <button class="btn btn-secondary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/inventory/details?id=${data}'" title="Details"><i class="ri-eye-fill"></i></button>
                             <button class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/inventory/update?id=${data}'" title="Update"><i class="ri-pencil-fill"></i></button>
-                            <button class="btn btn-danger btn-icon waves-effect waves-light mx-1" onclick="showDeleteModal('${data}')" title="Delete"><i class="ri-delete-bin-fill"></i></button>`;
+                            <button class="btn btn-danger btn-icon waves-effect waves-light mx-1" onclick="showDeleteModal('${data}', '${row.stock}')" title="Delete"><i class="ri-delete-bin-fill"></i></button>`;
                     },
                     "orderable": false,
                     "title": "Actions"

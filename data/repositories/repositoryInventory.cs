@@ -407,4 +407,25 @@ public class repositoryInventory : baseRepository
             throw exception;
         }
     }
+
+    public bool deleteItemInventoryById(int id)
+    {
+        try
+        {
+            base._providerDB.ExecuteNonQuery("sp_deleteItemInventoryById", new DbParameter[] {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@inventoryItemId", DbType.Int32, id),
+            });
+            return true;
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
 }

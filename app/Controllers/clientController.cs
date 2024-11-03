@@ -306,7 +306,7 @@ public class clientController : Controller
     {
         try
         {
-            if (!ModelState.IsValid || clientFormHelper.isUpdateFormValid(client))
+            if (!ModelState.IsValid || !clientFormHelper.isUpdateFormValid(client, true))
                 return Json(new
                 {
                     isSuccess = false,

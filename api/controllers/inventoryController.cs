@@ -127,4 +127,23 @@ public class inventoryController : ControllerBase
             return BadRequest(JsonConvert.SerializeObject(e));
         }
     }
+
+    [HttpPost("delete")]
+    public IActionResult delete(entities.models.inventoryItemModel inventoryItem)
+    {
+        try
+        {
+            if(!inventoryItemFormHelper.isUpdateFormValid(inventoryItem, true))
+                return BadRequest("Missing data.");
+
+            if (!_facadeInventory.deleteItemInventoryById(inventoryItem.id))
+                return BadRequest("Invetory item can't be deleted.");
+
+            return Ok();
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
 }

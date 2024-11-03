@@ -186,4 +186,20 @@ public class facadeInventory
                 throw exception;
             }
     }
+
+    public bool deleteItemInventoryById(int id)
+    {
+        try
+        {
+            var inventoryItem = _repositoryInventory.getItemInventoryById(id);
+            if (inventoryItem == null || inventoryItem.quantity <= 0)
+                return false;
+            return _repositoryInventory.deleteItemInventoryById(id);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
 }
