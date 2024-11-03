@@ -303,7 +303,7 @@ public class purchaseOrderController : Controller
     {
         try
         {
-            if (purchaseOrder!.status != (int)statusType.ACTIVE)
+            if (purchaseOrder != null && purchaseOrder!.status != (int)statusType.ACTIVE)
                 return Json(new
                 {
                     isSuccess = false,

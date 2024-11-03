@@ -296,4 +296,29 @@ public class repositoryQuotation : baseRepository
             throw exception;
         }
     }
+
+    public bool updateStatusByQuotationById(int quotationId, int status)
+    {
+        try
+        {
+            var idQuotationUpdated = dataFactory.getObjParameter(configurationManager.providerDB, "@idQuotationUpdated", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+            base._providerDB.ExecuteNonQuery("sp_updateStatusByQuotationId", new DbParameter[] {
+                idQuotationUpdated,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@quotationId", DbType.Int32, quotationId),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@newStatus", DbType.Int32, status)
+            });
+
+            return Convert.ToInt32(idQuotationUpdated.Value) > 0 ? true : false;
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
 }

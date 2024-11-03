@@ -13,6 +13,8 @@ namespace entities.enums
         PARTIALLY_FULFILLED = 9,
         FULFILLED = 10,
         CLOSED = 11,
-        CANCELLED = 12
+        CANCELLED = 12,
+        DELETEDHIDDEN = 13,
+        EXPIRED = 14
     }
 }

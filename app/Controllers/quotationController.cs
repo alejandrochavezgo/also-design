@@ -297,6 +297,52 @@ public class quotationController : Controller
         }
     }
 
+    [HttpPost("quotation/updateStatusByQuotationId")]
+    public async Task<JsonResult> updateStatusByQuotationId([FromBody] changeStatusModel changeStatus)
+    {
+        try
+        {
+            if (!ModelState.IsValid || !quotationFormHelper.isUpdateFormValid(changeStatus))
+                return Json(new
+                { 
+                    isSuccess = false,
+                    message = "Invalid data."
+                });
+
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            changeStatus.userId = userCookie.id;
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:quotation:updateStatusByQuotationId"]}", new StringContent(JsonConvert.SerializeObject(changeStatus), Encoding.UTF8, "application/json"));
+
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{message}"
+                });
+            }
+            clientHttp.Dispose();
+
+            return Json(new
+            { 
+                isSuccess = true,
+                message = "Status updated successfully."
+            });
+        }
+        catch(Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
     [HttpGet("quotation/update")]
     public async Task<IActionResult> update(int id)
     {

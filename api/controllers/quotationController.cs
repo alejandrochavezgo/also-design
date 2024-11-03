@@ -106,6 +106,25 @@ public class quotationController : ControllerBase
         }
     }
 
+    [HttpPost("updateStatusByQuotationId")]
+    public IActionResult updateStatusByQuotationId(entities.models.changeStatusModel changeStatus)
+    {
+        try
+        {
+            if(changeStatus == null || !new quotationFormHelper().isUpdateFormValid(changeStatus))
+                return BadRequest("The status was not modified.");
+
+            if (!_facadeQuotation.updateStatusByQuotationId(changeStatus))
+                return BadRequest("The status was not change.");
+
+            return Ok();
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
     [HttpPost("getQuotationById")]
     public IActionResult getQuotationById(entities.models.quotationModel quotation)
     {

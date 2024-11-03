@@ -156,10 +156,6 @@ public class facadePurchaseOrder
                 var _facadeInventory = new facadeInventory();
                 if (changeStatus.newStatusId == (int)statusType.PARTIALLY_FULFILLED)
                 {
-                    //is partial filling
-                    //que se agregue al inventario la cantidad
-                    //que se agregue el movimiento del inventario
-                    //que se agregue la traza
                     var purchaseOrderItems = getPendingPurchaseOrderItemsByPurchaseOrderId(purchaseOrder.id);
                     if (purchaseOrderItems == null || purchaseOrderItems.Count == 0)
                     {
@@ -212,11 +208,6 @@ public class facadePurchaseOrder
                 }
                 else if (changeStatus.newStatusId == (int)statusType.FULFILLED)
                 {
-                    //is filling
-                    //se obtienen las cantidades de la PO
-                    //que se agregue al inventario la cantidad
-                    //que se agregue el movimiento del inventario
-                    //que se agregue la traza
                     var purchaseOrderItems = changeStatus.currentStatusId == (int)statusType.PARTIALLY_FULFILLED ? getPendingPurchaseOrderItemsByPurchaseOrderId(purchaseOrder.id) : _repositoryPurchaseOrder.getPurchaseOrderItemsByPurchaseOrderId(purchaseOrder.id);
                     if (purchaseOrderItems == null || purchaseOrderItems.Count == 0)
                     {
@@ -254,7 +245,6 @@ public class facadePurchaseOrder
                     }
                 }
 
-                //agregar traza del cambio de status para la PO
                 trace = _facadeTrace.addTrace(new traceModel
                 {
                     entityType = entityType.PURCHASE_ORDER,

@@ -3,6 +3,7 @@ namespace data.factoryInstances;
 using System.Data;
 using common.conversions;
 using common.logging;
+using entities.enums;
 using entities.models;
 using Newtonsoft.Json;
 
@@ -54,19 +55,31 @@ internal class factoryGetQuotations: baseMethod<factoryGetQuotations, quotationM
         }
     }
 
-    private string getStatusColor(int statusId)
+     private string getStatusColor(int statusId)
     {
         try
         {
             var status = string.Empty;
             switch (statusId)
             {
-                case 1:
+                case (int)statusType.ACTIVE:
+                    status = "primary";
+                    break;
+                case (int)statusType.PENDING:
+                    status = "warning";
+                    break;
+                case (int)statusType.LINKED:
                     status = "success";
                     break;
-                case 2:
+                case (int)statusType.APPROVED:
+                    status = "secondary";
+                    break;
+                case (int)statusType.REJECTED:
+                case (int)statusType.CANCELLED:
+                case (int)statusType.EXPIRED:
                     status = "danger";
                     break;
+                case (int)statusType.CLOSED:
                 default:
                     status = "dark";
                     break;
@@ -87,11 +100,29 @@ internal class factoryGetQuotations: baseMethod<factoryGetQuotations, quotationM
             var status = string.Empty;
             switch (statusId)
             {
-                case 1:
+                case (int)statusType.ACTIVE:
                     status = "active";
                     break;
-                case 2:
-                    status = "inactive";
+                case (int)statusType.PENDING:
+                    status = "pending";
+                    break;
+                case (int)statusType.LINKED:
+                    status = "linked";
+                    break;
+                case (int)statusType.APPROVED:
+                    status = "approved";
+                    break;
+                case (int)statusType.REJECTED:
+                    status = "rejected";
+                    break;
+                case (int)statusType.CANCELLED:
+                    status = "cancelled";
+                    break;
+                case (int)statusType.CLOSED:
+                    status = "closed";
+                    break;
+                case (int)statusType.EXPIRED:
+                    status = "expired";
                     break;
                 default:
                     status = "undefined";

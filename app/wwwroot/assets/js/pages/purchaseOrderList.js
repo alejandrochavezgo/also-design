@@ -4,8 +4,21 @@ document.querySelectorAll('.uppercase-input').forEach(input => {
     });
 });
 
-function showDeleteModal(purchaseOrderId) {
+function showDeleteModal(purchaseOrderId, status) {
     try {
+        if (status != '1') {
+            Swal.fire({
+                title: 'Error!!',
+                html: 'To delete a purchase order, it must first be active.',
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: !1,
+                footer: '',
+                showCloseButton: !1
+            });
+            return;
+        }
+
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this.",
@@ -24,7 +37,8 @@ function showDeleteModal(purchaseOrderId) {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        id: quotationId
+                        id: purchaseOrderId,
+                        status: status
                     })
                 })
                 .then(response => {
@@ -296,7 +310,7 @@ async function getPurchaseOrderItems(purchaseOrderId, packingUnitTypeCatalog) {
     }
 }
 
-function loadStatusCatalog(statusName) {
+async function loadStatusCatalog(statusName) {
     try {
         let optionsToShow = [];
         switch (statusName.toUpperCase()) {
@@ -362,8 +376,7 @@ function updateStatus()
             });
         });
 
-        if(!isValidForm(purchaseOrderItems))
-        {
+        if(!isValidForm(purchaseOrderItems)) {
             $('#loader').hide();
             return;
         }
@@ -381,7 +394,7 @@ function updateStatus()
                 purchaseOrderItems: purchaseOrderItems
             })
         })
-        .then(response => {return response.json();})
+        .then(response => { return response.json(); })
         .then(data => {
             if(!data.isSuccess) {
                 Swal.fire({
@@ -516,21 +529,36 @@ function initializeDatatable() {
                 }
             },
             "columns": [
-                { "data": "code", "render": function(data) { return '<span class="badge bg-dark">' + data + '</span>'; } },
+                { 
+                    "data": "code",
+                    "render": function(data) {
+                        return `<span class="badge bg-dark">${data}</span>`;
+                    }
+                },
                 { "data": "supplier.businessName" },
                 { "data": "user.username" },
                 { "data": "payment.description" },
-                { "data": "totalAmount", "render": function(data) { return '$' + parseFloat(data).toFixed(2); } },
+                { 
+                    "data": "totalAmount",
+                    "render": function(data) {
+                        return `$${parseFloat(data).toFixed(2)}`;
+                    }
+                },
                 { "data": "currency.description" },
-                { "data": "statusName", "render": function(data, type, row) { return '<span class="badge rounded-pill badge-soft-' + row.statusColor + '">' + data + '</span>'; } },
+                { 
+                    "data": "statusName",
+                    "render": function(data, type, row) {
+                        return `<span class="badge rounded-pill badge-soft-${row.statusColor}">${data}</span>`;
+                    }
+                },
                 { "data": "creationDateAsString" },
                 { "data": "id", "render": function(data, type, row) {
                     return `
-                    <button type="button" class="btn btn-secondary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/purchaseOrder/detail?id=${data}'" title="View"><i class="ri-eye-fill"></i></button>
+                        <button type="button" class="btn btn-secondary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/purchaseOrder/detail?id=${data}'" title="View"><i class="ri-eye-fill"></i></button>
                         ${row.status == 1 ? `<button type="button" class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/purchaseOrder/update?id=${data}'" title="Update"><i class="ri-pencil-fill"></i></button>` : ''}
                         ${row.status != 11 ? `<button type="button" class="btn btn-primary btn-icon secondary waves-effect waves-light mx-1" onclick="showUpdateStatusModal(${data}, '${row.status}', '${row.statusName}', '${row.statusColor}')" title="Update Status"><i class="ri-exchange-fill"></i></button>` : ''}
                         <button type="button" class="btn btn-info btn-icon waves-effect waves-light mx-1" onclick="downloadPurchaseOrder(${data})" title="Download"><i class="ri-file-download-fill"></i></button>
-                        ${row.status == 1 ? `<button type="button" class="btn btn-danger btn-icon waves-effect waves-light mx-1" onclick="showDeleteModal(${data})" title="Delete"><i class="ri-delete-bin-2-fill"></i></button>` : ''}
+                        ${row.status == 1 ? `<button type="button" class="btn btn-danger btn-icon waves-effect waves-light mx-1" onclick="showDeleteModal(${data}, ${row.status})" title="Delete"><i class="ri-delete-bin-2-fill"></i></button>` : ''}
                     `;
                 }}
             ],
