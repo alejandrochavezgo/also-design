@@ -94,7 +94,50 @@ public class supplierController : Controller
             return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
         }
     }
-    
+
+    [HttpGet("supplier/detail")]
+    public async Task<IActionResult> detail(int id)
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var supplier = new supplierModel { id = id };
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:supplier:getSupplierById"]}", new StringContent(JsonConvert.SerializeObject(supplier), Encoding.UTF8, "application/json"));
+
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+            }
+
+            var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<entities.models.supplierModel>(responsePostAsJson);
+            clientHttp.Dispose();
+
+            ViewData["id"] = result!.id;
+            ViewData["businessName"] = result!.businessName;
+            ViewData["rfc"] = result!.rfc;
+            ViewData["address"] = result!.address;
+            ViewData["zipcode"] = result!.zipCode;
+            ViewData["city"] = result!.city;
+            ViewData["state"] = result!.state;
+            ViewData["country"] = result!.country;
+            ViewData["statusColor"] = result!.statusColor;
+            ViewData["statusName"] = result!.statusName;
+            ViewData["contactEmails"] = result!.contactEmails;
+            ViewData["contactPhones"] = result!.contactPhones;
+            ViewData["contactNames"] = result!.contactNames;
+            return View();
+        }
+        catch(Exception e)
+        {
+            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+        }
+    }
+
     [HttpGet("supplier/update")]
     public async Task<IActionResult> update(int id)
     {

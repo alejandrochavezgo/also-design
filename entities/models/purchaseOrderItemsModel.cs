@@ -15,6 +15,7 @@ public class purchaseOrderItemsModel
     public bool hasNewImage { get; set; }
     public double quantity { get; set; }
     public int unit { get; set; }
+    public string? unitDescription { get; set; }
     public decimal unitValue { get; set; }
     public decimal totalValue { get; set; }
 }

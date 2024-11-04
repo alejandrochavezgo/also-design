@@ -138,7 +138,6 @@ public class repositoryQuotation : baseRepository
         try
         {
             var quotationIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@quotationIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
-
             base._providerDB.ExecuteNonQuery("sp_addQuotation", new DbParameter[] {
                 quotationIdAdded,
                 dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, quotation.client!.id),
@@ -156,7 +155,6 @@ public class repositoryQuotation : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB,"@clientMainContactPhone", DbType.String, quotation.client!.mainContactPhone!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@generalNotes", DbType.String, quotation.generalNotes!)
             });
-
             return Convert.ToInt32(quotationIdAdded.Value);
         }
         catch (SqlException SqlException)
@@ -219,7 +217,7 @@ public class repositoryQuotation : baseRepository
                 quotationItemIdAdded,
                 dataFactory.getObjParameter(configurationManager.providerDB,"@quotationId", DbType.Int32, quotationId),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@quantity", DbType.Int32, quotationItem.quantity),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@unit", DbType.String, quotationItem.unit!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@unit", DbType.Int32, quotationItem.unit!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@unitValue", DbType.Decimal, quotationItem.unitValue),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@totalValue", DbType.Decimal, quotationItem.totalValue),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@description", DbType.String, quotationItem.description!),

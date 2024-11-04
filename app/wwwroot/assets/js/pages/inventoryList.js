@@ -145,7 +145,7 @@ function initializeDatatable() {
                     "data": "itemId",
                     "render": function (data, type, row) {
                         return `
-                            <button class="btn btn-secondary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/inventory/details?id=${data}'" title="Details"><i class="ri-eye-fill"></i></button>
+                            <button class="btn btn-secondary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/inventory/detail?id=${data}'" title="Details"><i class="ri-eye-fill"></i></button>
                             <button class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/inventory/update?id=${data}'" title="Update"><i class="ri-pencil-fill"></i></button>
                             <button class="btn btn-danger btn-icon waves-effect waves-light mx-1" onclick="showDeleteModal('${data}', '${row.stock}')" title="Delete"><i class="ri-delete-bin-fill"></i></button>`;
                     },

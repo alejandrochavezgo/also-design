@@ -42,6 +42,96 @@ public class purchaseOrderController : Controller
         }
     }
 
+    [HttpGet("purchaseOrder/detail")]
+    public async Task<IActionResult> detail(int id)
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var user = new userModel { id = userCookie.id };
+            var responsePostUser = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:user:getUserById"]}", new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
+            if(!responsePostUser.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePostUser.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePostUser.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+            }
+            var responsePostUserAsJson = await responsePostUser.Content.ReadAsStringAsync();
+            var resultUser = JsonConvert.DeserializeObject<entities.models.userModel>(responsePostUserAsJson);
+
+            var purchaseOrder = new purchaseOrderModel { id = id };
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:purchaseOrder:getPurchaseOrderById"]}", new StringContent(JsonConvert.SerializeObject(purchaseOrder), Encoding.UTF8, "application/json"));
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePostUser.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePostUser.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+            }
+            var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<entities.models.purchaseOrderModel>(responsePostAsJson);
+
+            var enterprise = new enterpriseModel
+            {
+                id = 1,
+                defaultValues = new defaultValuesModel
+                {
+                    configType = entities.enums.configType.PURCHASE_ORDERS
+                }
+            };
+            var responsePostEnterprise = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:enterprise:getEnterpriseFullInformationByIdAndConfigType"]}", new StringContent(JsonConvert.SerializeObject(enterprise), Encoding.UTF8, "application/json"));
+            if(!responsePostEnterprise.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePostEnterprise.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePostEnterprise.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+            }
+            var responsePostEnterpriseAsJson = await responsePostEnterprise.Content.ReadAsStringAsync();
+            var resultEnterprises = JsonConvert.DeserializeObject<List<entities.models.enterpriseModel>>(responsePostEnterpriseAsJson);
+            clientHttp.Dispose();
+
+            ViewData["user.id"] = resultUser!.id;
+            ViewData["user.email"] = resultUser!.email;
+            ViewData["user.firstname"] = resultUser!.firstname;
+            ViewData["user.lastname"] = resultUser!.lastname;
+            ViewData["enterprise.location"] = $"{resultEnterprises!.First().city} {resultEnterprises!.First()!.state} {resultEnterprises!.First()!.country}";
+            ViewData["employee.profession"] = resultUser.employee!.profession;
+            ViewData["employee.jobPosition"] = resultUser.employee!.jobPosition;
+            ViewData["employee.contactPhones"] = resultUser.employee!.contactPhones;
+            ViewData["employee.mainContactPhone"] = result!.user!.employee!.mainContactPhone;
+            ViewData["purchaseOrder.id"] = result!.id;
+            ViewData["supplier.businessName"] = result!.supplier!.businessName;
+            ViewData["supplier.id"] = result!.supplier!.id;
+            ViewData["supplier.rfc"] = result!.supplier!.rfc;
+            ViewData["supplier.address"] = result!.supplier!.address;
+            ViewData["supplier.city"] = result!.supplier.city;
+            ViewData["supplier.mainContactName"] = result!.supplier.mainContactName;
+            ViewData["supplier.mainContactPhone"] = result!.supplier.mainContactPhone;
+            ViewData["supplier.contactNames"] = result!.supplier.contactNames;
+            ViewData["supplier.contactPhones"] = result!.supplier.contactPhones;
+            ViewData["purchaseOrder.id"] = result!.id;
+            ViewData["purchaseOrder.code"] = result!.code;
+            ViewData["purchaseOrder.payment.description"] = result!.payment!.description;
+            ViewData["purchaseOrder.currency.description"] = result!.currency!.description;
+            ViewData["purchaseOrder.generalNotes"] = result!.generalNotes;
+            ViewData["purchaseOrder.subtotal"] = result!.subtotal;
+            ViewData["purchaseOrder.taxRate"] = result!.taxRate;
+            ViewData["purchaseOrder.taxAmount"] = result!.taxAmount;
+            ViewData["purchaseOrder.totalAmount"] = result!.totalAmount;
+            ViewData["purchaseOrder.items"] = result!.items;
+            foreach(var item in result.items!)
+                if (!string.IsNullOrEmpty(item.imagePath))
+                    item.imageString = $"data:image/jpg;base64,{Convert.ToBase64String(System.IO.File.ReadAllBytes(item.imagePath!))}";
+
+            return View();
+        }
+        catch(Exception e)
+        {
+            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+        }
+    }
+
     [HttpGet("purchaseOrder/getCatalogs")]
     public async Task<IActionResult> getCatalogs()
     {
@@ -460,15 +550,34 @@ public class purchaseOrderController : Controller
             }
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<entities.models.purchaseOrderModel>(responsePostAsJson);
-            clientHttp.Dispose();
 
             if (result!.status != (int)statusType.ACTIVE)
                 return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = "Only purchase orders with an ACTIVE status can be updated." });
+
+            var enterprise = new enterpriseModel
+            {
+                id = 1,
+                defaultValues = new defaultValuesModel
+                {
+                    configType = entities.enums.configType.PURCHASE_ORDERS
+                }
+            };
+            var responsePostEnterprise = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:enterprise:getEnterpriseFullInformationByIdAndConfigType"]}", new StringContent(JsonConvert.SerializeObject(enterprise), Encoding.UTF8, "application/json"));
+            if(!responsePostEnterprise.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePostEnterprise.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePostEnterprise.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+            }
+            var responsePostEnterpriseAsJson = await responsePostEnterprise.Content.ReadAsStringAsync();
+            var resultEnterprises = JsonConvert.DeserializeObject<List<entities.models.enterpriseModel>>(responsePostEnterpriseAsJson);
+            clientHttp.Dispose();
 
             ViewData["user.id"] = resultUser!.id;
             ViewData["user.email"] = resultUser!.email;
             ViewData["user.firstname"] = resultUser!.firstname;
             ViewData["user.lastname"] = resultUser!.lastname;
+            ViewData["enterprise.location"] = $"{resultEnterprises!.First().city} {resultEnterprises!.First()!.state} {resultEnterprises!.First()!.country}";
             ViewData["employee.profession"] = resultUser.employee!.profession;
             ViewData["employee.jobPosition"] = resultUser.employee!.jobPosition;
             ViewData["employee.contactPhones"] = resultUser.employee!.contactPhones;

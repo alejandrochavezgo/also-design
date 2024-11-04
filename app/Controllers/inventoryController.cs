@@ -355,6 +355,61 @@ public class inventoryController : Controller
         }
     }
 
+    [HttpGet("inventory/detail")]
+    public async Task<IActionResult> detail(int id)
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var inventoryItem = new inventoryItemModel { id = id };
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:inventory:getItemInventoryById"]}", new StringContent(JsonConvert.SerializeObject(inventoryItem), Encoding.UTF8, "application/json"));
+
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+            }
+
+            var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<entities.models.inventoryItemModel>(responsePostAsJson);
+            clientHttp.Dispose();
+
+            ViewData["id"] = result!.id;
+            ViewData["itemCode"] = result!.itemCode;
+            ViewData["itemName"] = result!.itemName;
+            ViewData["statusName"] = result!.statusName;
+            ViewData["statusColor"] = result!.statusColor;
+            ViewData["description"] = result!.description;
+            ViewData["material"] = result!.materialDescription;
+            ViewData["finishType"] = result!.finishTypeDescription;
+            ViewData["diameter"] = result!.diameter;
+            ViewData["unitDiameter"] = result!.unitDiameterDescription;
+            ViewData["length"] = result!.length;
+            ViewData["unitLength"] = result!.unitLengthDescription;
+            ViewData["weight"] = result!.weight;
+            ViewData["unitWeight"] = result!.unitWeightDescription;
+            ViewData["tolerance"] = result!.tolerance;
+            ViewData["unitTolerance"] = result!.unitToleranceDescription;
+            ViewData["warehouseLocation"] = result!.warehouseLocationDescription;
+            ViewData["reorderQty"] = result!.reorderQty;
+            ViewData["notes"] = result!.notes;
+            ViewData["itemImageString"] = $"data:image/jpg;base64,{Convert.ToBase64String(System.IO.File.ReadAllBytes(result.itemImagePath!))}";
+            ViewData["hasBluePrints"] = !string.IsNullOrEmpty(result.bluePrintsPath);
+            ViewData["hasTechnicalSpecifications"] = !string.IsNullOrEmpty(result.technicalSpecificationsPath);
+            ViewData["creationDate"] = result!.creationDate;
+            ViewData["lastRestockDate"] = result!.lastRestockDate;
+            ViewData["modificationDate"] = result!.modificationDate;
+            return View();
+        }
+        catch(Exception e)
+        {
+            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+        }
+    }
+
     [HttpPost("inventory/update")]
     public async Task<JsonResult> update(IFormCollection form)
     {

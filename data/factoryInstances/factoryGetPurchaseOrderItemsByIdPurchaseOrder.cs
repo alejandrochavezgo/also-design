@@ -23,8 +23,9 @@ internal class factoryGetPurchaseOrderItemsByIdPurchaseOrder: baseMethod<factory
                 details = conversionManager.toString(dr["DETAILS"]),
                 imagePath = conversionManager.toString(dr["IMAGEPATH"]),
                 notes = conversionManager.toString(dr["NOTES"]),
-                quantity = conversionManager.toInt(dr["QUANTITY"]),
+                quantity = conversionManager.toDouble(dr["QUANTITY"]),
                 unit = conversionManager.toInt(dr["IDPACKINGUNITTYPE"]),
+                unitDescription = conversionManager.toString(dr["PACKINGUNITTYPES.DESCRIPTION"]),
                 unitValue = conversionManager.toDecimal(dr["UNITVALUE"]),
                 totalValue = conversionManager.toDecimal(dr["TOTALVALUE"]),
                 inventoryItemId = conversionManager.toInt(dr["IDINVENTORY"])

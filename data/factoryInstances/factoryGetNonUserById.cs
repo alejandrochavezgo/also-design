@@ -31,6 +31,7 @@ internal class factoryGetNonUserById: baseMethod<factoryGetNonUserById, userMode
                     code = conversionManager.toString(dr["EMPLOYEE.CODE"]),
                     hasUser = conversionManager.toBoolean(dr["EMPLOYEE.HASUSER"]),
                     gender = conversionManager.toInt(dr["EMPLOYEE.IDGENDERTYPE"]),
+                    genderDescription = conversionManager.toString(dr["GENDERTYPES.DESCRIPTION"]),
                     address = conversionManager.toString(dr["EMPLOYEE.ADDRESS"]),
                     city = conversionManager.toString(dr["EMPLOYEE.CITY"]),
                     state = conversionManager.toString(dr["EMPLOYEE.STATE"]),

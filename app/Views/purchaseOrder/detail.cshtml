@@ -1,0 +1,197 @@
+@using Newtonsoft.Json;
+@{
+    ViewData["title"] = "Purchase Order Details| Also Design";
+    var phones = ViewData["employee.contactPhones"] as List<string> ?? new List<string>();
+    var supplierContactNames = ViewData["supplier.contactNames"] as List<string> ?? new List<string>();
+    var supplierContactPhones = ViewData["supplier.contactPhones"] as List<string> ?? new List<string>();
+    var employeeContactPhones = ViewData["employee.contactPhones"] as List<string> ?? new List<string>();
+}
+@section styles
+{
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet"  type="text/css">
+}
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Purchase Order Details</h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item color-495057">Purchase Order</li>
+                            <li class="breadcrumb-item color-495057">Purchase Order Details</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Purchase Order Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="d-flex col-3">
+                                <div class="navbar-brand-box horizontal-logo d-ruby pl-0 mt-24npx ml-22npx">
+                                    <span class="logo-sm">
+                                        <img width="120" src="../assets/images/alsologo.png"/>
+                                    </span>
+                                    <p class="font-size-15px ml-24npx">ALSO DESIGN</p>
+                                </div>
+                            </div>
+                            <div class="col-6 text-center">
+                                <h4>ALSO DESIGN</h4>
+                                <h6>DISEÑO ELECTROMECÁNICO INDUSTRIAL</h6>
+                                <h6>"RESPONSABILIDAD, CALIDAD E INNOVACIÓN TECNOLÓGICA"</h6>
+                            </div>
+                            <div class="col-3 text-center">
+                                <input class="form-control text-center bg-light border-0 fw-bold" value="@ViewData["purchaseOrder.code"]" disabled>
+                            </div>
+                        </div>
+                        <div class="row pt-4 text-center border-bottom border-bottom-dashed">
+                        </div>
+                        <div class="row pt-4 text-center">
+                            <div class="col-1">
+                                <label class="form-label fw-bold">ID</label>
+                                <p class="text-center">@ViewData["supplier.id"]</p>
+                            </div>
+                            <div class="col-5">
+                                <label class="form-label fw-bold">SUPPLIER</label>
+                                <p class="text-center">@ViewData["supplier.businessName"]</p>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label fw-bold">MAIN CONTACT</label>
+                                <p class="text-center">@ViewData["supplier.mainContactName"]</p>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label fw-bold">CITY</label>
+                                <p class="text-center">@ViewData["supplier.city"]</p>
+                            </div>
+                        </div>
+                        <div class="row pt-27px text-center">
+                            <div class="col-2">
+                                <label class="form-label fw-bold">MAIN PHONE</label>
+                                <p class="text-center">@ViewData["supplier.mainContactPhone"]</p>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label fw-bold">ADDRESS</label>
+                                <p class="text-center">@ViewData["supplier.address"]</p>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label fw-bold">RFC</label>
+                                <p>@ViewData["supplier.rfc"]</p>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label fw-bold">PAYMENT TYPE</label>
+                                <p>@ViewData["purchaseOrder.payment.description"]</p>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label fw-bold">CURRENCY</label>
+                                <p>@ViewData["purchaseOrder.currency.description"]</p>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-12">
+                                <div class="card-body pt-4 pb-4">
+                                    <table class="table table-borderless text-center align-middle mb-0">
+                                        <thead>
+                                            <tr class="table-active">
+                                                <th scope="col" style=""></th>
+                                                <th scope="col" style="width: 50px;">#</th>
+                                                <th scope="col" class="w-50per">Description</th>
+                                                <th scope="col">Quantity</th>
+                                                <th scope="col">Unit</th>
+                                                <th scope="col" class="text-end">Unit value</th>
+                                                <th scope="col" class="text-end">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbItems">
+                                            @if (ViewData["purchaseOrder.items"] != null)
+                                            {
+                                                var purchaseOrderItems = ViewData["purchaseOrder.items"] as List<entities.models.purchaseOrderItemsModel>;
+                                                if (purchaseOrderItems != null)
+                                                {
+                                                    var index = 1;
+                                                    foreach (var item in purchaseOrderItems)
+                                                    {
+                                                        <tr>
+                                                            <td class="width-0per"></td>
+                                                            <td scope="row">@index</td>
+                                                            <td class="text-start">
+                                                                <p class="form-control fw-medium mb-1 bg-light border-0">@item.description</p>
+                                                                <p class="form-control fw-medium mb-1 bg-light border-0">@item.material</p>
+                                                                <p class="form-control fw-medium mb-1 bg-light border-0">@item.details</p>
+                                                                @if (!string.IsNullOrEmpty(item.imageString))
+                                                                {
+                                                                    <img src="@item.imageString" class="rounded avatar-xl mb-1" />
+                                                                }
+                                                                <p class="form-control fw-medium bg-light border-0" placeholder="Notes">@item.notes</p>
+                                                            </td>
+                                                            <td>
+                                                                @item.quantity
+                                                            </td>
+                                                            <td>
+                                                                @item.unitDescription
+                                                            </td>
+                                                            <td class="text-end">
+                                                                $@item.unitValue.ToString("F2")
+                                                            </td>
+                                                            <td class="text-end">
+                                                                $@item.totalValue.ToString("F2")
+                                                            </td>
+                                                        </tr>
+                                                        index++;
+                                                    }
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                    <div class="border-top border-top-dashed mt-2">
+                                        <div class="row">
+                                            <div class="col-7">
+                                                <p class="form-control fw-semibold bg-light border-0 mt-3" placeholder="Notes">@ViewData["purchaseOrder.generalNotes"]</p>
+                                            </div>
+                                            <div class="col-5">
+                                                <table class="table table-borderless table-nowrap align-middle mb-0 ms-auto" style="width:250px">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Sub Total</td>
+                                                            <td class="text-end">$@ViewData["purchaseOrder.subtotal"]</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Estimated Tax @ViewData["purchaseOrder.taxRate"]%</td>
+                                                            <td class="text-end">$@ViewData["purchaseOrder.taxAmount"]</td>
+                                                        </tr>
+                                                        <tr class="border-top border-top-dashed fs-15">
+                                                            <th scope="row">Total Amount</th>
+                                                            <th class="text-end">$@ViewData["purchaseOrder.totalAmount"]</th>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-6">
+                                            <p class="fw-bold mb-3">ATENTAMENTE</p>
+                                            <p class="mb-1">@ViewData["employee.profession"]. @ViewData["user.firstname"] @ViewData["user.lastname"]</p>
+                                            <p class="mb-1">@ViewData["employee.mainContactPhone"]</p>
+                                            <p class="mb-1">@ViewData["employee.jobPosition"]</p>
+                                        </div>
+                                    </div>
+                                    <div class="row pt-4 pb-27px text-center border-bottom border-bottom-dashed">
+                                        <div class="col-12">
+                                            <p class="fw-bold mb-3">@ViewData["enterprise.location"]</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

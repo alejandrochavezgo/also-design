@@ -12,8 +12,9 @@ public class quotationItemsModel
     public string? notes { get; set; }
     public bool hasOriginalImage { get; set; }
     public bool hasNewImage { get; set; }
-    public int quantity { get; set; }
-    public string? unit { get; set; }
+    public double quantity { get; set; }
+    public int unit { get; set; }
+    public string? unitDescription { get; set; }
     public decimal unitValue { get; set; }
     public decimal totalValue { get; set; }
 }

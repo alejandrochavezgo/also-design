@@ -36,9 +36,9 @@ function initializeDatatable() {
                 }},
                 { "data": "id", "render": function(data, type, row) {
                     return `
+                        <button type="button" class="btn btn-secondary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/user/detail?id=${data}'" title="View"><i class="ri-eye-fill"></i></button>
                         <button type="button" class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/user/update?id=${data}'" title="Update"><i class="ri-pencil-fill"></i></button>
                         <button type="button" class="btn btn-danger btn-icon waves-effect waves-light mx-1" onclick="showDeleteModal(${data})" title="Delete"><i class="ri-delete-bin-2-fill"></i></button>
-                        <button type="button" class="btn btn-secondary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/user/detail?id=${data}'" title="View"><i class="ri-eye-fill"></i></button>
                     `;
                 }}
             ],

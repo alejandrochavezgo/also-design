@@ -30,6 +30,7 @@ internal class factoryGetUserById: baseMethod<factoryGetUserById, userModel>
                 {
                     id = conversionManager.toInt(dr["EMPLOYEE.IDEMPLOYEE"]),
                     gender = conversionManager.toInt(dr["EMPLOYEE.IDGENDERTYPE"]),
+                    genderDescription = conversionManager.toString(dr["GENDERTYPES.DESCRIPTION"]),
                     address = conversionManager.toString(dr["EMPLOYEE.ADDRESS"]),
                     city = conversionManager.toString(dr["EMPLOYEE.CITY"]),
                     state = conversionManager.toString(dr["EMPLOYEE.STATE"]),

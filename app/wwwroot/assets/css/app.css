@@ -60,6 +60,9 @@
 .pr-22px {
   padding-right: 22px;
 }
+.p-10px {
+  padding: 10px;
+}
 .no-support-screen {
   display: none;
 }
@@ -174,4 +177,7 @@
 }
 .height-163px {
   height:163px;
+}
+.w-50per {
+  width: 50%;
 }

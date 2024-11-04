@@ -6,18 +6,27 @@ public class inventoryItemModel
     public string? itemCode { get; set; }
     public string? itemName { get; set; }
     public int status { get; set; }
+    public string? statusName { get; set; }
+    public string? statusColor { get; set; }
     public string? description { get; set; }
     public int material { get; set; }
+    public string? materialDescription { get; set; }
     public int finishType { get; set; }
+    public string? finishTypeDescription { get; set; }
     public double? diameter { get; set; }
     public int unitDiameter { get; set; }
+    public string? unitDiameterDescription { get; set; }
     public double? length { get; set; }
     public int unitLength { get; set; }
+    public string? unitLengthDescription { get; set; }
     public double? weight { get; set; }
     public int unitWeight { get; set; }
+    public string? unitWeightDescription { get; set; }
     public double? tolerance { get; set; }
     public int unitTolerance { get; set; }
+    public string? unitToleranceDescription { get; set; }
     public int warehouseLocation { get; set; }
+    public string? warehouseLocationDescription { get; set; }
     public double? quantity { get; set; }
     public double? reorderQty { get; set; }
     public int unit { get; set; }

@@ -1,0 +1,100 @@
+@{
+    ViewData["title"] = "User Details | Also Design";
+    var phones = ViewData["employee.contactPhones"] as List<string> ?? new List<string>();
+    var employeeContactPhonesString = phones != null ? string.Join(", ", phones!) : "";
+}
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">User Details</h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item color-495057">User</li>
+                            <li class="breadcrumb-item color-495057">User Details</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">User Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="form-label fw-bold">Firstname</label>
+                                <p>@ViewData["user.firstname"]</p>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-bold">Last Name</label>
+                                <p>@ViewData["user.lastname"]</p>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-4">
+                                <label class="form-label fw-bold">Email</label>
+                                <p>@ViewData["user.email"]</p>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label fw-bold">Status</label>
+                                <span class="badge rounded-pill badge-soft-@ViewData["statusColor"] d-table">@ViewData["statusName"]</span>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label fw-bold">Gender</label>
+                                <p>@ViewData["employee.gender"]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">User Contact Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-5">
+                                <label class="form-label fw-bold">Address</label>
+                                <p>@ViewData["employee.address"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label fw-bold">City</label>
+                                <p>@ViewData["employee.city"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label fw-bold">State</label>
+                                <p>@ViewData["employee.state"]</p>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-2">
+                                <label class="form-label fw-bold">Zip Code</label>
+                                <p>@ViewData["employee.zipcode"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label fw-bold">Job Position</label>
+                                <p>@ViewData["employee.jobPosition"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label fw-bold">Profession</label>
+                                <p>@ViewData["employee.profession"]</p>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label fw-bold">Contact Phones</label>
+                                <p>@employeeContactPhonesString</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

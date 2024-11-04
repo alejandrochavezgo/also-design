@@ -14,7 +14,7 @@ public static class quotationFormHelper
                 return false;
 
             foreach (var item in quotation.items!)
-                if(string.IsNullOrEmpty(item.description) || string.IsNullOrEmpty(item.material) || string.IsNullOrEmpty(item.unit))
+                if(string.IsNullOrEmpty(item.description) || string.IsNullOrEmpty(item.material) || item.unit <= 0)
                     return false;
 
             return true;
@@ -34,7 +34,7 @@ public static class quotationFormHelper
                 return false;
 
             foreach (var item in quotation.items!)
-                if(string.IsNullOrEmpty(item.description) || string.IsNullOrEmpty(item.material) || string.IsNullOrEmpty(item.unit))
+                if(string.IsNullOrEmpty(item.description) || string.IsNullOrEmpty(item.material) || item.unit <= 0)
                     return false;
 
             return true;

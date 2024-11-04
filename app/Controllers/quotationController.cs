@@ -372,12 +372,31 @@ public class quotationController : Controller
             }
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<entities.models.quotationModel>(responsePostAsJson);
+
+            var enterprise = new enterpriseModel
+            {
+                id = 1,
+                defaultValues = new defaultValuesModel
+                {
+                    configType = entities.enums.configType.PURCHASE_ORDERS
+                }
+            };
+            var responsePostEnterprise = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:enterprise:getEnterpriseFullInformationByIdAndConfigType"]}", new StringContent(JsonConvert.SerializeObject(enterprise), Encoding.UTF8, "application/json"));
+            if(!responsePostEnterprise.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePostEnterprise.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePostEnterprise.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+            }
+            var responsePostEnterpriseAsJson = await responsePostEnterprise.Content.ReadAsStringAsync();
+            var resultEnterprises = JsonConvert.DeserializeObject<List<entities.models.enterpriseModel>>(responsePostEnterpriseAsJson);
             clientHttp.Dispose();
 
             ViewData["user.id"] = resultUser!.id;
             ViewData["user.email"] = resultUser!.email;
             ViewData["user.firstname"] = resultUser!.firstname;
             ViewData["user.lastname"] = resultUser!.lastname;
+            ViewData["enterprise.location"] = $"{resultEnterprises!.First().city} {resultEnterprises!.First()!.state} {resultEnterprises!.First()!.country}";
             ViewData["employee.profession"] = resultUser.employee!.profession;
             ViewData["employee.jobPosition"] = resultUser.employee!.jobPosition;
             ViewData["employee.contactPhones"] = resultUser.employee!.contactPhones;
@@ -396,6 +415,95 @@ public class quotationController : Controller
             ViewData["quotation.code"] = result!.code;
             ViewData["quotation.payment.id"] = result!.payment!.id;
             ViewData["quotation.currency.id"] = result!.currency!.id;
+            ViewData["quotation.generalNotes"] = result!.generalNotes;
+            ViewData["quotation.subtotal"] = result!.subtotal;
+            ViewData["quotation.taxRate"] = result!.taxRate;
+            ViewData["quotation.taxAmount"] = result!.taxAmount;
+            ViewData["quotation.totalAmount"] = result!.totalAmount;
+            foreach(var item in result.items!)
+                item.imageString = !string.IsNullOrEmpty(item.imagePath) ? $"data:image/jpg;base64,{Convert.ToBase64String(System.IO.File.ReadAllBytes(item.imagePath!))}" : string.Empty;
+            ViewData["quotation.items"] = result!.items;
+
+            return View();
+        }
+        catch(Exception e)
+        {
+            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+        }
+    }
+
+    [HttpGet("quotation/detail")]
+    public async Task<IActionResult> detail(int id)
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var user = new userModel { id = userCookie.id };
+            var responsePostUser = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:user:getUserById"]}", new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
+            if(!responsePostUser.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePostUser.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePostUser.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+            }
+            var responsePostUserAsJson = await responsePostUser.Content.ReadAsStringAsync();
+            var resultUser = JsonConvert.DeserializeObject<entities.models.userModel>(responsePostUserAsJson);
+
+            var quotation = new quotationModel { id = id };
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:quotation:getQuotationById"]}", new StringContent(JsonConvert.SerializeObject(quotation), Encoding.UTF8, "application/json"));
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+            }
+            var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<entities.models.quotationModel>(responsePostAsJson);
+
+            var enterprise = new enterpriseModel
+            {
+                id = 1,
+                defaultValues = new defaultValuesModel
+                {
+                    configType = entities.enums.configType.PURCHASE_ORDERS
+                }
+            };
+            var responsePostEnterprise = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:enterprise:getEnterpriseFullInformationByIdAndConfigType"]}", new StringContent(JsonConvert.SerializeObject(enterprise), Encoding.UTF8, "application/json"));
+            if(!responsePostEnterprise.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePostEnterprise.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePostEnterprise.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+            }
+            var responsePostEnterpriseAsJson = await responsePostEnterprise.Content.ReadAsStringAsync();
+            var resultEnterprises = JsonConvert.DeserializeObject<List<entities.models.enterpriseModel>>(responsePostEnterpriseAsJson);
+            clientHttp.Dispose();
+
+            ViewData["user.id"] = resultUser!.id;
+            ViewData["user.email"] = resultUser!.email;
+            ViewData["user.firstname"] = resultUser!.firstname;
+            ViewData["user.lastname"] = resultUser!.lastname;
+            ViewData["enterprise.location"] = $"{resultEnterprises!.First().city} {resultEnterprises!.First()!.state} {resultEnterprises!.First()!.country}";
+            ViewData["employee.profession"] = resultUser.employee!.profession;
+            ViewData["employee.jobPosition"] = resultUser.employee!.jobPosition;
+            ViewData["employee.contactPhones"] = resultUser.employee!.contactPhones;
+            ViewData["employee.mainContactPhone"] = result!.user!.employee!.mainContactPhone;
+            ViewData["quotation.id"] = result!.id;
+            ViewData["client.businessName"] = result!.client!.businessName;
+            ViewData["client.id"] = result!.client!.id;
+            ViewData["client.rfc"] = result!.client!.rfc;
+            ViewData["client.address"] = result!.client!.address;
+            ViewData["client.city"] = result!.client.city;
+            ViewData["client.mainContactName"] = result!.client.mainContactName;
+            ViewData["client.mainContactPhone"] = result!.client.mainContactPhone;
+            ViewData["client.contactNames"] = result!.client.contactNames;
+            ViewData["client.contactPhones"] = result!.client.contactPhones;
+            ViewData["quotation.id"] = result!.id;
+            ViewData["quotation.code"] = result!.code;
+            ViewData["quotation.payment.description"] = result!.payment!.description;
+            ViewData["quotation.currency.description"] = result!.currency!.description;
             ViewData["quotation.generalNotes"] = result!.generalNotes;
             ViewData["quotation.subtotal"] = result!.subtotal;
             ViewData["quotation.taxRate"] = result!.taxRate;

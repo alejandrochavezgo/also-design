@@ -23,8 +23,9 @@ internal class factoryGetQuotationItemsByIdQuotation: baseMethod<factoryGetQuota
                 details = conversionManager.toString(dr["DETAILS"]),
                 imagePath = conversionManager.toString(dr["IMAGEPATH"]),
                 notes = conversionManager.toString(dr["NOTES"]),
-                quantity = conversionManager.toInt(dr["QUANTITY"]),
-                unit = conversionManager.toString(dr["UNIT"]),
+                quantity = conversionManager.toDouble(dr["QUANTITY"]),
+                unit = conversionManager.toInt(dr["PACKINGUNITTYPES.IDPACKINGUNITTYPE"]),
+                unitDescription = conversionManager.toString(dr["PACKINGUNITTYPES.DESCRIPTION"]),
                 unitValue = conversionManager.toDecimal(dr["UNITVALUE"]),
                 totalValue = conversionManager.toDecimal(dr["TOTALVALUE"])
             };

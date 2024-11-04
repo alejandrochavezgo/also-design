@@ -121,7 +121,6 @@ public class repositoryPurchaseOrder : baseRepository
         try
         {
             var purchaseOrderIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@purchaseOrderIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
-
             base._providerDB.ExecuteNonQuery("sp_addPurchaseOrder", new DbParameter[] {
                 purchaseOrderIdAdded,
                 dataFactory.getObjParameter(configurationManager.providerDB,"@supplierId", DbType.Int32, purchaseOrder.supplier!.id),
@@ -139,7 +138,6 @@ public class repositoryPurchaseOrder : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB,"@supplierMainContactPhone", DbType.String, purchaseOrder.supplier!.mainContactPhone!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@generalNotes", DbType.String, purchaseOrder.generalNotes!)
             });
-
             return Convert.ToInt32(purchaseOrderIdAdded.Value);
         }
         catch (SqlException SqlException)

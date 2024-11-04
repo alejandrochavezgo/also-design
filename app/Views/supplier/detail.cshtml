@@ -1,0 +1,98 @@
+@{
+    ViewData["title"] = "Supplier Details | Also Design";
+    var names = ViewData["contactNames"] as List<string> ?? new List<string>();
+    var contactNamesString = names != null ? string.Join(", ", names!) : "";
+    var emails = ViewData["contactEmails"] as List<string> ?? new List<string>();
+    var contactEmailsString = emails != null ? string.Join(", ", emails!) : "";
+    var phones = ViewData["contactPhones"] as List<string> ?? new List<string>();
+    var contactPhonesString = phones != null ? string.Join(", ", phones!) : "";
+}
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Supplier Details</h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item color-495057">Supplier</li>
+                            <li class="breadcrumb-item color-495057">Supplier Details</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Supplier Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-3">
+                                <label class="form-label fw-bold">Business Name</label>
+                                <p>@ViewData["businessName"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label fw-bold">RFC</label>
+                                <p>@ViewData["rfc"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label fw-bold">Address</label>
+                                <p>@ViewData["address"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label fw-bold">ZIP Code</label>
+                                <p>@ViewData["zipcode"]</p>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-3">
+                                <label class="form-label fw-bold">City</label>
+                                <p>@ViewData["city"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label fw-bold">State</label>
+                                <p>@ViewData["state"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label fw-bold">Country</label>
+                                <p>@ViewData["country"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label fw-bold">Status</label>
+                                <span class="badge rounded-pill badge-soft-@ViewData["statusColor"] d-table">@ViewData["statusName"]</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Contact Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-4">
+                                <label class="form-label fw-bold">Contact Name</label>
+                                <p>@contactNamesString</p>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label fw-bold">Contact E-mail</label>
+                                <p>@contactEmailsString</p>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label fw-bold">Contact Phone</label>
+                                <p>@contactPhonesString</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

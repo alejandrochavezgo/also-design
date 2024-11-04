@@ -7,3 +7,10 @@
 [Ll]ogs/
 *.log
 .DS_Store
+entities/bin/Debug/net7.0/
+providerData/bin/Debug/net7.0/
+data/bin/Debug/net7.0/
+common/bin/Debug/net7.0/
+business/bin/Debug/net7.0/
+app/bin/Debug/net7.0/
+api/bin/Debug/net7.0/

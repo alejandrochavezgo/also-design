@@ -1,0 +1,186 @@
+@{
+    ViewData["title"] = "Inventory Details | Also Design";
+    var itemImageString = ViewData["itemImageString"]?.ToString();
+}
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Item Details</h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item color-495057">Inventory</li>
+                            <li class="breadcrumb-item color-495057">Item Details</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Item Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-3">
+                                <label class="form-label fw-bold">Item Code</label>
+                                <p class="form-control fw-medium bg-light border-0">@ViewData["itemCode"]</p>
+                            </div>
+                            <div class="col-5">
+                                <label class="form-label fw-bold">Item Name</label>
+                                <p class="form-control fw-medium bg-light border-0">@ViewData["itemName"]</p>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label fw-bold">Status</label>
+                                <span class="badge rounded-pill badge-soft-@ViewData["statusColor"] d-table">@ViewData["statusName"]</span>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Description</label>
+                                <p class="form-control fw-medium bg-light border-0">@ViewData["description"]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Technical Specifications</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="form-label fw-bold">Material</label>
+                                <p>@ViewData["material"]</p>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-bold">Finish Type</label>
+                                <p>@ViewData["finishType"]</p>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-3">
+                                <label class="form-label fw-bold">Diameter</label>
+                                <p>@ViewData["diameter"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label fw-bold">Unit</label>
+                                <p>@ViewData["unitDiameter"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label fw-bold">Length</label>
+                                <p>@ViewData["length"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label fw-bold">Unit</label>
+                                <p>@ViewData["unitLength"]</p>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-3">
+                                <label class="form-label fw-bold">Weight</label>
+                                <p>@ViewData["weight"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label fw-bold">Unit</label>
+                                <p>@ViewData["unitWeight"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label fw-bold">Tolerance</label>
+                                <p>@ViewData["tolerance"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label fw-bold">Unit</label>
+                                <p>@ViewData["unitTolerance"]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Inventory Management</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="form-label fw-bold">Warehouse Location</label>
+                                <p>@ViewData["warehouseLocation"]</p>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-bold">Re-order Quantity</label>
+                                <p>@ViewData["reorderQty"]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Associated Documents</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @if (!string.IsNullOrEmpty(itemImageString))
+                            {
+                                <div class="col-12 text-center">
+                                    <img id="itemImage" src="@itemImageString" class="rounded avatar-md mb-1" />
+                                </div>
+                            }
+                            <div class="col-12 pt-27px">
+                                <label class="form-label fw-bold">Blueprints</label>
+                            </div>
+                            @if (ViewData["hasBluePrints"] != null && (bool)ViewData["hasBluePrints"])
+                            {
+                                <div class="col-12 pt-10px">
+                                    <button id="downloadBluePrints" type="button" class="btn btn-info btn-icon waves-effect waves-light w-100per">
+                                        <i class=" ri-file-download-fill"></i>
+                                    </button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-12 text-center">
+                                    <span class="badge bg-dark p-10px w-100per">None</span>
+                                </div>
+                            }
+                            <div class="col-12 pt-27px">
+                                <label class="form-label fw-bold">Technical Specifications</label>
+                            </div>
+                            @if (ViewData["hasTechnicalSpecifications"] != null && (bool)ViewData["hasTechnicalSpecifications"])
+                            {
+                                <div class="col-12 pt-10px">
+                                    <button id="downloadTechnicalSpecifications" type="button" class="btn btn-info btn-icon waves-effect waves-light w-100per">
+                                        <i class=" ri-file-download-fill"></i>
+                                    </button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-12 text-center">
+                                    <span class="badge bg-dark p-10px w-100per">None</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Additional Remarks</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Notes</label>
+                                <p class="form-control fw-medium bg-light border-0">@ViewData["notes"]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
