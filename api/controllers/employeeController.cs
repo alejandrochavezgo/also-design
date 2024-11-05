@@ -14,11 +14,15 @@ public class employeeController : ControllerBase
 {
     private IUserService _userService;
     private facadeEmployee _facadeEmployee;
+    private providerData.entitiesData.userModel _user;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public employeeController(IUserService userService)
+    public employeeController(IUserService userService, IHttpContextAccessor httpContextAccessor)
     {
         _userService = userService;
-        _facadeEmployee = new facadeEmployee();
+        _httpContextAccessor = httpContextAccessor;
+        _user = (providerData.entitiesData.userModel)_httpContextAccessor!.HttpContext?.Items["user"]!;
+        _facadeEmployee = new facadeEmployee(new entities.models.userModel { id = _user.id });
     }
 
     [HttpGet("getAllEmployeeCatalogs")]

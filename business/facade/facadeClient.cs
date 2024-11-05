@@ -10,11 +10,15 @@ using entities.enums;
 public class facadeClient
 {
     private log _logger;
+    private userModel _user;
+    private facadeTrace _facadeTrace;
     private repositoryClient _repositoryClient;
 
-    public facadeClient()
+    public facadeClient(userModel user)
     {
+        _user = user;
         _logger = new log();
+        _facadeTrace = new facadeTrace();
         _repositoryClient = new repositoryClient();
     }
 
@@ -146,9 +150,20 @@ public class facadeClient
                     foreach(var phone in client.contactPhones)
                         if(!string.IsNullOrEmpty(phone))
                             _repositoryClient.addContactPhone(clientIdAdded, phone);
-                
+
                 var result = clientIdAdded > 0;
-                if(result)
+                var trace = _facadeTrace.addTrace(new traceModel
+                {
+                    traceType = traceType.ADD_CLIENT,
+                    entityType = entityType.CLIENT,
+                    userId = _user.id,
+                    comments = "CLIENT ADDED.",
+                    beforeChange = string.Empty,
+                    afterChange = string.Empty,
+                    entityId = clientIdAdded
+                });
+
+                if(result && trace > 0)
                     transactionScope.Complete();
                 else
                     transactionScope.Dispose();
@@ -186,7 +201,18 @@ public class facadeClient
                         _repositoryClient.addContactPhone(client.id, phone);
 
                 var result = _repositoryClient.updateClient(client) > 0;
-                if(result)
+                var trace = _facadeTrace.addTrace(new traceModel
+                {
+                    traceType = traceType.UPDATE_CLIENT,
+                    entityType = entityType.CLIENT,
+                    userId = _user.id,
+                    comments = "CLIENT UPDATED.",
+                    beforeChange = string.Empty,
+                    afterChange = string.Empty,
+                    entityId = client.id
+                });
+
+                if(result && trace > 0)
                     transactionScope.Complete();
                 else
                     transactionScope.Dispose();
@@ -204,17 +230,39 @@ public class facadeClient
 
     public bool deleteClientById(int id)
     {
-        try
+        using (var transactionScope = new TransactionScope())
         {
-            var client = _repositoryClient.getClientById(id);
-            if (client == null || client.status != (int)statusType.ACTIVE)
-                return false;
-            return _repositoryClient.deleteClientById(id);
-        }
-        catch (Exception exception)
-        {
-            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
-            throw exception;
+            try
+            {
+                var client = _repositoryClient.getClientById(id);
+                if (client == null || client.status != (int)statusType.ACTIVE)
+                    return false;
+
+                var result = _repositoryClient.deleteClientById(id);
+                var trace = _facadeTrace.addTrace(new traceModel
+                {
+                    traceType = traceType.DELETE_CLIENT,
+                    entityType = entityType.CLIENT,
+                    userId = _user.id,
+                    comments = "CLIENT DELETED.",
+                    beforeChange = string.Empty,
+                    afterChange = string.Empty,
+                    entityId = client.id
+                });
+
+                if(result && trace > 0)
+                    transactionScope.Complete();
+                else
+                    transactionScope.Dispose();
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                transactionScope.Dispose();
+                _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+                throw exception;
+            }
         }
     }
 }

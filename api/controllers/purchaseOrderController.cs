@@ -16,11 +16,15 @@ public class purchaseOrderController : ControllerBase
 {
     private IUserService _userService;
     private facadePurchaseOrder _facadePurchaseOrder;
+    private providerData.entitiesData.userModel _user;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public purchaseOrderController(IUserService userService)
+    public purchaseOrderController(IUserService userService, IHttpContextAccessor httpContextAccessor)
     {
         _userService = userService;
-        _facadePurchaseOrder = new facadePurchaseOrder();
+        _httpContextAccessor = httpContextAccessor;
+        _user = (providerData.entitiesData.userModel)_httpContextAccessor!.HttpContext?.Items["user"]!;
+        _facadePurchaseOrder = new facadePurchaseOrder(new entities.models.userModel { id = _user.id });
     }
 
     [HttpGet("getAllPurchaseOrderCatalogs")]

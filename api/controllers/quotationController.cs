@@ -16,11 +16,15 @@ public class quotationController : ControllerBase
 {
     private IUserService _userService;
     private facadeQuotation _facadeQuotation;
+    private providerData.entitiesData.userModel _user;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public quotationController(IUserService userService)
+    public quotationController(IUserService userService, IHttpContextAccessor httpContextAccessor)
     {
         _userService = userService;
-        _facadeQuotation = new facadeQuotation();
+        _httpContextAccessor = httpContextAccessor;
+        _user = (providerData.entitiesData.userModel)_httpContextAccessor!.HttpContext?.Items["user"]!;
+        _facadeQuotation = new facadeQuotation(new entities.models.userModel { id = _user.id });
     }
 
     [HttpGet("getAllQuotationCatalogs")]

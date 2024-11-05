@@ -10,11 +10,15 @@ using entities.enums;
 public class facadeSupplier
 {
     private log _logger;
+    private userModel _user;
+    private facadeTrace _facadeTrace;
     private repositorySupplier _repositorySupplier;
 
-    public facadeSupplier()
+    public facadeSupplier(userModel user)
     {
+        _user = user;
         _logger = new log();
+        _facadeTrace = new facadeTrace();
         _repositorySupplier = new repositorySupplier();
     }
 
@@ -148,7 +152,18 @@ public class facadeSupplier
                             _repositorySupplier.addContactPhone(supplierIdAdded, phone);
                 
                 var result = supplierIdAdded > 0;
-                if(result)
+                var trace = _facadeTrace.addTrace(new traceModel
+                {
+                    traceType = traceType.ADD_SUPPLIER,
+                    entityType = entityType.SUPPLIER,
+                    userId = _user.id,
+                    comments = "SUPPLIER ADDED.",
+                    beforeChange = string.Empty,
+                    afterChange = string.Empty,
+                    entityId = supplierIdAdded
+                });
+
+                if(result && trace > 0)
                     transactionScope.Complete();
                 else
                     transactionScope.Dispose();
@@ -186,7 +201,18 @@ public class facadeSupplier
                         _repositorySupplier.addContactPhone(supplier.id, phone);
 
                 var result = _repositorySupplier.updateSupplier(supplier) > 0;
-                if(result)
+                var trace = _facadeTrace.addTrace(new traceModel
+                {
+                    traceType = traceType.UPDATE_SUPPLIER,
+                    entityType = entityType.SUPPLIER,
+                    userId = _user.id,
+                    comments = "SUPPLIER UPDATED.",
+                    beforeChange = string.Empty,
+                    afterChange = string.Empty,
+                    entityId = supplier.id
+                });
+
+                if(result && trace > 0)
                     transactionScope.Complete();
                 else
                     transactionScope.Dispose();
@@ -204,17 +230,39 @@ public class facadeSupplier
 
     public bool deleteSupplierById(int id)
     {
-        try
+        using (var transactionScope = new TransactionScope())
         {
-            var supplier = _repositorySupplier.getSupplierById(id);
-            if (supplier == null || supplier.status != (int)statusType.ACTIVE)
-                return false;
-            return _repositorySupplier.deleteSupplierById(id);
-        }
-        catch (Exception exception)
-        {
-            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
-            throw exception;
+            try
+            {
+                var supplier = _repositorySupplier.getSupplierById(id);
+                if (supplier == null || supplier.status != (int)statusType.ACTIVE)
+                    return false;
+
+                var result = _repositorySupplier.deleteSupplierById(id);
+                var trace = _facadeTrace.addTrace(new traceModel
+                {
+                    traceType = traceType.DELETE_SUPPLIER,
+                    entityType = entityType.SUPPLIER,
+                    userId = _user.id,
+                    comments = "SUPPLIER DELETED.",
+                    beforeChange = string.Empty,
+                    afterChange = string.Empty,
+                    entityId = supplier.id
+                });
+
+                if(result && trace > 0)
+                    transactionScope.Complete();
+                else
+                    transactionScope.Dispose();
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                transactionScope.Dispose();
+                _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+                throw exception;
+            }
         }
     }
 }

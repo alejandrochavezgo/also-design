@@ -170,6 +170,49 @@ public class inventoryController : Controller
         }
     }
 
+    [HttpGet("inventory/getInventoryMovementsByPurchaseOrderIdAndInventoryItemId")]
+    public async Task<IActionResult> getInventoryMovementsByPurchaseOrderIdAndInventoryItemId(int purchaseOrderId, int inventoryItemId)
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var url = $"{configurationManager.appSettings["api:routes:inventory:getInventoryMovementsByPurchaseOrderIdAndInventoryItemId"]}?purchaseOrderId={purchaseOrderId}&inventoryItemId={inventoryItemId}";
+            var responseGet = await clientHttp.GetAsync(url);
+            if (!responseGet.IsSuccessStatusCode)
+            {
+                var errorMessage = await responseGet.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responseGet.ReasonPhrase : errorMessage;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{message}"
+                });
+            }
+
+            var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
+            var results = JsonConvert.DeserializeObject<IEnumerable<inventoryMovementModel>>(responseGetAsJson);
+            clientHttp.Dispose();
+
+            return Json(new
+            {
+                isSuccess = true,
+                message = "Ok.",
+                results
+            });
+        }
+        catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
+
     [HttpGet("inventory/getItemByTerm")]
     public async Task<IActionResult> getItemByTerm(string description)
     {

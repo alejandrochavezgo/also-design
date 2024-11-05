@@ -8,6 +8,7 @@ using providerData.entitiesData;
 using Newtonsoft.Json;
 using common.helpers;
 using entities.enums;
+using entities.models;
 
 [ApiController]
 [authorize]
@@ -16,11 +17,15 @@ public class clientController : ControllerBase
 {
     private IUserService _userService;
     private facadeClient _facadeClient;
+    private providerData.entitiesData.userModel _user;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public clientController(IUserService userService)
+    public clientController(IUserService userService, IHttpContextAccessor httpContextAccessor)
     {
         _userService = userService;
-        _facadeClient = new facadeClient();
+        _httpContextAccessor = httpContextAccessor;
+        _user = (providerData.entitiesData.userModel)_httpContextAccessor!.HttpContext?.Items["user"]!;
+        _facadeClient = new facadeClient(new entities.models.userModel { id = _user.id });
     }
 
     [HttpGet("getAllClientCatalogs")]

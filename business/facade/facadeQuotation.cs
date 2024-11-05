@@ -10,11 +10,15 @@ using System.Transactions;
 public class facadeQuotation
 {
     private log _logger;
+    private userModel _user;
+    private facadeTrace _facadeTrace;
     private repositoryQuotation _repositoryQuotation;
 
-    public facadeQuotation()
+    public facadeQuotation(userModel user)
     {
+        _user = user;
         _logger = new log();
+        _facadeTrace = new facadeTrace();
         _repositoryQuotation = new repositoryQuotation();
     }
 
@@ -47,8 +51,24 @@ public class facadeQuotation
                         throw new Exception($"Error at saving the quotation item.");
                 }
 
-                transactionScope.Complete();
-                return true;
+                var result = quotationIdAdded > 0;
+                var trace = _facadeTrace.addTrace(new traceModel
+                {
+                    traceType = traceType.ADD_QUOTATION,
+                    entityType = entityType.QUOTATION,
+                    userId = _user.id,
+                    comments = "QUOTATION ADDED.",
+                    beforeChange = string.Empty,
+                    afterChange = string.Empty,
+                    entityId = quotationIdAdded
+                });
+
+                if(result && trace > 0)
+                    transactionScope.Complete();
+                else
+                    transactionScope.Dispose();
+
+                return result;
             }
             catch (Exception exception)
             {
@@ -105,8 +125,24 @@ public class facadeQuotation
                             throw new Exception($"Error at saving the new quotation item.");
                     }
 
-                transactionScope.Complete();
-                return true;
+                var result = quotationIdUpdated > 0;
+                var trace = _facadeTrace.addTrace(new traceModel
+                {
+                    traceType = traceType.UPDATE_QUOTATION,
+                    entityType = entityType.QUOTATION,
+                    userId = _user.id,
+                    comments = "QUOTATION UPDATED.",
+                    beforeChange = string.Empty,
+                    afterChange = string.Empty,
+                    entityId = quotationIdUpdated
+                });
+
+                if(result && trace > 0)
+                    transactionScope.Complete();
+                else
+                    transactionScope.Dispose();
+
+                return result;
             }
             catch (Exception exception)
             {
@@ -119,17 +155,39 @@ public class facadeQuotation
 
     public bool deleteQuotationById(int id)
     {
-        try
+        using (var transactionScope = new TransactionScope())
         {
-            var quotation = _repositoryQuotation.getQuotationById(id);
-            if (quotation == null || quotation.status != (int)statusType.ACTIVE)
-                return false;
-            return _repositoryQuotation.deleteQuotationById(id);
-        }
-        catch (Exception exception)
-        {
-            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
-            throw exception;
+            try
+            {
+                var quotation = _repositoryQuotation.getQuotationById(id);
+                if (quotation == null || quotation.status != (int)statusType.ACTIVE)
+                    return false;
+
+                var result = _repositoryQuotation.deleteQuotationById(id);
+                var trace = _facadeTrace.addTrace(new traceModel
+                {
+                    traceType = traceType.DELETE_QUOTATION,
+                    entityType = entityType.QUOTATION,
+                    userId = _user.id,
+                    comments = "QUOTATION DELETED.",
+                    beforeChange = string.Empty,
+                    afterChange = string.Empty,
+                    entityId = quotation.id
+                });
+
+                if(result && trace > 0)
+                    transactionScope.Complete();
+                else
+                    transactionScope.Dispose();
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                transactionScope.Dispose();
+                _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+                throw exception;
+            }
         }
     }
 

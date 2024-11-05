@@ -202,6 +202,27 @@ public class repositoryInventory : baseRepository
         }
     }
 
+    public List<inventoryMovementModel> getInventoryMovementsByPurchaseOrderIdAndInventoryItemId(int inventoryItemId)
+    {
+        try
+        {
+            return factoryGetInventoryMovementsByPurchaseOrderIdAndInventoryItemId.getList((DbDataReader)_providerDB.GetDataReader("sp_getLastInventoryMovementsByPurchaseorderIdAndInventoryItemId", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB, "@inventoryItemId", DbType.Int32, inventoryItemId)
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public bool addInventoryItem(inventoryItemModel inventoryItem)
     {
         try

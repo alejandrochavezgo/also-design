@@ -43,6 +43,19 @@ public class facadeInventory
         }
     }
 
+    public List<inventoryMovementModel> getInventoryMovementsByPurchaseOrderIdAndInventoryItemId(int inventoryItemId)
+    {
+        try
+        {
+            return _repositoryInventory.getInventoryMovementsByPurchaseOrderIdAndInventoryItemId(inventoryItemId);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public bool addInventoryItem(inventoryItemModel inventoryItem)
     {
         try

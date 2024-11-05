@@ -2,6 +2,11 @@
     ViewData["title"] = "Inventory Details | Also Design";
     var itemImageString = ViewData["itemImageString"]?.ToString();
 }
+@section styles
+{
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+}
 <div class="page-content">
     <div class="container-fluid">
         <div class="row">
@@ -18,7 +23,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-9">
+            <div class="col-9">
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title">Item Information</h5>
@@ -26,6 +31,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-3">
+                                <input id="inventoryItemId" value="@ViewData["id"]" hidden>
                                 <label class="form-label fw-bold">Item Code</label>
                                 <p class="form-control fw-medium bg-light border-0">@ViewData["itemCode"]</p>
                             </div>
@@ -117,7 +123,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3">
+            <div class="col-3">
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title mb-0">Associated Documents</h5>
@@ -182,5 +188,44 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Recent inventory transactions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <table id="dvTableTransactions" class="table table-bordered align-middle mdl-data-table" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Movement Type</th>
+                                            <th>Quantity</th>
+                                            <th>Unit</th>
+                                            <th>Unit value</th>
+                                            <th>Total value</th>
+                                            <th>Username</th>
+                                            <th style="width: 200px;">Comments</th>
+                                            <th>Transaction date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+@section scripts
+{
+    <script src="../assets/js/pages/inventoryDetail.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+}

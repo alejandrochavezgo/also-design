@@ -10,14 +10,16 @@ using System.Transactions;
 public class facadePurchaseOrder
 {
     private log _logger;
+    private userModel _user;
+    private facadeTrace _facadeTrace;
     private repositoryPurchaseOrder _repositoryPurchaseOrder;
-    private repositoryTrace _repositoryTrace;
 
-    public facadePurchaseOrder()
+    public facadePurchaseOrder(userModel user)
     {
+        _user = user;
         _logger = new log();
+        _facadeTrace = new facadeTrace();
         _repositoryPurchaseOrder = new repositoryPurchaseOrder();
-        _repositoryTrace = new repositoryTrace();
     }
 
     public List<List<catalogModel>> getAllPurchaseOrderCatalogs()
@@ -65,8 +67,24 @@ public class facadePurchaseOrder
                         throw new Exception($"Error at saving the purchase order item.");
                 }
 
-                transactionScope.Complete();
-                return true;
+                var result = purchaseOrderIdAdded > 0;
+                var trace = _facadeTrace.addTrace(new traceModel
+                {
+                    traceType = traceType.ADD_PURCHASE_ORDER,
+                    entityType = entityType.PURCHASE_ORDER,
+                    userId = _user.id,
+                    comments = "PURCHASE ORDER ADDED.",
+                    beforeChange = string.Empty,
+                    afterChange = string.Empty,
+                    entityId = purchaseOrderIdAdded
+                });
+
+                if(result && trace > 0)
+                    transactionScope.Complete();
+                else
+                    transactionScope.Dispose();
+
+                return result;
             }
             catch (Exception exception)
             {
@@ -107,8 +125,24 @@ public class facadePurchaseOrder
                             throw new Exception($"Error at saving the purchase order item.");
                     }
 
-                transactionScope.Complete();
-                return true;
+                var result = purchaseOrderIdUpdated > 0;
+                var trace = _facadeTrace.addTrace(new traceModel
+                {
+                    traceType = traceType.UPDATE_PURCHASE_ORDER,
+                    entityType = entityType.PURCHASE_ORDER,
+                    userId = _user.id,
+                    comments = "PURCHASE ORDER UPDATED.",
+                    beforeChange = string.Empty,
+                    afterChange = string.Empty,
+                    entityId = purchaseOrderFromDatabase.id
+                });
+
+                if(result && trace > 0)
+                    transactionScope.Complete();
+                else
+                    transactionScope.Dispose();
+
+                return result;
             }
             catch (Exception exception)
             {
@@ -121,17 +155,38 @@ public class facadePurchaseOrder
 
     public bool deletePurchaseOrderById(int id)
     {
-        try
+        using (var transactionScope = new TransactionScope())
         {
-            var purchaseOrder = _repositoryPurchaseOrder.getPurchaseOrderById(id);
-            if (purchaseOrder == null || purchaseOrder.status != (int)statusType.ACTIVE)
-                return false;
-            return _repositoryPurchaseOrder.deletePurchaseOrderById(id);
-        }
-        catch (Exception exception)
-        {
-            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
-            throw exception;
+            try
+            {
+                var purchaseOrder = _repositoryPurchaseOrder.getPurchaseOrderById(id);
+                if (purchaseOrder == null || purchaseOrder.status != (int)statusType.ACTIVE)
+                    return false;
+
+                var result = _repositoryPurchaseOrder.deletePurchaseOrderById(id);
+                var trace = _facadeTrace.addTrace(new traceModel
+                {
+                    traceType = traceType.DELETE_PURCHASE_ORDER,
+                    entityType = entityType.PURCHASE_ORDER,
+                    userId = _user.id,
+                    comments = "PURCHASE ORDER DELETED.",
+                    beforeChange = string.Empty,
+                    afterChange = string.Empty,
+                    entityId = purchaseOrder.id
+                });
+
+                if(result && trace > 0)
+                    transactionScope.Complete();
+                else
+                    transactionScope.Dispose();
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+                throw exception;
+            }
         }
     }
 

@@ -61,6 +61,19 @@ public class inventoryController : ControllerBase
         }
     }
 
+    [HttpGet("getInventoryMovementsByPurchaseOrderIdAndInventoryItemId")]
+    public IActionResult getInventoryMovementsByPurchaseOrderIdAndInventoryItemId(int inventoryItemId)
+    {
+        try
+        {
+            return Ok(_facadeInventory.getInventoryMovementsByPurchaseOrderIdAndInventoryItemId(inventoryItemId));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { isSuccess = false, message = e.Message });
+        }
+    }
+
     [HttpPost("add")]
     public IActionResult add(entities.models.inventoryItemModel inventoryItem)
     {

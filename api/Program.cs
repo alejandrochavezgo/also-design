@@ -47,7 +47,8 @@ try
         //Configure DI for application services.
         services.AddScoped<IJwtUtils, jwtUtils>();
         services.AddScoped<IUserService, userService>();
-        
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
         #region ::services - provider for sql server
         log.logDebug("\t[+] SQL Server provider service...");
         System.Data.Common.DbProviderFactories.RegisterFactory(common.configurations.configurationManager.appSettings["providers:alsoProviderName"]!, System.Data.SqlClient.SqlClientFactory.Instance);

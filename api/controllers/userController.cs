@@ -12,13 +12,18 @@ using Newtonsoft.Json;
 [Route("[controller]")]
 public class userController : ControllerBase
 {
-    private IUserService _userService;
+    private userModel _user;
     private facadeUser _facadeUser;
+    private facadeTrace _facadeTrace;
+    private IUserService _userService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public userController(IUserService userService)
+    public userController(IUserService userService, IHttpContextAccessor httpContextAccessor)
     {
         _userService = userService;
-        _facadeUser = new facadeUser();
+        _httpContextAccessor = httpContextAccessor;
+        _user = (providerData.entitiesData.userModel)_httpContextAccessor!.HttpContext?.Items["user"]!;
+        _facadeUser = new facadeUser(new entities.models.userModel { id = _user.id });
     }
 
     [HttpGet("getAllUserCatalogs")]

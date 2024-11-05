@@ -14,6 +14,10 @@ public class inventoryMovementModel
     public double quantity { get; set; }
     public packingUnitType unit { get; set; }
     public string? comments { get; set; }
+    public string? inventoryItemName { get; set; }
+    public string? creatorUsername { get; set; }
+    public string? packingUnitTypeDescription { get; set; }
+    public string? inventoryMovementTypeDescription { get; set; }
     public DateTime creationDate { get; set; }
     public decimal unitValue { get; set; }
     public decimal totalValue { get; set; }

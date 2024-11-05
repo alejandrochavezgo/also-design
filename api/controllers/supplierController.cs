@@ -15,11 +15,15 @@ public class supplierController : ControllerBase
 {
     private IUserService _userService;
     private facadeSupplier _facadeSupplier;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private providerData.entitiesData.userModel _user;
 
-    public supplierController(IUserService userService)
+    public supplierController(IUserService userService, IHttpContextAccessor httpContextAccessor)
     {
         _userService = userService;
-        _facadeSupplier = new facadeSupplier();
+        _httpContextAccessor = httpContextAccessor;
+        _user = (providerData.entitiesData.userModel)_httpContextAccessor!.HttpContext?.Items["user"]!;
+        _facadeSupplier = new facadeSupplier(new entities.models.userModel { id = _user.id });
     }
 
     [HttpGet("getAllSupplierCatalogs")]
