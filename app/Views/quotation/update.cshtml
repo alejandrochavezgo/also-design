@@ -247,8 +247,26 @@
 @section scripts
 {
     <script type="text/javascript">
-        $('#seClientContactNames').val("@ViewData["client.mainContactName"]");
-        $('#seClientContactPhones').val("@ViewData["client.mainContactPhone"]");
+        function decodeHtmlEntities(str) {
+            return str
+                .replace(/&#x2B;/g, '+')
+                .replace(/&#xE1;/g, 'á')
+                .replace(/&#xC1;/g, 'Á')
+                .replace(/&#xE9;/g, 'é')
+                .replace(/&#xC9;/g, 'É')
+                .replace(/&#xED;/g, 'í')
+                .replace(/&#xCD;/g, 'Í')
+                .replace(/&#xF3;/g, 'ó')
+                .replace(/&#xD3;/g, 'Ó')
+                .replace(/&#xFA;/g, 'ú')
+                .replace(/&#xDA;/g, 'Ú')
+                .replace(/&#xFC;/g, 'ü')
+                .replace(/&#xDC;/g, 'Ü')
+                .replace(/&#xF1;/g, 'ñ')
+                .replace(/&#xD1;/g, 'Ñ');
+        }
+        $('#seSupplierContactNames').val("@ViewData["client.mainContactName"]");
+        $('#seSupplierContactPhones').val("@ViewData["client.mainContactPhone"]");
         $('#seEmployeeContactPhone').val("@ViewData["employee.mainContactPhone"]");
     </script>
     <script src="../assets/js/pages/quotationUpdate.js"></script>

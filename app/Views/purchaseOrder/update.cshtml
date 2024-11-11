@@ -243,9 +243,27 @@
 @section scripts
 {
     <script type="text/javascript">
-        $('#seSupplierContactNames').val("@ViewData["supplier.mainContactName"]");
-        $('#seSupplierContactPhones').val("@ViewData["supplier.mainContactPhone"]");
-        $('#seEmployeeContactPhone').val("@ViewData["employee.mainContactPhone"]");
+        function decodeHtmlEntities(str) {
+            return str
+                .replace(/&#x2B;/g, '+')
+                .replace(/&#xE1;/g, 'á')
+                .replace(/&#xC1;/g, 'Á')
+                .replace(/&#xE9;/g, 'é')
+                .replace(/&#xC9;/g, 'É')
+                .replace(/&#xED;/g, 'í')
+                .replace(/&#xCD;/g, 'Í')
+                .replace(/&#xF3;/g, 'ó')
+                .replace(/&#xD3;/g, 'Ó')
+                .replace(/&#xFA;/g, 'ú')
+                .replace(/&#xDA;/g, 'Ú')
+                .replace(/&#xFC;/g, 'ü')
+                .replace(/&#xDC;/g, 'Ü')
+                .replace(/&#xF1;/g, 'ñ')
+                .replace(/&#xD1;/g, 'Ñ');
+        }
+        $('#seSupplierContactNames').val(decodeHtmlEntities("@ViewData["supplier.mainContactName"]"));
+        $('#seSupplierContactPhones').val(decodeHtmlEntities("@ViewData["supplier.mainContactPhone"]"));
+        $('#seEmployeeContactPhone').val(decodeHtmlEntities("@ViewData["employee.mainContactPhone"]"));
     </script>
     <script src="../assets/js/pages/purchaseOrderUpdate.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
