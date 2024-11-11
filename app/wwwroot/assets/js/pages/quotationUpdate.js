@@ -561,6 +561,14 @@ function isValidForm(quotation) {
 }
 
 $(document).ready(function() {
+    $('#loader').show();
+    $('#tbItems tr').each(function() {
+        const hiddenInput = $(this).find('input.unitSelected');
+        const selectElement = $(this).find('select.form-select');
+        if (hiddenInput.length && selectElement.length) {
+            selectElement.val(hiddenInput.val());
+        }
+    });
     updateAddAndRemoveButtons();
     initializeClientAutocomplete();
     initializeInputTaxMasks();

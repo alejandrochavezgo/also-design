@@ -250,7 +250,7 @@ public class repositoryQuotation : baseRepository
                 quotationItemIdUpdated,
                 dataFactory.getObjParameter(configurationManager.providerDB,"@quotationItemId", DbType.Int32, quotationItem.id),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@quantity", DbType.Int32, quotationItem.quantity),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@unit", DbType.String, quotationItem.unit!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@unit", DbType.Int32, quotationItem.unit!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@unitValue", DbType.Decimal, quotationItem.unitValue),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@totalValue", DbType.Decimal, quotationItem.totalValue),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@description", DbType.String, quotationItem.description!),
@@ -259,7 +259,6 @@ public class repositoryQuotation : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB,"@imagePath", DbType.String, quotationItem.imagePath!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@notes", DbType.String, quotationItem.notes!)
             });
-
             return Convert.ToInt32(quotationItemIdUpdated.Value);
         }
         catch (SqlException SqlException)

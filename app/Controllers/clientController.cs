@@ -304,7 +304,7 @@ public class clientController : Controller
     {
         try
         {
-            if (!ModelState.IsValid || !clientFormHelper.isUpdateFormValid(client, true))
+            if (!ModelState.IsValid || !clientFormHelper.isUpdateFormValid(client))
                 return Json(new
                 {
                     isSuccess = false,
@@ -376,7 +376,7 @@ public class clientController : Controller
             return Json(new
             { 
                 isSuccess = true,
-                message = "Purchase order deleted successfully."
+                message = "Client deleted successfully."
             });
         }
         catch(Exception exception)

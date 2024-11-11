@@ -374,7 +374,7 @@ public class supplierController : Controller
             return Json(new
             { 
                 isSuccess = true,
-                message = "Purchase order deleted successfully."
+                message = "Supplier deleted successfully."
             });
         }
         catch(Exception exception)

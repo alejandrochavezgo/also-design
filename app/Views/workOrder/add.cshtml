@@ -1,0 +1,188 @@
+@{
+    ViewData["title"] = "Add Work Order | Also Design";
+}
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Add Work Order</h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item color-495057">Work Order</li>
+                            <li class="breadcrumb-item color-495057">Add Work Order</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">1) Select Quotation</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-3">
+                                <label for="inQuotation" class="form-label">QUOTATION</label>
+                                <input type="text" class="form-control uppercase-input" id="inQuotation" placeholder="Enter quotation code">
+                            </div>
+                            <div class="col-3">
+                                <label for="pCode" class="form-label fw-bold">CODE</label>
+                                <p class="form-control bg-light border-0" id="pCode">&nbsp;</p>
+                            </div>
+                            <div class="col-3">
+                                <label for="pClient" class="form-label fw-bold">CLIENT</label>
+                                <p class="form-control bg-light border-0" id="pClient">&nbsp;</p>
+                            </div>
+                            <div class="col-3">
+                                <label for="pPaymentType" class="form-label fw-bold">PAYMENT TYPE</label>
+                                <p class="form-control bg-light border-0" id="pPaymentType">&nbsp;</p>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-3">
+                                <label for="pCurrency" class="form-label fw-bold">CURRENCY</label>
+                                <p class="form-control bg-light border-0" id="pCurrency">&nbsp;</p>
+                            </div>
+                            <div class="col-3">
+                                <label for="pSubTotal" class="form-label fw-bold">SUB TOTAL</label>
+                                <p class="form-control bg-light border-0" id="pSubTotal">&nbsp;</p>
+                            </div>
+                            <div class="col-3">
+                                <label for="pTax" class="form-label fw-bold">TAX</label>
+                                <p class="form-control bg-light border-0" id="pTax">&nbsp;</p>
+                            </div>
+                            <div class="col-3">
+                                <label for="pTotal" class="form-label fw-bold">TOTAL</label>
+                                <p class="form-control bg-light border-0" id="pTotal">&nbsp;</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">2) Load Work Order Items</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <table class="table table-borderless text-center align-middle mb-0">
+                                    <thead>
+                                        <tr class="table-active">
+                                            <th scope="col" style=""></th>
+                                            <th scope="col" style="width: 50px;">#</th>
+                                            <th scope="col" class="w-50per">Description</th>
+                                            <th scope="col">Quantity</th>
+                                            <th scope="col">Unit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbItems">
+                                        <tr>
+                                            <td class="width-0per"></td>
+                                            <td scope="row">1</td>
+                                            <td class="text-start">
+                                                <p class="form-control fw-medium mb-1 bg-light border-0">&nbsp;</p>
+                                                <p class="form-control fw-medium mb-1 bg-light border-0">&nbsp;</p>
+                                                <p class="form-control fw-medium mb-1 bg-light border-0">&nbsp;</p>
+                                                <p class="form-control fw-medium bg-light border-0" placeholder="Notes">&nbsp;</p>
+                                            </td>
+                                            <td>
+                                                &nbsp;
+                                            </td>
+                                            <td>
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-6 d-flex align-items-center">
+                                <div class="row d-flex align-items-center justify-content-center w-100">
+                                    <div class="col-3">
+                                        <label for="pMaterial" class="form-label">Material</label>
+                                        <input type="text" class="form-control uppercase-input" id="inMaterial" maxlength="200" placeholder="Search item...">
+                                    </div>
+                                    <div class="col-3">
+                                        <label for="inQuantity" class="form-label">Quantity</label>
+                                        <input type="text" class="form-control numerical-mask" id="inQuantity" value="0">
+                                    </div>
+                                    <div class="col-3">
+                                        <label for="pUnit" class="form-label">Unit</label>
+                                        <select class="form-select">
+                                            <option value="">Select option</option>
+                                            <option value="1">EACH (EA)</option>
+                                            <option value="2">BOX (BOX)</option>
+                                            <option value="3">PACKAGE (PKG)</option>
+                                            <option value="4">SET (SET)</option>
+                                            <option value="5">PALLET (PAL)</option>
+                                            <option value="6">POUND (LB)</option>
+                                            <option value="7">KILOGRAM (KG)</option>
+                                            <option value="8">METER (M)</option>
+                                            <option value="9">LITER (L)</option>
+                                            <option value="10">FOOT (FT)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <label for="btSteps" class="form-label">&nbsp;</label>
+                                        <button id="btSteps" type="button" class="btn btn-secondary btn-label waves-effect waves-light w-100">
+                                            <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i> Add Steps
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">3) Work Order Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-4">
+                                <label class="form-label">PRIORITY</label>
+                                <select id="sePriority" class="form-select">
+                                    <option value="">Select option</option>
+                                    <option value="1">LOW</option>
+                                    <option value="2">MEDIUM</option>
+                                    <option value="3">HIGH</option>
+                                    <option value="4">CRITICAL</option>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label"># RFQ</label>
+                                <input type="text" class="form-control numerical-mask" id="inRfq" placeholder="RFQ">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">DELIVERY DATE</label>
+                                <input type="date" class="form-control" id="inDeliveryDate">
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-warning w-100per" onclick="window.location.reload(true)">Refresh</button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-success w-100per" onclick="add()">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script src="../assets/js/pages/workOrderAdd.js"></script>
+}

@@ -23,7 +23,8 @@ public class userController : ControllerBase
         _userService = userService;
         _httpContextAccessor = httpContextAccessor;
         _user = (providerData.entitiesData.userModel)_httpContextAccessor!.HttpContext?.Items["user"]!;
-        _facadeUser = new facadeUser(new entities.models.userModel { id = _user.id });
+        if (_user != null)
+            _facadeUser = new facadeUser(new entities.models.userModel { id = _user.id });
     }
 
     [HttpGet("getAllUserCatalogs")]
