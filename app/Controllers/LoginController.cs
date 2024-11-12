@@ -29,6 +29,7 @@ public class loginController : Controller
     [HttpGet]
     public IActionResult login()
     {
+        Response.Cookies.Delete("userCookie");
         return View();
     }
 
@@ -158,6 +159,30 @@ public class loginController : Controller
             {
                 isSuccess = true,
                 url = "/dashboard/dashboard",
+                message = "Ok."
+            });
+        }
+        catch (Exception e)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                url = string.Empty,
+                message = $"Unexpected error has ocurred: {e.Message}.\nPlease refresh the page and try again."
+            });
+        }
+    }
+
+    [HttpPost]
+    public JsonResult logout()
+    {
+        try
+        {
+            Response.Cookies.Delete("userCookie");
+            return Json(new
+            {
+                isSuccess = true,
+                url = "/login/login",
                 message = "Ok."
             });
         }

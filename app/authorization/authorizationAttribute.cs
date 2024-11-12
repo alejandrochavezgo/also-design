@@ -20,7 +20,7 @@ public sealed class authorizationAttribute : Attribute, IAuthorizationFilter
                 context!.Result = new RedirectToRouteResult(new RouteValueDictionary {
                     {"controller", "error"},
                     {"action", "error"},
-                    {"errorMessage", "No context"}
+                    {"errorMessage", "No context."}
                 });
                 return;
             }
@@ -29,9 +29,8 @@ public sealed class authorizationAttribute : Attribute, IAuthorizationFilter
             if (userCookie == null)
             {
                 context!.Result = new RedirectToRouteResult(new RouteValueDictionary {
-                    {"controller", "error"},
-                    {"action", "error"},
-                    {"errorMessage", "No cookie"}
+                    {"controller", "login"},
+                    {"action", "login"}
                 });
                 return;
             }
@@ -42,7 +41,7 @@ public sealed class authorizationAttribute : Attribute, IAuthorizationFilter
                 context!.Result = new RedirectToRouteResult(new RouteValueDictionary {
                     {"controller", "error"},
                     {"action", "error"},
-                    {"errorMessage", "No path provider"}
+                    {"errorMessage", "No path provider."}
                 });
                 return;
             }
@@ -50,9 +49,8 @@ public sealed class authorizationAttribute : Attribute, IAuthorizationFilter
             if (currentPath == "/login/login" || currentPath == "/")
             {
                 context!.Result = new RedirectToRouteResult(new RouteValueDictionary {
-                    {"controller", "login"},
-                    {"action", "logged"},
-                    {"errorMessage", "Logged"}
+                    {"controller", "dashboard"},
+                    {"action", "dashboard"}
                 });
                 return;
             }

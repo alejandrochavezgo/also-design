@@ -46,7 +46,7 @@ $(document).ready(function () {
                 password: $("#password").val(),
             };
 
-            fetch("login/login", {
+            fetch('login/login', {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json',

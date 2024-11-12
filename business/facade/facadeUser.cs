@@ -90,7 +90,12 @@ public class facadeUser
                 user.employee.profession = user.employee.profession.Trim().ToUpper();
                 user.employee.jobPosition = user.employee.jobPosition.Trim().ToUpper();
 
-                var result = _repositoryUser.updateUser(user) && _repositoryEmployee.updateEmployee(user.employee);
+                var result = true;
+                if (!string.IsNullOrEmpty(user.newPasswordHash))
+                    result = _repositoryUser.updateUserPassword(user.id, user.newPasswordHash);
+
+                result = result && _repositoryUser.updateUser(user) && _repositoryEmployee.updateEmployee(user.employee);
+
                 var employeeTrace = _facadeTrace.addTrace(new traceModel
                 {
                     traceType = traceType.UPDATE_EMPLOYEE,

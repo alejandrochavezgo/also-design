@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using common.configurations;
 using System.Text;
 using providerData.helpers;
+using app.helpers;
 
 [authorization]
 public class userController : Controller
@@ -85,7 +86,7 @@ public class userController : Controller
     {
         try
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || !userFormHelper.isAddFormValid(user))
                 {
                     return Json(new
                     { 
@@ -240,14 +241,12 @@ public class userController : Controller
     {
         try
         {
-            if (!ModelState.IsValid)
-                {
-                    return Json(new
-                    { 
-                        isSuccess = false,
-                        message = "Invalid data."
-                    });
-                }
+            if (!ModelState.IsValid || !userFormHelper.isUpdateFormValid(user))
+                return Json(new
+                { 
+                    isSuccess = false,
+                    message = "Invalid data."
+                });
 
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);

@@ -7,6 +7,9 @@ public class userModel
     public string? username { get; set; }
     public string? password { get; set; }
     public string? passwordHash { get; set; }
+    public string? newPasswordHash { get; set; }
+    public string? newPassword { get; set; }
+    public string? confirmNewPassword { get; set; }
     public string? email { get; set; }
     public string? firstname { get; set; }
     public string? lastname { get; set; }

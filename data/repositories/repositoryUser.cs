@@ -239,6 +239,31 @@ public class repositoryUser : baseRepository
         }
     }
 
+    public bool updateUserPassword(int userId, string newPasswordHash)
+    {
+        try
+        {
+            var userIdUpdated = dataFactory.getObjParameter(configurationManager.providerDB, "@userIdUpdated", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+            base._providerDB.ExecuteNonQuery("sp_updateUserPassword", new DbParameter[]
+            {
+                userIdUpdated,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@userId",DbType.Int32, userId),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@newPasswordHash",DbType.String, newPasswordHash)
+            });
+            return Convert.ToInt32(userIdUpdated.Value) > 0;
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public int addNonUser(userModel user)
     {
         try

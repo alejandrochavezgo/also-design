@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "cbx_app": {
+    "also_app": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

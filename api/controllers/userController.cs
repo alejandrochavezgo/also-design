@@ -6,6 +6,7 @@ using api.services;
 using business.facade;
 using providerData.entitiesData;
 using Newtonsoft.Json;
+using common.helpers;
 
 [ApiController]
 [authorize]
@@ -90,7 +91,7 @@ public class userController : ControllerBase
     {
         try
         {
-            if(user == null)
+            if(user == null || !new userFormHelper().isUpdateFormValid(user))
                 return BadRequest("The user was not modified.");
 
             if (!_facadeUser.updateUser(user))
@@ -128,7 +129,7 @@ public class userController : ControllerBase
     {
         try
         {
-            if(user == null)
+            if(user == null || !new userFormHelper().isAddFormValid(user))
                 return BadRequest("The user was not created.");
 
             if (!_facadeUser.addUser(user))
