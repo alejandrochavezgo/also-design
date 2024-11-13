@@ -15,14 +15,14 @@ using Microsoft.AspNetCore.Mvc.TagHelpers;
 using entities.enums;
 
 [authorization]
-public class settingsController : Controller
+public class settingController : Controller
 {
     private readonly IHttpClientFactory _clientFactory;
-    private readonly ILogger<settingsController> _logger;
+    private readonly ILogger<settingController> _logger;
     private readonly UserManager<applicationUser> _userManager;
     private readonly SignInManager<applicationUser> _signInManager;
 
-    public settingsController(ILogger<settingsController> logger, UserManager<applicationUser> userManager, SignInManager<applicationUser> signInManager, IHttpClientFactory clientFactory)
+    public settingController(ILogger<settingController> logger, UserManager<applicationUser> userManager, SignInManager<applicationUser> signInManager, IHttpClientFactory clientFactory)
     {
         _logger = logger;
         _userManager = userManager;
@@ -30,7 +30,7 @@ public class settingsController : Controller
         _clientFactory = clientFactory;
     }
 
-    [HttpGet("settings/user")]
+    [HttpGet("setting/user")]
     public async Task<IActionResult> user()
     {
         try
@@ -79,7 +79,7 @@ public class settingsController : Controller
         }
     }
 
-    [HttpPost("settings/updateUser")]
+    [HttpPost("setting/updateUser")]
     public async Task<JsonResult> updateUser([FromBody] userModel user)
     {
         try
@@ -171,7 +171,7 @@ public class settingsController : Controller
         }
     }
 
-    [HttpGet("settings/getCatalogs")]
+    [HttpGet("setting/getCatalogs")]
     public async Task<IActionResult> getCatalogs()
     {
         try

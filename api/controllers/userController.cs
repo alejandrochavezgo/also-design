@@ -48,7 +48,6 @@ public class userController : ControllerBase
         try
         {
             var response = _userService.authenticate(model);
-
             if(response == null)
                 return BadRequest(new { message = "Username or password is incorrect." });
 

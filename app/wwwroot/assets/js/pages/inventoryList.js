@@ -93,6 +93,8 @@ function initializeDatatable() {
     try {
         $('#loader').show();
         $('#dvTableItems').DataTable({
+            "scrollX": true,
+            "autoWidth": false,
             "ajax": {
                 "url": "getAll",
                 "type": "get",

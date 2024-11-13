@@ -165,6 +165,8 @@ public class userController : Controller
             ViewData["user.email"] = result!.email;
             ViewData["user.firstname"] = result!.firstname;
             ViewData["user.lastname"] = result!.lastname;
+            ViewData["user.userRole"] = result!.userRole;
+            ViewData["user.userAccess"] = result!.userAccess;
             ViewData["user.status"] = result!.status;
             ViewData["employee.id"] = result.employee!.id;
             ViewData["employee.gender"] = result.employee!.gender;
@@ -213,10 +215,12 @@ public class userController : Controller
             ViewData["user.email"] = result!.email;
             ViewData["user.firstname"] = result!.firstname;
             ViewData["user.lastname"] = result!.lastname;
+            ViewData["user.userRoleDescription"] = result!.userRoleDescription;
+            ViewData["user.userAccess"] = result!.userAccess;
             ViewData["statusName"] = result!.statusName;
             ViewData["statusColor"] = result!.statusColor;
             ViewData["employee.id"] = result.employee!.id;
-            ViewData["employee.gender"] = result.employee!.genderDescription;
+            ViewData["employee.genderDescription"] = result.employee!.genderDescription;
             ViewData["employee.address"] = result.employee!.address;
             ViewData["employee.city"] = result.employee!.city;
             ViewData["employee.state"] = result.employee!.state;

@@ -93,6 +93,8 @@ function showDeleteModal(clientId, status) {
 function initializeDatatable() {
     try {
         $('#tbClients').DataTable({
+            "scrollX": true,
+            "autoWidth": false,
             "ajax": {
                 "url": "getAll",
                 "type": "get",

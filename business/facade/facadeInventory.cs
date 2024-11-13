@@ -87,6 +87,7 @@ public class facadeInventory
             catalogs.Add(_repositoryInventory.getWeightUnitTypesCatalog());
             catalogs.Add(_repositoryInventory.getToleranceUnitTypesCatalog());
             catalogs.Add(_repositoryInventory.getWarehouseUnitTypesCatalog());
+            catalogs.Add(_repositoryInventory.getClassificationTypesCatalog());
             return catalogs;
         }
         catch (Exception exception)

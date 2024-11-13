@@ -1,13 +1,9 @@
 namespace app.authorization;
 
-using System.Text.RegularExpressions;
 using entities.models;
-using Microsoft.AspNetCore.Identity.UI.V4.Pages.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 public sealed class authorizationAttribute : Attribute, IAuthorizationFilter
 {
@@ -19,7 +15,8 @@ public sealed class authorizationAttribute : Attribute, IAuthorizationFilter
             {
                 context!.Result = new RedirectToRouteResult(new RouteValueDictionary {
                     {"controller", "error"},
-                    {"action", "error"},
+                    {"action", "errorWithParams"},
+                    {"errorCode", "500"},
                     {"errorMessage", "No context."}
                 });
                 return;
@@ -40,7 +37,8 @@ public sealed class authorizationAttribute : Attribute, IAuthorizationFilter
             {
                 context!.Result = new RedirectToRouteResult(new RouteValueDictionary {
                     {"controller", "error"},
-                    {"action", "error"},
+                    {"action", "errorWithParams"},
+                    {"errorCode", "400"},
                     {"errorMessage", "No path provider."}
                 });
                 return;
@@ -55,13 +53,26 @@ public sealed class authorizationAttribute : Attribute, IAuthorizationFilter
                 return;
             }
 
+            var userInfo = JsonConvert.DeserializeObject<userCookieModel>(userCookie);
+            if (!userInfo!.menus!.Any(menu => menu.path!.Trim().ToUpper().Split('/')[1] == currentPath.Trim().ToUpper().Split('/')[1]))
+            {
+                context.Result = new RedirectToRouteResult(new RouteValueDictionary {
+                    {"controller", "error"},
+                    {"action", "errorWithParams"},
+                    {"errorCode", "403"},
+                    {"errorMessage", "You do not have permission to access this page."}
+                });
+                return;
+            }
+
             return;
         }
         catch (Exception exception)
         {
             context!.Result = new RedirectToRouteResult(new RouteValueDictionary {
                     {"controller", "error"},
-                    {"action", "exception"},
+                    {"action", "errorWithParams"},
+                    {"errorCode", "500"},
                     {"errorMessage", $"{exception.Message}"}
             });
             return;

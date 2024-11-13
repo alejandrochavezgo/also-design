@@ -319,6 +319,8 @@ function isValidForm() {
 function initializeQuotationsDatatable() {
     try {
         $('#tbQuotations').DataTable({
+            "scrollX": true,
+            "autoWidth": false,
             "ajax": {
                 "url": "getAll",
                 "type": "get",
@@ -370,7 +372,6 @@ function initializeQuotationsDatatable() {
                             <button type="button" class="btn btn-secondary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/quotation/detail?id=${data}'" title="View"><i class="ri-eye-fill"></i></button>
                             ${row.status == 1 ? `<button type="button" class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/quotation/update?id=${data}'" title="Update"><i class="ri-pencil-fill"></i></button>` : ''}
                             ${row.status != 11 && row.status != 4 ? `<button type="button" class="btn btn-primary btn-icon secondary waves-effect waves-light mx-1" onclick="showUpdateStatusModal(${data}, '${row.status}', '${row.statusName}', '${row.statusColor}')" title="Update Status"><i class="ri-exchange-fill"></i></button>` : ''}
-                            <button type="button" class="btn btn-info btn-icon waves-effect waves-light mx-1" onclick="downloadQuotation(${data})" title="Download"><i class="ri-file-download-fill"></i></button>
                             ${row.status == 1 ? `<button type="button" class="btn btn-danger btn-icon waves-effect waves-light mx-1" onclick="showDeleteModal(${data}, ${row.status})" title="Delete"><i class="ri-delete-bin-2-fill"></i></button>` : ''}
                         `;
                     }

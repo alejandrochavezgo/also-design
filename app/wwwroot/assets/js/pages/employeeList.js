@@ -1,6 +1,8 @@
 function initializeDatatable() {
     try {
         $('#tbEmployees').DataTable({
+            "scrollX": true,
+            "autoWidth": false,
             "ajax": {
                 "url": "getAll",
                 "type": "get",

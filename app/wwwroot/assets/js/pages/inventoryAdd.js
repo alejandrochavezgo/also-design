@@ -59,7 +59,7 @@ async function initializeCatalogs()
         }
 
         const catalogs = await response.json();
-        if (!catalogs || !catalogs.isSuccess || catalogs.results.length !== 7) {
+        if (!catalogs || !catalogs.isSuccess || catalogs.results.length !== 8) {
             Swal.fire({
                 title: 'Error!!',
                 html: 'Catalogs not downloaded. Please reload the page.',
@@ -80,7 +80,8 @@ async function initializeCatalogs()
             seUnitLength: 3,
             seUnitWeight: 4,
             seUnitTolerance: 5,
-            seWarehouseLocation: 6
+            seWarehouseLocation: 6,
+            seClassificationType: 7
         };
 
         for (var selectId in selectMapping) {
@@ -131,6 +132,7 @@ function add() {
             description: $('#taDescription').val(),
             material: $('#seMaterial').val(),
             finishType: $('#seFinishType').val(),
+            classificationType: $('#seClassificationType').val(),
             diameter: parseFloat($('#inDiameter').val()),
             unitDiameter: $('#seUnitDiameter').val(),
             length: parseFloat($('#inLength').val()),
@@ -227,6 +229,7 @@ function isValidForm(inventoryItem) {
             !inventoryItem.notes ||
             !inventoryItem.material ||
             !inventoryItem.finishType ||
+            !inventoryItem.classificationType ||
             isNaN(inventoryItem.diameter) ||
             !inventoryItem.unitDiameter ||
             isNaN(inventoryItem.length) ||

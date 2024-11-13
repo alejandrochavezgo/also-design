@@ -372,6 +372,7 @@ public class inventoryController : Controller
             ViewData["description"] = result!.description;
             ViewData["material"] = result!.material;
             ViewData["finishType"] = result!.finishType;
+            ViewData["classificationType"] = result!.classificationType;
             ViewData["diameter"] = result!.diameter;
             ViewData["unitDiameter"] = result!.unitDiameter;
             ViewData["length"] = result!.length;
@@ -428,6 +429,7 @@ public class inventoryController : Controller
             ViewData["description"] = result!.description;
             ViewData["material"] = result!.materialDescription;
             ViewData["finishType"] = result!.finishTypeDescription;
+            ViewData["classificationTypeDescription"] = result!.classificationTypeDescription;
             ViewData["diameter"] = result!.diameter;
             ViewData["unitDiameter"] = result!.unitDiameterDescription;
             ViewData["length"] = result!.length;

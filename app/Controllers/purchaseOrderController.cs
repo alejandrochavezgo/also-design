@@ -12,6 +12,10 @@ using System.Text;
 using helpers;
 using System.Text.RegularExpressions;
 using entities.enums;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.IO;
+using Microsoft.DiaSymReader;
 
 [authorization]
 public class purchaseOrderController : Controller
@@ -510,6 +514,70 @@ public class purchaseOrderController : Controller
                 message = "Ok.",
                 results
             });
+        }
+        catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
+    [HttpGet("purchaseOrder/downloadPurchaseOrderByPurchaseOrderId")]
+    public async Task<IActionResult> downloadPurchaseOrderByPurchaseOrderId(int id)
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var user = new userModel { id = userCookie.id };
+            var responsePostUser = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:user:getUserById"]}", new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
+            if(!responsePostUser.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePostUser.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePostUser.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+            }
+            var responsePostUserAsJson = await responsePostUser.Content.ReadAsStringAsync();
+            user = JsonConvert.DeserializeObject<userModel>(responsePostUserAsJson);
+
+            var purchaseOrder = new purchaseOrderModel { id = id };
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:purchaseOrder:getPurchaseOrderById"]}", new StringContent(JsonConvert.SerializeObject(purchaseOrder), Encoding.UTF8, "application/json"));
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePostUser.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePostUser.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+            }
+            var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
+            purchaseOrder = JsonConvert.DeserializeObject<purchaseOrderModel>(responsePostAsJson);
+
+            var enterprises = new List<enterpriseModel>();
+            var enterprise = new enterpriseModel
+            {
+                id = 1,
+                defaultValues = new defaultValuesModel
+                {
+                    configType = configType.PURCHASE_ORDERS
+                }
+            };
+            var responsePostEnterprise = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:enterprise:getEnterpriseFullInformationByIdAndConfigType"]}", new StringContent(JsonConvert.SerializeObject(enterprise), Encoding.UTF8, "application/json"));
+            if(!responsePostEnterprise.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePostEnterprise.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePostEnterprise.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+            }
+            var responsePostEnterpriseAsJson = await responsePostEnterprise.Content.ReadAsStringAsync();
+            enterprises = JsonConvert.DeserializeObject<List<enterpriseModel>>(responsePostEnterpriseAsJson);
+            clientHttp.Dispose();
+
+            var pdfContent = pdfHelper.generatePurchaseOrderPdf(purchaseOrder!, enterprises!, user!);
+            Response.Headers.Add("Content-Disposition", $"attachment; filename=PurchaseOrder_{id}.pdf");
+            return File(pdfContent, "application/pdf");
         }
         catch (Exception exception)
         {

@@ -93,6 +93,8 @@ function showDeleteModal(supplierId, status) {
 function initializeSuppliersDatatable() {
     try {
         $('#tbSuppliers').DataTable({
+            "scrollX": true,
+            "autoWidth": false,
             "ajax": {
                 "url": "getAll",
                 "type": "get",

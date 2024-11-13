@@ -22,7 +22,7 @@ async function initializeCatalogs()
         }
 
         const catalogs = await response.json();
-        if (!catalogs || !catalogs.isSuccess || catalogs.results.length !== 2) {
+        if (!catalogs || !catalogs.isSuccess || catalogs.results.length !== 4) {
             Swal.fire({
                 title: 'Error!!',
                 html: 'Catalog not downloaded. Please reload the page.',
@@ -37,21 +37,36 @@ async function initializeCatalogs()
 
         var selectMapping = {
             seUserStatus: 0,
-            seEmployeeGender: 1
+            seEmployeeGender: 1,
+            seUserAccess: 2,
+            seUserRoles: 3
         };
 
         for (var selectId in selectMapping) {
             var index = selectMapping[selectId];
             var $select = $('#' + selectId);
-            $select.empty().append('<option value="">Select option</option>');
-            catalogs.results[index].forEach(function(item) {
-                $select.append(
-                    $('<option>', {
-                        value: item.id,
-                        text: item.description
-                    })
-                );
-            });
+
+            if (index == 2)
+            {
+                $select.empty();
+                catalogs.results[index].forEach(function(item) {
+                    $select.append(
+                        $('<option>', {
+                            text: item.description
+                        })
+                    );
+                });
+            } else {
+                $select.empty().append('<option value="">Select option</option>');
+                catalogs.results[index].forEach(function(item) {
+                    $select.append(
+                        $('<option>', {
+                            value: item.id,
+                            text: item.description
+                        })
+                    );
+                });
+            }
         }
     } catch (exception) {
         Swal.fire({
@@ -84,6 +99,8 @@ function add() {
                 status: $('#seUserStatus').val(),
                 username: $('#inUsername').val(),
                 password: $('#inPassword').val(),
+                userAccess: Array.from($('#seUserAccess')[0].options).filter(option => option.selected).map(option => option.value),
+                userRole: $('#seUserRoles').val(),
                 employee: {
                     gender: $('#seEmployeeGender').val(),
                     address: $('#inEmployeeAddress').val(),
@@ -152,7 +169,6 @@ function add() {
     }
 }
 
-
 function isValidForm() {
     try {
         var email = $('#inUserEmail').val();
@@ -169,12 +185,14 @@ function isValidForm() {
         var jobPosition = $('#inEmployeeJobPosition').val();
         var profession = $('#inEmployeeProfession').val();
         var contactPhones = $('#inEmployeeContactPhones').val();
+        var userAccess = Array.from($('#seUserAccess')[0].options).filter(option => option.selected).map(option => option.value);
+        var userRoles = $('#seUserRoles').val();
 
         if (!email || !firstname || !lastname || !status || !username || !password || !gender || !address ||
-            !city || !state || !zipcode || !jobPosition || !profession || !contactPhones) {
+            !city || !state || !zipcode || !jobPosition || !profession || !contactPhones || !userAccess || userAccess.length == 0 || !userRoles) {
             Swal.fire({
                 title: 'Error!!',
-                html: 'The fields Email, First Name, Last Name, Status, Username, Password, Gender, Address, City, State, ZipCode, Job Position, Profession and Contact Phones cannot be empty.',
+                html: 'The fields Email, First Name, Last Name, Status, Username, Password, Gender, Address, City, State, ZipCode, Job Position, Profession, Contact Phones, User Access and User Roles cannot be empty.',
                 icon: 'error',
                 confirmButtonClass: 'btn btn-danger w-xs mt-2',
                 buttonsStyling: !1,
@@ -183,6 +201,7 @@ function isValidForm() {
             });
             return false;
         }
+
         return true;
     } catch (exception) {
         Swal.fire({
@@ -196,10 +215,3 @@ function isValidForm() {
         });
     }
 }
-
-$(document).ready(function() {
-    $('#loader').show();
-    initializeCatalogs().then(() => {
-        $('#loader').hide();
-    });
-});

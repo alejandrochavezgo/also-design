@@ -2,6 +2,7 @@
     ViewData["title"] = "User Details | Also Design";
     var phones = ViewData["employee.contactPhones"] as List<string> ?? new List<string>();
     var employeeContactPhonesString = phones != null ? string.Join(", ", phones!) : "";
+    var userAccess = ViewData["user.userAccess"] as List<string>;
 }
 <div class="page-content">
     <div class="container-fluid">
@@ -46,7 +47,29 @@
                             </div>
                             <div class="col-4">
                                 <label class="form-label fw-bold">Gender</label>
-                                <p>@ViewData["employee.gender"]</p>
+                                <p>@ViewData["employee.genderDescription"]</p>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-6">
+                                <label for="seUserAccess" class="form-label fw-bold">User Access</label>
+                                @if (userAccess != null && userAccess.Any())
+                                {
+                                    <ul>
+                                        @foreach (var access in userAccess)
+                                        {
+                                            <li>@access</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <p>No hay elementos de acceso para este usuario.</p>
+                                }
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-bold">User Role</label>
+                                <p>@ViewData["user.userRoleDescription"]</p>
                             </div>
                         </div>
                     </div>

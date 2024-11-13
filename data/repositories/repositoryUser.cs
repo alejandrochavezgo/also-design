@@ -37,6 +37,42 @@ public class repositoryUser : baseRepository
         }
     }
 
+    public List<catalogModel> getAccessTypesCatalog()
+    {
+        try
+        {
+            return factoryGetCatalog.getList((DbDataReader)_providerDB.GetDataReader("sp_getAccessTypesCatalog", new DbParameter[] {}));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<catalogModel> getRoleTypesCatalog()
+    {
+        try
+        {
+            return factoryGetCatalog.getList((DbDataReader)_providerDB.GetDataReader("sp_getRoleTypesCatalog", new DbParameter[] {}));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public List<catalogModel> getStatusTypesCatalog()
     {
         try
@@ -96,6 +132,26 @@ public class repositoryUser : baseRepository
         try
         {
             return factoryGetUserById.get((DbDataReader)_providerDB.GetDataReader("sp_getUserById", new DbParameter[] {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@userId", DbType.Int32, id),
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<string> getUserAccessByUserId(int id)
+    {
+        try
+        {
+            return factoryGetUserAccessByUserId.getList((DbDataReader)_providerDB.GetDataReader("sp_getUserAccessByUserId", new DbParameter[] {
                 dataFactory.getObjParameter(configurationManager.providerDB,"@userId", DbType.Int32, id),
             }));
         }
@@ -239,6 +295,78 @@ public class repositoryUser : baseRepository
         }
     }
 
+    public int updateUserRole(int userId, int userRole)
+    {
+        try
+        {
+            var userIdUpdated = dataFactory.getObjParameter(configurationManager.providerDB, "@userIdUpdated", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+            base._providerDB.ExecuteNonQuery("sp_updateUserRole", new DbParameter[] {
+                userIdUpdated,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@userId", DbType.Int32, userId),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@userRole", DbType.Int32, userRole)
+            });
+            return Convert.ToInt32(userIdUpdated.Value);
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public int addUserRole(int userId, int userRole)
+    {
+        try
+        {
+            var userRoleIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@userRoleIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+            base._providerDB.ExecuteNonQuery("sp_addUserRole", new DbParameter[] {
+                userRoleIdAdded,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@userId", DbType.Int32, userId),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@userRole", DbType.Int32, userRole)
+            });
+            return Convert.ToInt32(userRoleIdAdded.Value);
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public int addUserAccess(int userId, int userAccess)
+    {
+        try
+        {
+            var userAccessIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@userAccessIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+            base._providerDB.ExecuteNonQuery("sp_addUserAccess", new DbParameter[] {
+                userAccessIdAdded,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@userId", DbType.Int32, userId),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@userAccess", DbType.Int32, userAccess)
+            });
+            return Convert.ToInt32(userAccessIdAdded.Value);
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public bool updateUserPassword(int userId, string newPasswordHash)
     {
         try
@@ -300,6 +428,26 @@ public class repositoryUser : baseRepository
         {
             return base._providerDB.ExecuteNonQuery("sp_removeContactPhonesByEmployeeId", new DbParameter[] {
                 dataFactory.getObjParameter(configurationManager.providerDB,"@employeeId", DbType.Int32, id)
+            });
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public int removeUserAccessByUserId(int id)
+    {
+        try
+        {
+            return base._providerDB.ExecuteNonQuery("sp_removeUserAccessByUserId", new DbParameter[] {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@userId", DbType.Int32, id)
             });
         }
         catch (SqlException SqlException)

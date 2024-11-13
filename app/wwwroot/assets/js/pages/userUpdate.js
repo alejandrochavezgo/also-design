@@ -21,7 +21,7 @@ async function initializeCatalogs() {
         }
 
         const catalogs = await response.json();
-        if (!catalogs || !catalogs.isSuccess || catalogs.results.length !== 2) {
+        if (!catalogs || !catalogs.isSuccess || catalogs.results.length !== 4) {
             Swal.fire({
                 title: 'Error!!',
                 html: 'Catalog not downloaded. Please reload the page.',
@@ -36,25 +36,47 @@ async function initializeCatalogs() {
 
         var selectMapping = {
             seUserStatus: 0,
-            seEmployeeGender: 1
+            seEmployeeGender: 1,
+            seUserAccess: 2,
+            seUserRoles: 3
         };
 
         for (var selectId in selectMapping) {
             var index = selectMapping[selectId];
             var $select = $('#' + selectId);
-            $select.empty().append('<option value="">Select option</option>');
-            catalogs.results[index].forEach(function(item) {
-                $select.append(
-                    $('<option>', {
-                        value: item.id,
-                        text: item.description
-                    })
-                );
-            });
+
+            if (index == 2)
+            {
+                $select.empty();
+                catalogs.results[index].forEach(function(item) {
+                    $select.append(
+                        $('<option>', {
+                            text: item.description
+                        })
+                    );
+                });
+            } else {
+                $select.empty().append('<option value="">Select option</option>');
+                catalogs.results[index].forEach(function(item) {
+                    $select.append(
+                        $('<option>', {
+                            value: item.id,
+                            text: item.description
+                        })
+                    );
+                });
+            }
         }
 
         $('#seUserStatus').val($('#seUserStatus').attr('option-selected'));
         $('#seEmployeeGender').val($('#seEmployeeGender').attr('option-selected'));
+        $('#seUserRoles').val($('#seUserRoles').attr('option-selected'));
+        var optionSelected = $('#seUserAccess').attr('option-selected');
+        const selectElement = document.getElementById('seUserAccess');
+        Array.from(selectElement.options).forEach(option => {
+            if (optionSelected.includes(option.value))
+                option.selected = true;
+        });
     } catch (exception) {
         Swal.fire({
             title: 'Error!!',
@@ -85,6 +107,8 @@ function update() {
                 firstname: $('#inUserFirstname').val(),
                 lastname: $('#inUserLastname').val(),
                 status: $('#seUserStatus').val(),
+                userAccess: Array.from($('#seUserAccess')[0].options).filter(option => option.selected).map(option => option.value),
+                userRole: $('#seUserRoles').val(),
                 employee: {
                     id: $('#inEmployeeId').val(),
                     gender: $('#seEmployeeGender').val(),
@@ -170,12 +194,15 @@ function isValidForm() {
         var jobPosition = $('#inEmployeeJobPosition').val();
         var profession = $('#inEmployeeProfession').val();
         var contactPhones = $('#inEmployeeContactPhones').val();
+        var userAccess = Array.from($('#seUserAccess')[0].options).filter(option => option.selected).map(option => option.value);
+        var userRoles = $('#seUserRoles').val();
 
+        
         if (!userId || !employeeId || !email || !firstname || !lastname || !status || !gender || !address ||
-            !address || !city || !state || !zipcode || !jobPosition || !profession || !contactPhones) {
+            !address || !city || !state || !zipcode || !jobPosition || !profession || !contactPhones || !userAccess || userAccess.length == 0 || !userRoles) {
             Swal.fire({
                 title: 'Error!!',
-                html: 'The fields Email, First Name, Last Name, Status, Gender, Address, City, State, ZipCode, Job Position, Profession and Contact Phones cannot be empty.',
+                html: 'The fields Email, First Name, Last Name, Status, Gender, Address, City, State, ZipCode, Job Position, Profession, Contact Phones, User Access and User Roles cannot be empty.',
                 icon: 'error',
                 confirmButtonClass: 'btn btn-danger w-xs mt-2',
                 buttonsStyling: !1,
@@ -197,10 +224,3 @@ function isValidForm() {
         });
     }
 }
-
-$(document).ready(function() {
-    $('#loader').show();
-    initializeCatalogs().then(() => {
-        $('#loader').hide();
-    });
-});

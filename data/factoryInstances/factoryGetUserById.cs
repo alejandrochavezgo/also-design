@@ -26,6 +26,8 @@ internal class factoryGetUserById: baseMethod<factoryGetUserById, userModel>
                 modificationDateAsString = conversionManager.toValidDate(dr["USER.MODIFICATIONDATE"]) > DateTime.MinValue ? conversionManager.toValidDate(dr["USER.MODIFICATIONDATE"]).ToString("yyyy-MM-dd hh:mm:ss") : "-",
                 statusColor =  getStatusColor(conversionManager.toInt(dr["USER.IDSTATUS"])),
                 statusName = getStatusName(conversionManager.toInt(dr["USER.IDSTATUS"])),
+                userRole = conversionManager.toInt(dr["RL_ROLES_USERS.IDROLE"]),
+                userRoleDescription = conversionManager.toString(dr["ROLES.DESCRIPTION"]),
                 employee = new employeeModel
                 {
                     id = conversionManager.toInt(dr["EMPLOYEE.IDEMPLOYEE"]),

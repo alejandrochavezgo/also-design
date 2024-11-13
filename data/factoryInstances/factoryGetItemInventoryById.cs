@@ -27,6 +27,8 @@ internal class factoryGetItemInventoryById: baseMethod<factoryGetItemInventoryBy
                 materialDescription = conversionManager.toString(dr["MATERIALTYPES.DESCRIPTION"]),
                 finishType = conversionManager.toInt(dr["IDFINISHTYPE"]),
                 finishTypeDescription = conversionManager.toString(dr["FINISHTYPES.DESCRIPTION"]),
+                classificationType = conversionManager.toInt(dr["CLASSIFICATIONTYPE.IDCLASSIFICATIONTYPE"]),
+                classificationTypeDescription = conversionManager.toString(dr["CLASSIFICATIONTYPE.DESCRIPTION"]),
                 diameter = conversionManager.toDouble(dr["DIAMETER"]),
                 unitDiameter = conversionManager.toInt(dr["IDDIAMETERUNITTYPE"]),
                 unitDiameterDescription = conversionManager.toString(dr["DIAMETERLENGTHUNITTYPES.DESCRIPTION"]),

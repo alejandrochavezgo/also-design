@@ -53,13 +53,17 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-4">
                                 <label class="form-label" for="seMaterial">Material</label>
                                 <select class="form-select" id="seMaterial"></select>
                             </div>
-                            <div class="col-6">
+                            <div class="col-4">
                                 <label for="seFinishType" class="form-label">Finish Type</label>
                                 <select class="form-select" id="seFinishType"></select>
+                            </div>
+                            <div class="col-4">
+                                <label for="seClassificationType" class="form-label">Classification Type</label>
+                                <select class="form-select" id="seClassificationType"></select>
                             </div>
                         </div>
                         <div class="row pt-27px">
@@ -68,7 +72,7 @@
                                 <input type="text" class="form-control uppercase-input numerical-mask" id="inDiameter" value="@ViewData["diameter"]">
                             </div>
                             <div class="col-3">
-                                <label for="seUnitDiameter" class="form-label">Unit</label>
+                                <label for="seUnitDiameter" class="form-label">Diameter Unit</label>
                                 <select class="form-select" id="seUnitDiameter"></select>
                             </div>
                             <div class="col-3">
@@ -76,7 +80,7 @@
                                 <input type="text" class="form-control uppercase-input numerical-mask" id="inLength" value="@ViewData["length"]">
                             </div>
                             <div class="col-3">
-                                <label for="seUnitLength" class="form-label">Unit</label>
+                                <label for="seUnitLength" class="form-label">Length Unit</label>
                                 <select class="form-select" id="seUnitLength"></select>
                             </div>
                         </div>
@@ -86,7 +90,7 @@
                                 <input type="text" class="form-control numerical-mask" id="inWeight" value="@ViewData["weight"]">
                             </div>
                             <div class="col-3">
-                                <label for="seUnitWeight" class="form-label">Unit</label>
+                                <label for="seUnitWeight" class="form-label">Weight Unit</label>
                                 <select class="form-select" id="seUnitWeight"></select>
                             </div>
                             <div class="col-3">
@@ -94,7 +98,7 @@
                                 <input type="text" class="form-control uppercase-input numerical-mask" id="inTolerance" value="@ViewData["tolerance"]">
                             </div>
                             <div class="col-3">
-                                <label for="seUnitTolerance" class="form-label">Unit</label>
+                                <label for="seUnitTolerance" class="form-label">Tolerance Unit</label>
                                 <select class="form-select" id="seUnitTolerance"></select>
                             </div>
                         </div>
@@ -227,6 +231,7 @@
             $('#seUnitWeight').val("@ViewData["unitWeight"]");
             $('#seUnitTolerance').val("@ViewData["unitTolerance"]");
             $('#seWarehouseLocation').val("@ViewData["warehouseLocation"]");
+            $('#seClassificationType').val("@ViewData["classificationType"]");
             $('#description').attr('rows', 1);
         }
     </script>

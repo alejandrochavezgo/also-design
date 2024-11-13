@@ -9,7 +9,7 @@
 @section styles
 {
     <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet"  type="text/css">
-}
+} 
 <div class="page-content">
     <div class="container-fluid">
         <div class="row">
@@ -29,9 +29,18 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title">Purchase Order Information</h5>
+                        <div class="d-flex">
+                            <h5 class="card-title">Purchase Order Information</h5>
+                            <a href="#" id="download-pdf" class="btn btn-light ms-auto" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Print" data-bs-original-title="Print" style="margin-right: 10px;"><i class="ri-printer-fill align-bottom"></i></a>
+                            <div class="form-check mb-2" style="padding-top: 10px;">
+                                <input class="form-check-input" type="checkbox" id="hideTaxTotal">
+                                <label class="form-check-label" for="hideTaxTotal">
+                                    Hide Tax and Total
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
+                    <div id="toPrint" class="card-body">
                         <div class="row">
                             <div class="d-flex col-3">
                                 <div class="navbar-brand-box horizontal-logo d-ruby pl-0 mt-24npx ml-22npx">
@@ -47,7 +56,7 @@
                                 <h6>"RESPONSABILIDAD, CALIDAD E INNOVACIÓN TECNOLÓGICA"</h6>
                             </div>
                             <div class="col-3 text-center">
-                                <input class="form-control text-center bg-light border-0 fw-bold" value="@ViewData["purchaseOrder.code"]" disabled>
+                                <input id="purchaseOrderCode" class="form-control text-center bg-light border-0 fw-bold" value="@ViewData["purchaseOrder.code"]" disabled>
                             </div>
                         </div>
                         <div class="row pt-4 text-center border-bottom border-bottom-dashed">
@@ -160,11 +169,11 @@
                                                             <td>Sub Total</td>
                                                             <td class="text-end">$@ViewData["purchaseOrder.subtotal"]</td>
                                                         </tr>
-                                                        <tr>
+                                                        <tr id="trEstimatedTax">
                                                             <td>Estimated Tax @ViewData["purchaseOrder.taxRate"]%</td>
                                                             <td class="text-end">$@ViewData["purchaseOrder.taxAmount"]</td>
                                                         </tr>
-                                                        <tr class="border-top border-top-dashed fs-15">
+                                                        <tr id="trTotalAmount" class="border-top border-top-dashed fs-15">
                                                             <th scope="row">Total Amount</th>
                                                             <th class="text-end">$@ViewData["purchaseOrder.totalAmount"]</th>
                                                         </tr>
@@ -195,3 +204,34 @@
         </div>
     </div>
 </div>
+@section scripts
+{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="../assets/js/pages/html2canvas.min.js"></script>
+    <script>
+        var purchaseOrderCode = $('#purchaseOrderCode').val();
+        document.getElementById('download-pdf').addEventListener('click', function() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            html2canvas(document.getElementById('toPrint'), { scale: 2 }).then(function(canvas) {
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                doc.save('Purchase_Order_' + purchaseOrderCode + '.pdf');
+            }).catch(function(error) {
+                console.error('Error al generar la imagen con html2canvas:', error);
+            });
+        });
+
+        $('#hideTaxTotal').change(function() {
+            if ($(this).prop('checked')) {
+                $('#trEstimatedTax').hide();
+                $('#trTotalAmount').hide();
+            } else {
+                $('#trEstimatedTax').show();
+                $('#trTotalAmount').show();
+            }
+        });
+    </script>
+}

@@ -6,6 +6,7 @@ using entities.models;
 using Newtonsoft.Json;
 using System.Transactions;
 using entities.enums;
+using common.helpers;
 
 public class facadeUser
 {
@@ -31,6 +32,8 @@ public class facadeUser
             var catalogs = new List<List<catalogModel>>();
             catalogs.Add(_repositoryUser.getStatusTypesCatalog().Take(3).ToList());
             catalogs.Add(_repositoryUser.getGenderTypesCatalog());
+            catalogs.Add(_repositoryUser.getAccessTypesCatalog());
+            catalogs.Add(_repositoryUser.getRoleTypesCatalog());
             return catalogs;
         }
         catch (Exception exception)
@@ -58,6 +61,7 @@ public class facadeUser
         try
         {
             var user = _repositoryUser.getUserById(id);
+            user.userAccess = _repositoryUser.getUserAccessByUserId(user.id);
             user.employee.contactPhones = _repositoryEmployee.getContactPhonesByEmployeeId(user.employee.id);
             return user;
         }
@@ -81,6 +85,16 @@ public class facadeUser
                     if(!string.IsNullOrEmpty(phone))
                         _repositoryUser.addContactPhone(user.employee.id, phone);
 
+                _repositoryUser.removeUserAccessByUserId(user.id);
+                var userAccessHelper = new userAccessHelper();
+                user.userAccess.AddRange(new List<string> { "DASHBOARD", "ENTERPRISE", "LOGIN", "SETTING" });
+                foreach (var access in user.userAccess)
+                    if (_repositoryUser.addUserAccess(user.id, userAccessHelper.getIdAccessByAccessDescription(access)) <= 0)
+                    {
+                        transactionScope.Complete();
+                        return false;
+                    }
+
                 user.email = user.email.Trim().ToUpper();
                 user.firstname = user.firstname.Trim().ToUpper();
                 user.lastname = user.lastname.Trim().ToUpper();
@@ -94,7 +108,9 @@ public class facadeUser
                 if (!string.IsNullOrEmpty(user.newPasswordHash))
                     result = _repositoryUser.updateUserPassword(user.id, user.newPasswordHash);
 
-                result = result && _repositoryUser.updateUser(user) && _repositoryEmployee.updateEmployee(user.employee);
+                result = result && _repositoryUser.updateUser(user) &&
+                                    _repositoryEmployee.updateEmployee(user.employee) &&
+                                    _repositoryUser.updateUserRole(user.id, user.userRole) > 0;
 
                 var employeeTrace = _facadeTrace.addTrace(new traceModel
                 {
@@ -183,14 +199,26 @@ public class facadeUser
                 user.status = user.status;
                 user.failCount = 0;
                 var userIdAdded = _repositoryUser.addUser(user);
+                var userIdRoleAdded = _repositoryUser.addUserRole(userIdAdded, user.userRole);
                 user.employee.userId = userIdAdded;
                 var employeeIdAdded = _repositoryEmployee.addEmployee(user.employee);
-                if (user.employee.contactPhones.Count > 0)
-                    foreach(var phone in user.employee.contactPhones)
-                        if(!string.IsNullOrEmpty(phone))
-                            _repositoryEmployee.addContactPhone(employeeIdAdded, phone);
+                foreach(var phone in user.employee.contactPhones)
+                    if(!string.IsNullOrEmpty(phone))
+                        if (_repositoryEmployee.addContactPhone(employeeIdAdded, phone) <= 0)
+                        {
+                            transactionScope.Complete();
+                            return false;
+                        }
+                var userAccessHelper = new userAccessHelper();
+                user.userAccess.AddRange(new List<string> { "DASHBOARD", "ENTERPRISE", "LOGIN", "SETTING" });
+                foreach (var access in user.userAccess)
+                    if (_repositoryUser.addUserAccess(userIdAdded, userAccessHelper.getIdAccessByAccessDescription(access)) <= 0)
+                    {
+                        transactionScope.Complete();
+                        return false;
+                    }
 
-                var result = userIdAdded > 0 && employeeIdAdded > 0;
+                var result = userIdAdded > 0 && employeeIdAdded > 0 && userIdRoleAdded > 0;
                 var employeeTrace = _facadeTrace.addTrace(new traceModel
                 {
                     traceType = traceType.ADD_EMPLOYEE,

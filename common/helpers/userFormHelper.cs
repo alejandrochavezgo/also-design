@@ -17,7 +17,7 @@ public class userFormHelper
                 string.IsNullOrEmpty(user.employee!.address) || string.IsNullOrEmpty(user.employee!.city)||
                 string.IsNullOrEmpty(user.employee!.state) || string.IsNullOrEmpty(user.employee!.zipcode) ||
                 string.IsNullOrEmpty(user.employee!.jobPosition) || string.IsNullOrEmpty(user.employee!.profession) ||
-                user.employee!.contactPhones!.Count == 0 || user.status <= 0)
+                user.employee!.contactPhones!.Count == 0 || user.status <= 0 || user.userRole <= 0 || user.userAccess!.Count == 0)
                 return false;
 
             return true;
@@ -37,7 +37,8 @@ public class userFormHelper
                 string.IsNullOrEmpty(user.employee!.address) || string.IsNullOrEmpty(user.employee!.city)||
                 string.IsNullOrEmpty(user.employee!.state) || string.IsNullOrEmpty(user.employee!.zipcode) ||
                 string.IsNullOrEmpty(user.employee!.jobPosition) || string.IsNullOrEmpty(user.employee!.profession) ||
-                user.employee!.contactPhones!.Count == 0 || user.status <= 0 || user.id <= 0 || user.employee!.id <= 0)
+                user.employee!.contactPhones!.Count == 0 || user.status <= 0 || user.id <= 0 || user.employee!.id <= 0 ||
+                user.userRole <= 0 || user.userAccess!.Count == 0)
                 return false;
 
             if (!string.IsNullOrEmpty(user.password))

@@ -21,7 +21,7 @@ async function initializeCatalogs() {
         }
 
         const catalogs = await response.json();
-        if (!catalogs || !catalogs.isSuccess || catalogs.results.length !== 2) {
+        if (!catalogs || !catalogs.isSuccess || catalogs.results.length !== 4) {
             Swal.fire({
                 title: 'Error!!',
                 html: 'Catalog not downloaded. Please reload the page.',

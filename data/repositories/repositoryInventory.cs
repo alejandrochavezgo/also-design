@@ -166,6 +166,24 @@ public class repositoryInventory : baseRepository
         }
     }
 
+    public List<catalogModel> getClassificationTypesCatalog()
+    {
+        try
+        {
+            return factoryGetCatalog.getList((DbDataReader)_providerDB.GetDataReader("sp_getClassificationTypesCatalog", new DbParameter[] {}));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public List<catalogModel> getCurrencyTypesCatalog()
     {
         try
@@ -236,6 +254,7 @@ public class repositoryInventory : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB, "@description", DbType.String, inventoryItem.description!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@material", DbType.String, inventoryItem.material!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@finishType", DbType.Int32, inventoryItem.finishType!),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@classificationType", DbType.Int32, inventoryItem.classificationType!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@diameter", DbType.Double, inventoryItem.diameter!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@unitDiameter", DbType.Int32, inventoryItem.unitDiameter!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@length", DbType.Double, inventoryItem.length!),
@@ -342,6 +361,7 @@ public class repositoryInventory : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB, "@description", DbType.String, inventoryItem.description!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@material", DbType.String, inventoryItem.material!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@finishType", DbType.Int32, inventoryItem.finishType!),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@classificationType", DbType.Int32, inventoryItem.classificationType!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@diameter", DbType.Double, inventoryItem.diameter!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@unitDiameter", DbType.Int32, inventoryItem.unitDiameter!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@length", DbType.Double, inventoryItem.length!),

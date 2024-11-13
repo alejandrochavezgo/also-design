@@ -96,21 +96,36 @@ function showDeleteModal(purchaseOrderId, status) {
     }
 }
 
-function downloadQuotation(purchaseOrderId)
-{
-    try {
-        alert('This feature is not available yet.');
-    } catch(exception) {
+function downloadPurchaseOrderByPurchaseOrderId(purchaseOrderId) {
+    fetch(window.location.origin + '/purchaseOrder/downloadPurchaseOrderByPurchaseOrderId?id=' + purchaseOrderId, {
+        method: 'get'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP status ${response.status}`);
+        }
+        return response.blob();
+    })
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `PurchaseOrder_${purchaseOrderId}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+    })
+    .catch(error => {
         Swal.fire({
             title: 'Error!!',
-            html: exception,
+            html: error.message,
             icon: 'error',
             confirmButtonClass: 'btn btn-danger w-xs mt-2',
             buttonsStyling: false,
-            footer: '',
             showCloseButton: true
         });
-    }
+    });
 }
 
 async function showUpdateStatusModal(purchaseOrderId, status, statusName, statusColor) {
@@ -508,6 +523,8 @@ function getValueForStatus(status) {
 function initializeDatatable() {
     try {
         $('#tbPurchaseOrders').DataTable({
+            "scrollX": true,
+            "autoWidth": false,
             "ajax": {
                 "url": "getAll",
                 "type": "get",
@@ -557,7 +574,6 @@ function initializeDatatable() {
                         <button type="button" class="btn btn-secondary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/purchaseOrder/detail?id=${data}'" title="View"><i class="ri-eye-fill"></i></button>
                         ${row.status == 1 ? `<button type="button" class="btn btn-primary btn-icon waves-effect waves-light mx-1" onclick="window.location.href='/purchaseOrder/update?id=${data}'" title="Update"><i class="ri-pencil-fill"></i></button>` : ''}
                         ${row.status != 11 ? `<button type="button" class="btn btn-primary btn-icon secondary waves-effect waves-light mx-1" onclick="showUpdateStatusModal(${data}, '${row.status}', '${row.statusName}', '${row.statusColor}')" title="Update Status"><i class="ri-exchange-fill"></i></button>` : ''}
-                        <button type="button" class="btn btn-info btn-icon waves-effect waves-light mx-1" onclick="downloadPurchaseOrder(${data})" title="Download"><i class="ri-file-download-fill"></i></button>
                         ${row.status == 1 ? `<button type="button" class="btn btn-danger btn-icon waves-effect waves-light mx-1" onclick="showDeleteModal(${data}, ${row.status})" title="Delete"><i class="ri-delete-bin-2-fill"></i></button>` : ''}
                     `;
                 }}

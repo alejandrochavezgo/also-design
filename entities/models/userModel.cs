@@ -4,6 +4,9 @@ public class userModel
 {
     public int id { get; set; }
     public int status { get; set; }
+    public List<string>? userAccess { get; set; }
+    public int userRole { get; set; }
+    public string? userRoleDescription { get; set; }
     public string? username { get; set; }
     public string? password { get; set; }
     public string? passwordHash { get; set; }

@@ -31,6 +31,8 @@ public class inventoryItemModel
     public double? reorderQty { get; set; }
     public int unit { get; set; }
     public int? currency { get; set; }
+    public int? classificationType { get; set; }
+    public string? classificationTypeDescription { get; set; }
     public decimal? unitValue { get; set; }
     public decimal? totalValue { get; set; }
     public string? notes { get; set; }

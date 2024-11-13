@@ -2,6 +2,21 @@
     ViewData["title"] = "Update User | Also Design";
     var phones = ViewData["employee.contactPhones"] as List<string> ?? new List<string>();
     var employeeContactPhonesString = phones != null ? string.Join(",", phones!) : "";
+    var userAccess = ViewData["user.userAccess"] as List<string> ?? new List<string>();
+    var userAccessString = userAccess != null ? string.Join(",", userAccess!) : "";
+}
+@section styles
+{
+    <link href="../assets/libs/multi.js/multi.min.css" rel="stylesheet"  type="text/css">
+
+    <style>
+        .multi-wrapper .selected-wrapper {
+            border: none;
+        }
+        .multi-wrapper .non-selected-wrapper {
+            border: none;
+        }
+    </style>
 }
 <div class="page-content">
     <div class="container-fluid">
@@ -49,6 +64,19 @@
                             <div class="col-4">
                                 <label for="seEmployeeGender" class="form-label">Gender</label>
                                 <select class="form-select" id="seEmployeeGender" option-selected="@ViewData["employee.gender"]"></select>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-6">
+                                <label for="seUserAccess" class="form-label">User Access</label>
+                                <form>
+                                    <select required multiple="multiple" id="seUserAccess" option-selected="@userAccessString">
+                                    </select>
+                                </form>
+                            </div>
+                            <div class="col-6">
+                                <label for="seUserRoles" class="form-label">User Role</label>
+                                <select class="form-select" id="seUserRoles" option-selected="@ViewData["user.userRole"]"></select>
                             </div>
                         </div>
                     </div>
@@ -110,5 +138,24 @@
 </div>
 @section scripts
 {
-    <script src="../assets/js/pages/userUpdate.js"></script>
+    <script>
+        $(document).ready(async function() {
+            $('#loader').show();
+            await loadScript('../assets/js/pages/userUpdate.js');
+            await initializeCatalogs();
+            await loadScript('../assets/libs/multi.js/multi.min.js');
+            await loadScript('../assets/js/pages/form-advanced.init.js');
+            $('#loader').hide();
+        });
+
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = () => resolve(src);
+                script.onerror = () => reject(new Error(`Error al cargar el script ${src}`));
+                document.head.appendChild(script);
+            });
+        }
+    </script>
 }

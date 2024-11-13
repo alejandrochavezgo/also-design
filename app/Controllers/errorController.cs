@@ -3,13 +3,7 @@ namespace app.controllers;
 using providerData;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Newtonsoft.Json;
-using entities.models;
-using Microsoft.AspNetCore.Authorization;
-using authorization;
-using Microsoft.AspNetCore.Identity.UI.V4.Pages.Internal;
 
-[authorization]
 public class errorController : Controller
 {
     private readonly ILogger<errorController> _logger;
@@ -26,19 +20,32 @@ public class errorController : Controller
     }
 
     [HttpGet]
-    public IActionResult error(int errorCode, string errorMessage)
+    public IActionResult errorWithParams(int errorCode, string errorMessage)
     {
         try
         {
-            return View(new errorModel
-            {
-                errorCode = errorCode,
-                errorMessage = errorMessage
-            });
+            TempData["errorCode"] = errorCode;
+            TempData["errorMessage"] = errorMessage;
+            return RedirectToAction("error");
         }
-        catch(Exception e)
+        catch(Exception exception)
         {
-            throw e;
+            throw exception;
+        }
+    }
+
+    [HttpGet]
+    public IActionResult error()
+    {
+        try
+        {
+            ViewData["errorCode"] = TempData["errorCode"];
+            ViewData["errorMessage"] = TempData["errorMessage"];
+            return View();
+        }
+        catch (Exception exception)
+        {
+            throw exception;
         }
     }
 }

@@ -68,10 +68,6 @@
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <h6 class="dropdown-header">Welcome @user.firstname </h6>
-                                    @* <a class="dropdown-item" href="#">
-                                        <i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
-                                        <span class="align-middle">Profile</span>
-                                    </a> *@
                                     <a id="aSettings" class="dropdown-item" href="#">
                                         <i class="mdi mdi-cog-outline text-muted fs-16 align-middle me-1"></i>
                                         <span class="align-middle">Settings</span>
@@ -92,158 +88,186 @@
                         <div id="two-column-menu"></div>
                         <ul class="navbar-nav" id="navbar-nav">
                             <li class="menu-title"><span>Menu</span></li>
-                            <li class="nav-item">
-                                <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
-                                    <i class="ri-team-fill"></i> <span>Clients</span>
-                                </a>
-                                <div class="collapse menu-dropdown" id="sidebarApps">
-                                    <ul class="nav nav-sm flex-column">
-                                        <li class="nav-item">
-                                            <a href="@Url.Action("add", "client")" class="nav-link"> Add Client </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="@Url.Action("list", "client")" class="nav-link"> Client List </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
+                            @if (user.menus!.Any(x => x.description!.Equals("CLIENT")))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
+                                        <i class="ri-team-fill"></i> <span>Clients</span>
+                                    </a>
+                                    <div class="collapse menu-dropdown" id="sidebarApps">
+                                        <ul class="nav nav-sm flex-column">
+                                            <li class="nav-item">
+                                                <a href="@Url.Action("add", "client")" class="nav-link"> Add Client </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="@Url.Action("list", "client")" class="nav-link"> Client List </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            }
+                            @if (user.menus!.Any(x => x.description!.Equals("SUPPLIER")))
+                            {
+                                <li class="menu-title"><span>Menu</span></li>
+                                <li class="nav-item">
+                                    <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
+                                        <i class="ri-team-fill"></i> <span>Suppliers</span>
+                                    </a>
+                                    <div class="collapse menu-dropdown" id="sidebarApps">
+                                        <ul class="nav nav-sm flex-column">
+                                            <li class="nav-item">
+                                                <a href="@Url.Action("add", "supplier")" class="nav-link"> Add Supplier </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="@Url.Action("list", "supplier")" class="nav-link"> Supplier List </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            }
+                            @if (user.menus!.Any(x => x.description!.Equals("PURCHASEORDER")))
+                            {
+                                <li class="menu-title"><span>Menu</span></li>
+                                <li class="nav-item">
+                                    <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
+                                        <i class="ri-file-chart-line"></i> <span>Purchase Orders</span>
+                                    </a>
+                                    <div class="collapse menu-dropdown" id="sidebarApps">
+                                        <ul class="nav nav-sm flex-column">
+                                            <li class="nav-item">
+                                                <a href="@Url.Action("add", "purchaseOrder")" class="nav-link"> Add Purchase Order </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="@Url.Action("list", "purchaseOrder")" class="nav-link"> Purchase Order List </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            }
+                            @if (user.menus!.Any(x => x.description!.Equals("QUOTATION")))
+                            {
+                                <li class="menu-title"><span>Menu</span></li>
+                                <li class="nav-item">
+                                    <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
+                                        <i class="ri-file-list-line"></i> <span>Quotation</span>
+                                    </a>
+                                    <div class="collapse menu-dropdown" id="sidebarApps">
+                                        <ul class="nav nav-sm flex-column">
+                                            <li class="nav-item">
+                                                <a href="@Url.Action("add", "quotation")" class="nav-link"> Add Quotation </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="@Url.Action("list", "quotation")" class="nav-link"> Quotation List </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            }
+                            @if (user.menus!.Any(x => x.description!.Equals("WORKORDER")))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
+                                        <i class="ri-file-word-line"></i> <span>Work Orders</span>
+                                    </a>
+                                    <div class="collapse menu-dropdown" id="sidebarApps">
+                                        <ul class="nav nav-sm flex-column">
+                                            <li class="nav-item">
+                                                <a href="@Url.Action("add", "workOrder")" class="nav-link"> Add Work Order </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="@Url.Action("list", "workOrder")" class="nav-link"> Work Order List </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false"> Workflow Config </a>
+                                                <div class="collapse menu-dropdown">
+                                                    <ul class="nav nav-sm flex-column">
+                                                        <li class="nav-item">
+                                                            <a href="@Url.Action("steps", "workorder")" class="nav-link"> Steps </a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a href="@Url.Action("status", "workorder")" class="nav-link"> Status </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            }
+                            @if (user.menus!.Any(x => x.description!.Equals("INVENTORY")))
+                            {
+                                <li class="menu-title"><span>Menu</span></li>
+                                <li class="nav-item">
+                                    <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
+                                        <i class="ri-archive-fill"></i> <span>Inventory</span>
+                                    </a>
+                                    <div class="collapse menu-dropdown" id="sidebarApps">
+                                        <ul class="nav nav-sm flex-column">
+                                            <li class="nav-item">
+                                                <a href="@Url.Action("add", "inventory")" class="nav-link"> Add Item </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="@Url.Action("list", "inventory")" class="nav-link"> Inventory List </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            }
                             <li class="menu-title"><span>Menu</span></li>
-                            <li class="nav-item">
-                                <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
-                                    <i class="ri-team-fill"></i> <span>Suppliers</span>
-                                </a>
-                                <div class="collapse menu-dropdown" id="sidebarApps">
-                                    <ul class="nav nav-sm flex-column">
-                                        <li class="nav-item">
-                                            <a href="@Url.Action("add", "supplier")" class="nav-link"> Add Supplier </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="@Url.Action("list", "supplier")" class="nav-link"> Supplier List </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
-                                    <i class="ri-file-chart-line"></i> <span>Purchase Orders</span>
-                                </a>
-                                <div class="collapse menu-dropdown" id="sidebarApps">
-                                    <ul class="nav nav-sm flex-column">
-                                        <li class="nav-item">
-                                            <a href="@Url.Action("add", "purchaseOrder")" class="nav-link"> Add Purchase Order </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="@Url.Action("list", "purchaseOrder")" class="nav-link"> Purchase Order List </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li class="menu-title"><span>Menu</span></li>
-                            <li class="nav-item">
-                                <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
-                                    <i class="ri-file-list-line"></i> <span>Quotation</span>
-                                </a>
-                                <div class="collapse menu-dropdown" id="sidebarApps">
-                                    <ul class="nav nav-sm flex-column">
-                                        <li class="nav-item">
-                                            <a href="@Url.Action("add", "quotation")" class="nav-link"> Add Quotation </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="@Url.Action("list", "quotation")" class="nav-link"> Quotation List </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
-                                    <i class="ri-file-word-line"></i> <span>Work Orders</span>
-                                </a>
-                                <div class="collapse menu-dropdown" id="sidebarApps">
-                                    <ul class="nav nav-sm flex-column">
-                                        <li class="nav-item">
-                                            <a href="@Url.Action("add", "workOrder")" class="nav-link"> Add Work Order </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="@Url.Action("list", "workOrder")" class="nav-link"> Work Order List </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false"> Workflow Config </a>
-                                            <div class="collapse menu-dropdown">
-                                                <ul class="nav nav-sm flex-column">
-                                                    <li class="nav-item">
-                                                        <a href="@Url.Action("steps", "workorder")"" class="nav-link"> Steps </a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a href="@Url.Action("status", "workorder")"" class="nav-link"> Status </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
-                                    <i class="ri-archive-fill"></i> <span>Inventory</span>
-                                </a>
-                                <div class="collapse menu-dropdown" id="sidebarApps">
-                                    <ul class="nav nav-sm flex-column">
-                                        <li class="nav-item">
-                                            <a href="@Url.Action("add", "inventory")" class="nav-link"> Add Item </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="@Url.Action("list", "inventory")" class="nav-link"> Inventory List </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-
                             <li class="nav-item">
                                 <a class="nav-link menu-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
                                     <i class="ri-apps-2-line"></i> <span>Administrative Actions</span>
                                 </a>
                                 <div class="collapse menu-dropdown" id="sidebarApps">
                                     <ul class="nav nav-sm flex-column">
-                                        <li class="nav-item">
-                                            <a href="" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false"> Users </a>
-                                            <div class="collapse menu-dropdown">
-                                                <ul class="nav nav-sm flex-column">
-                                                    <li class="nav-item">
-                                                        <a href="@Url.Action("add", "user")" class="nav-link"> Add User </a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a href="@Url.Action("list", "user")"" class="nav-link"> User List </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false"> Employees </a>
-                                            <div class="collapse menu-dropdown">
-                                                <ul class="nav nav-sm flex-column">
-                                                    <li class="nav-item">
-                                                        <a href="@Url.Action("add", "employee")" class="nav-link"> Add Employee </a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a href="@Url.Action("list", "employee")"" class="nav-link"> Employee List </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false"> Reports </a>
-                                            <div class="collapse menu-dropdown">
-                                                <ul class="nav nav-sm flex-column">
-                                                    <li class="nav-item">
-                                                        <a href="@Url.Action("dashboard", "dashboard")" class="nav-link"> Dashboard </a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a href="@Url.Action("deliveries", "report")"" class="nav-link"> Deliveries </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
+                                        @if (user.menus!.Any(x => x.description!.Equals("USER")))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false"> Users </a>
+                                                <div class="collapse menu-dropdown">
+                                                    <ul class="nav nav-sm flex-column">
+                                                        <li class="nav-item">
+                                                            <a href="@Url.Action("add", "user")" class="nav-link"> Add User </a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a href="@Url.Action("list", "user")" class="nav-link"> User List </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        }
+                                        @if (user.menus!.Any(x => x.description!.Equals("EMPLOYEE")))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false"> Employees </a>
+                                                <div class="collapse menu-dropdown">
+                                                    <ul class="nav nav-sm flex-column">
+                                                        <li class="nav-item">
+                                                            <a href="@Url.Action("add", "employee")" class="nav-link"> Add Employee </a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a href="@Url.Action("list", "employee")" class="nav-link"> Employee List </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        }
+                                        @if (user.menus!.Any(x => x.description!.Equals("REPORT")))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false"> Reports </a>
+                                                <div class="collapse menu-dropdown">
+                                                    <ul class="nav nav-sm flex-column">
+                                                        <li class="nav-item">
+                                                            <a href="@Url.Action("dashboard", "dashboard")" class="nav-link"> Dashboard </a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a href="@Url.Action("deliveries", "report")" class="nav-link"> Deliveries </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        }
                                     </ul>
                                 </div>
                             </li>
@@ -276,7 +300,7 @@
             <script src="../../assets/libs/sweetalert2/sweetalert2.min.js"></script>
             <script src="../assets/libs/jquery/jquery-3.7.1.min.js"></script>
             <script src="../assets/js/security.js"></script>
-            <script src="../assets/js/settings.js"></script>
+            <script src="../assets/js/setting.js"></script>
             @await RenderSectionAsync("scripts", required: false)
         </div>
         <div class="no-support-screen">
