@@ -306,4 +306,46 @@ public class repositoryPurchaseOrder : baseRepository
             throw exception;
         }
     }
+
+    public List<traceModel> getPurchaseOrderTracesByPurchaseOrderId(int id)
+    {
+        try
+        {
+            return factoryGetPurchaseOrderTracesByPurchaseOrderId.getList((DbDataReader)_providerDB.GetDataReader("sp_getLastPurchaseOrderTracesByPurchaseOrderId", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB, "@purchaseOrderId", DbType.Int32, id)
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public traceModel getPurchaseOrderTraceById(int id)
+    {
+        try
+        {
+            return factoryGetPurchaseOrderTraceById.get((DbDataReader)_providerDB.GetDataReader("sp_getPurchaseOrderTraceById", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB, "@traceId", DbType.Int32, id)
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
 }

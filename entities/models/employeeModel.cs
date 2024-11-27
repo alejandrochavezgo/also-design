@@ -5,6 +5,9 @@ public class employeeModel
     public int id { get; set;}
     public string? code { get; set;}
     public int userId { get; set;}
+    public int status { get; set; }
+    public string? statusName { get; set; }
+    public string? statusColor { get; set; }
     public int gender { get; set;}
     public string? genderDescription { get; set;}
     public string? address { get; set;}

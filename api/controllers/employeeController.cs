@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using api.authorization;
 using api.services;
 using business.facade;
+using common.helpers;
 using providerData.entitiesData;
 using Newtonsoft.Json;
 
@@ -51,6 +52,25 @@ public class employeeController : ControllerBase
         }
     }
 
+    [HttpPost("delete")]
+    public IActionResult delete(entities.models.employeeModel employee)
+    {
+        try
+        {
+            if(!new employeeFormHelper().isUpdateFormValid(employee, true))
+                return BadRequest("Missing data.");
+
+            if (!_facadeEmployee.deleteEmployeeById(employee.id))
+                return BadRequest("Employee can't be deleted.");
+
+            return Ok();
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
     [HttpPost("getEmployeeById")]
     public IActionResult getEmployeeById(entities.models.userModel user)
     {
@@ -69,7 +89,7 @@ public class employeeController : ControllerBase
     {
         try
         {
-            if(user == null)
+            if(user == null || !new employeeFormHelper().isUpdateFormValid(user))
                 return BadRequest("The employee was not modified.");
 
             if (!_facadeEmployee.updateEmployee(user))
@@ -88,8 +108,11 @@ public class employeeController : ControllerBase
     {
         try
         {
-            if(user == null)
+            if(user == null || !new employeeFormHelper().isAddFormValid(user))
                 return BadRequest("The employee was not created.");
+
+            if (new facadeUser(user).getUserByEmail(user.email!.ToUpper().Trim()) != null)
+                return BadRequest("This email already exist.");
 
             if (!_facadeEmployee.addEmployee(user))
                 return BadRequest("Employee not created.");
@@ -99,6 +122,32 @@ public class employeeController : ControllerBase
         catch(Exception e)
         {
             return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
+    [HttpGet("getEmployeeTracesByEmployeeId")]
+    public IActionResult getEmployeeTracesByEmployeeId(int id)
+    {
+        try
+        {
+            return Ok(_facadeEmployee.getEmployeeTracesByEmployeeId(id));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { isSuccess = false, message = e.Message });
+        }
+    }
+
+    [HttpGet("getEmployeeTraceById")]
+    public IActionResult getEmployeeTraceById(int id)
+    {
+        try
+        {
+            return Ok(_facadeEmployee.getEmployeeTraceById(id));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { isSuccess = false, message = e.Message });
         }
     }
 }

@@ -6,6 +6,7 @@ using entities.models;
 using Newtonsoft.Json;
 using System.Transactions;
 using entities.enums;
+using common.utils;
 
 public class facadeClient
 {
@@ -152,6 +153,14 @@ public class facadeClient
                             _repositoryClient.addContactPhone(clientIdAdded, phone);
 
                 var result = clientIdAdded > 0;
+                var clientAfter = getClientById(clientIdAdded);
+                var clientSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new ignoringPropertiesContractResolver(new[]
+                    { 
+                        "creationDate", "modificationDate", "status", "statusColor"
+                    })
+                };
                 var trace = _facadeTrace.addTrace(new traceModel
                 {
                     traceType = traceType.ADD_CLIENT,
@@ -159,7 +168,7 @@ public class facadeClient
                     userId = _user.id,
                     comments = "CLIENT ADDED.",
                     beforeChange = string.Empty,
-                    afterChange = string.Empty,
+                    afterChange = JsonConvert.SerializeObject(clientAfter, clientSettings),
                     entityId = clientIdAdded
                 });
 
@@ -185,6 +194,7 @@ public class facadeClient
         {
             try
             {
+                var clientBefore = getClientById(client.id);
                 client.modificationDate = DateTime.Now;
                 _repositoryClient.removeContactNamesEmailsAndPhonesByClientId(client.id);
 
@@ -201,14 +211,22 @@ public class facadeClient
                         _repositoryClient.addContactPhone(client.id, phone);
 
                 var result = _repositoryClient.updateClient(client) > 0;
+                var clientAfter = getClientById(client.id);
+                var clientSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new ignoringPropertiesContractResolver(new[]
+                    { 
+                        "creationDate", "modificationDate", "status", "statusColor"
+                    })
+                };
                 var trace = _facadeTrace.addTrace(new traceModel
                 {
                     traceType = traceType.UPDATE_CLIENT,
                     entityType = entityType.CLIENT,
                     userId = _user.id,
                     comments = "CLIENT UPDATED.",
-                    beforeChange = string.Empty,
-                    afterChange = string.Empty,
+                    beforeChange = JsonConvert.SerializeObject(clientBefore, clientSettings),
+                    afterChange = JsonConvert.SerializeObject(clientAfter, clientSettings),
                     entityId = client.id
                 });
 
@@ -263,6 +281,32 @@ public class facadeClient
                 _logger.logError($"{JsonConvert.SerializeObject(exception)}");
                 throw exception;
             }
+        }
+    }
+
+    public List<traceModel> getClientTracesByClientId(int id)
+    {
+        try
+        {
+            return _repositoryClient.getClientTracesByClientId(id);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public traceModel getClientTraceById(int id)
+    {
+        try
+        {
+            return _repositoryClient.getClientTraceById(id);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
         }
     }
 }

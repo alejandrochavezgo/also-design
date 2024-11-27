@@ -6,6 +6,7 @@ using entities.models;
 using Newtonsoft.Json;
 using System.Transactions;
 using entities.enums;
+using common.utils;
 
 public class facadeEmployee
 {
@@ -74,6 +75,7 @@ public class facadeEmployee
         {
             try
             {
+                var employeeBefore = getEmployeeById(user.id);
                 user.modificationDate = DateTime.Now;
                 _repositoryUser.removeContactPhonesByEmployeeId(user.employee.id);
 
@@ -91,14 +93,22 @@ public class facadeEmployee
                 user.employee.jobPosition = user.employee.jobPosition.Trim().ToUpper();
 
                 var result = _repositoryUser.updateUser(user) && _repositoryEmployee.updateEmployee(user.employee);
+                var employeeAfter = getEmployeeById(user.id);
+                var employeeSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new ignoringPropertiesContractResolver(new[]
+                    { 
+                        "status", "gender", "statusColor"
+                    })
+                };
                 var employeeTrace = _facadeTrace.addTrace(new traceModel
                 {
                     traceType = traceType.UPDATE_EMPLOYEE,
                     entityType = entityType.EMPLOYEE,
                     userId = _user.id,
                     comments = "EMPLOYEE UPDATED.",
-                    beforeChange = string.Empty,
-                    afterChange = string.Empty,
+                    beforeChange = JsonConvert.SerializeObject(employeeBefore, employeeSettings),
+                    afterChange = JsonConvert.SerializeObject(employeeAfter, employeeSettings),
                     entityId = user.employee.id
                 });
                 var userTrace = _facadeTrace.addTrace(new traceModel
@@ -113,6 +123,44 @@ public class facadeEmployee
                 });
 
                 if(result && employeeTrace > 0 && userTrace > 0)
+                    transactionScope.Complete();
+                else
+                    transactionScope.Dispose();
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                transactionScope.Dispose();
+                _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+                throw exception;
+            }
+        }
+    }
+
+    public bool deleteEmployeeById(int id)
+    {
+        using (var transactionScope = new TransactionScope())
+        {
+            try
+            {
+                var nonUser = _repositoryUser.getNonUserById(id);
+                if (nonUser == null || nonUser.status != (int)statusType.ACTIVE)
+                    return false;
+
+                var result = _repositoryEmployee.deleteEmployeeById(nonUser.employee.id);
+                var trace = _facadeTrace.addTrace(new traceModel
+                {
+                    traceType = traceType.DELETE_EMPLOYEE,
+                    entityType = entityType.EMPLOYEE,
+                    userId = _user.id,
+                    comments = "EMPLOYEE DELETED.",
+                    beforeChange = string.Empty,
+                    afterChange = string.Empty,
+                    entityId = nonUser.id
+                });
+
+                if(result && trace > 0)
                     transactionScope.Complete();
                 else
                     transactionScope.Dispose();
@@ -149,6 +197,14 @@ public class facadeEmployee
                             _repositoryEmployee.addContactPhone(employeeIdAdded, phone);
 
                 var result = userIdAdded > 0 && employeeIdAdded > 0;
+                var employeeAfter = getEmployeeById(userIdAdded);
+                var employeeSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new ignoringPropertiesContractResolver(new[]
+                    { 
+                        "status", "gender", "statusColor"
+                    })
+                };
                 var employeeTrace = _facadeTrace.addTrace(new traceModel
                 {
                     traceType = traceType.ADD_EMPLOYEE,
@@ -156,7 +212,7 @@ public class facadeEmployee
                     userId = _user.id,
                     comments = "EMPLOYEE ADDED.",
                     beforeChange = string.Empty,
-                    afterChange = string.Empty,
+                    afterChange = JsonConvert.SerializeObject(employeeAfter, employeeSettings),
                     entityId = employeeIdAdded
                 });
                 var userTrace = _facadeTrace.addTrace(new traceModel
@@ -183,6 +239,32 @@ public class facadeEmployee
                 _logger.logError($"{JsonConvert.SerializeObject(exception)}");
                 throw exception;
             }
+        }
+    }
+
+    public List<traceModel> getEmployeeTracesByEmployeeId(int id)
+    {
+        try
+        {
+            return _repositoryEmployee.getEmployeeTracesByEmployeeId(id);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public traceModel getEmployeeTraceById(int id)
+    {
+        try
+        {
+            return _repositoryEmployee.getEmployeeTraceById(id);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
         }
     }
 }

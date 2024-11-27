@@ -318,4 +318,46 @@ public class repositoryQuotation : baseRepository
             throw exception;
         }
     }
+
+    public List<traceModel> getQuotationTracesByQuotationId(int id)
+    {
+        try
+        {
+            return factoryGetQuotationTracesByQuotationId.getList((DbDataReader)_providerDB.GetDataReader("sp_getLastQuotationTracesByQuotationId", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB, "@quotationId", DbType.Int32, id)
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public traceModel getQuotationTraceById(int id)
+    {
+        try
+        {
+            return factoryGetQuotationTraceById.get((DbDataReader)_providerDB.GetDataReader("sp_getQuotationTraceById", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB, "@traceId", DbType.Int32, id)
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
 }

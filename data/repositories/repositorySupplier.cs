@@ -366,4 +366,46 @@ public class repositorySupplier : baseRepository
             throw exception;
         }
     }
+
+    public List<traceModel> getSupplierTracesBySupplierId(int id)
+    {
+        try
+        {
+            return factoryGetSupplierTracesBySupplierId.getList((DbDataReader)_providerDB.GetDataReader("sp_getLastSupplierTracesBySupplierId", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB, "@supplierId", DbType.Int32, id)
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public traceModel getSupplierTraceById(int id)
+    {
+        try
+        {
+            return factoryGetSupplierTraceById.get((DbDataReader)_providerDB.GetDataReader("sp_getSupplierTraceById", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB, "@traceId", DbType.Int32, id)
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
 }

@@ -6,6 +6,7 @@ using entities.models;
 using entities.enums;
 using Newtonsoft.Json;
 using System.Transactions;
+using common.utils;
 
 public class facadeQuotation
 {
@@ -52,6 +53,14 @@ public class facadeQuotation
                 }
 
                 var result = quotationIdAdded > 0;
+                var quotationAfter = getQuotationById(quotationIdAdded);
+                var quotationSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new ignoringPropertiesContractResolver(new[]
+                    { 
+                        "creationDate", "modificationDate", "status", "statusColor"
+                    })
+                };
                 var trace = _facadeTrace.addTrace(new traceModel
                 {
                     traceType = traceType.ADD_QUOTATION,
@@ -59,7 +68,7 @@ public class facadeQuotation
                     userId = _user.id,
                     comments = "QUOTATION ADDED.",
                     beforeChange = string.Empty,
-                    afterChange = string.Empty,
+                    afterChange = JsonConvert.SerializeObject(quotationAfter, quotationSettings),
                     entityId = quotationIdAdded
                 });
 
@@ -101,8 +110,8 @@ public class facadeQuotation
         {
             try
             {
-                var quotationFromDatabase = _repositoryQuotation.getQuotationById(quotation.id);
-                if (quotationFromDatabase != null && quotationFromDatabase.status != (int)statusType.ACTIVE)
+                var quotationBefore = getQuotationById(quotation.id);
+                if (quotationBefore != null && quotationBefore.status != (int)statusType.ACTIVE)
                 {
                     transactionScope.Dispose();
                     return false;
@@ -126,15 +135,23 @@ public class facadeQuotation
                     }
 
                 var result = quotationIdUpdated > 0;
+                var quotationAfter = getQuotationById(quotation.id);
+                var quotationSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new ignoringPropertiesContractResolver(new[]
+                    { 
+                        "creationDate", "modificationDate", "status", "statusColor"
+                    })
+                };
                 var trace = _facadeTrace.addTrace(new traceModel
                 {
                     traceType = traceType.UPDATE_QUOTATION,
                     entityType = entityType.QUOTATION,
                     userId = _user.id,
                     comments = "QUOTATION UPDATED.",
-                    beforeChange = string.Empty,
-                    afterChange = string.Empty,
-                    entityId = quotationIdUpdated
+                    beforeChange = JsonConvert.SerializeObject(quotationBefore, quotationSettings),
+                    afterChange = JsonConvert.SerializeObject(quotationAfter, quotationSettings),
+                    entityId = quotation.id
                 });
 
                 if(result && trace > 0)
@@ -211,8 +228,8 @@ public class facadeQuotation
                     traceType = traceType.CHANGE_STATUS,
                     userId = changeStatus.userId,
                     comments = changeStatus.comments,
-                    beforeChange = $"{quotation.status}",
-                    afterChange = $"{changeStatus.newStatusId}"
+                    beforeChange = JsonConvert.SerializeObject(quotation.status),
+                    afterChange = JsonConvert.SerializeObject(changeStatus.newStatusId)
                 });
 
                 if (_repositoryQuotation.updateStatusByQuotationById(quotation.id, changeStatus.newStatusId) && trace > 0)
@@ -246,6 +263,32 @@ public class facadeQuotation
             quotation.client.contactNames = _repositoryClient.getContactNamesByClientId(quotation.client.id);
             quotation.client.contactPhones = _repositoryClient.getContactPhonesByClientId(quotation.client.id);
             return quotation;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<traceModel> getQuotationTracesByQuotationId(int id)
+    {
+        try
+        {
+            return _repositoryQuotation.getQuotationTracesByQuotationId(id);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public traceModel getQuotationTraceById(int id)
+    {
+        try
+        {
+            return _repositoryQuotation.getQuotationTraceById(id);
         }
         catch (Exception exception)
         {

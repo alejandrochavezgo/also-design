@@ -182,22 +182,6 @@ function isValidForm() {
     }
 }
 
-function setCatalogValues(statusSelected) {
-    try {
-        $('#seStatus').val(statusSelected);
-    } catch (exception) {
-        Swal.fire({
-            title: 'Error!!',
-            html: exception,
-            icon: 'error',
-            confirmButtonClass: 'btn btn-danger w-xs mt-2',
-            buttonsStyling: !1,
-            footer: '',
-            showCloseButton: !1
-        });
-    }
-}
-
 $(document).ready(function() {
     $('#loader').show();
     initializeCatalogs().then(() => {

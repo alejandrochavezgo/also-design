@@ -212,7 +212,6 @@ public class inventoryController : Controller
         }
     }
 
-
     [HttpGet("inventory/getItemByTerm")]
     public async Task<IActionResult> getItemByTerm(string description)
     {

@@ -147,6 +147,48 @@ public class repositoryUser : baseRepository
         }
     }
 
+    public userModel getUserByEmailOrUsername(string email, string username)
+    {
+        try
+        {
+            return factoryGetUserByEmailOrUsername.get((DbDataReader)_providerDB.GetDataReader("sp_getUserByEmailOrUsername", new DbParameter[] {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@email", DbType.String, email),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@username", DbType.String, username),
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public userModel getUserByEmail(string email)
+    {
+        try
+        {
+            return factoryGetUserByEmail.get((DbDataReader)_providerDB.GetDataReader("sp_getUserByEmail", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@email", DbType.String, email)
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public List<string> getUserAccessByUserId(int id)
     {
         try
@@ -449,6 +491,70 @@ public class repositoryUser : baseRepository
             return base._providerDB.ExecuteNonQuery("sp_removeUserAccessByUserId", new DbParameter[] {
                 dataFactory.getObjParameter(configurationManager.providerDB,"@userId", DbType.Int32, id)
             });
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<traceModel> getUserTracesByUserId(int id)
+    {
+        try
+        {
+            return factoryGetUserTracesByUserId.getList((DbDataReader)_providerDB.GetDataReader("sp_getLastUserTracesByUserId", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB, "@userId", DbType.Int32, id)
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public traceModel getUserTraceById(int id)
+    {
+        try
+        {
+            return factoryGetUserTraceById.get((DbDataReader)_providerDB.GetDataReader("sp_getUserTraceById", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB, "@traceId", DbType.Int32, id)
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public bool deleteUserById(int id)
+    {
+        try
+        {
+            base._providerDB.ExecuteNonQuery("sp_deleteUserById", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@userId", DbType.Int32, id),
+            });
+            return true;
         }
         catch (SqlException SqlException)
         {

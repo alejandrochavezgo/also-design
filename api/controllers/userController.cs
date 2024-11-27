@@ -93,6 +93,10 @@ public class userController : ControllerBase
             if(user == null || !new userFormHelper().isUpdateFormValid(user))
                 return BadRequest("The user was not modified.");
 
+            var userFromDb = _facadeUser.getUserByEmail(user.email!.ToUpper().Trim());
+            if (userFromDb != null && userFromDb.id != user.id)
+                return BadRequest("This email already exist.");
+
             if (!_facadeUser.updateUser(user))
                 return BadRequest("User not updated.");
 
@@ -128,11 +132,59 @@ public class userController : ControllerBase
     {
         try
         {
-            if(user == null || !new userFormHelper().isAddFormValid(user))
+            if (user == null || !new userFormHelper().isAddFormValid(user))
                 return BadRequest("The user was not created.");
+
+            if (_facadeUser.getUserByEmailOrUsername(user.email!.ToUpper().Trim(), user.username!.ToUpper().Trim()) != null)
+                return BadRequest("This email or username already exist.");
 
             if (!_facadeUser.addUser(user))
                 return BadRequest("User not created");
+
+            return Ok();
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
+    [HttpGet("getUserTracesByUserId")]
+    public IActionResult getUserTracesByUserId(int id)
+    {
+        try
+        {
+            return Ok(_facadeUser.getUserTracesByUserId(id));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { isSuccess = false, message = e.Message });
+        }
+    }
+
+    [HttpGet("getUserTraceById")]
+    public IActionResult getUserTraceById(int id)
+    {
+        try
+        {
+            return Ok(_facadeUser.getUserTraceById(id));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { isSuccess = false, message = e.Message });
+        }
+    }
+
+    [HttpPost("delete")]
+    public IActionResult delete(entities.models.userModel user)
+    {
+        try
+        {
+            if(!new userFormHelper().isUpdateFormValid(user, true))
+                return BadRequest("Missing data.");
+
+            if (!_facadeUser.deleteUserById(user.id))
+                return BadRequest("User can't be deleted.");
 
             return Ok();
         }

@@ -7,6 +7,32 @@
     var phones = ViewData["contactPhones"] as List<string> ?? new List<string>();
     var contactPhonesString = phones != null ? string.Join(", ", phones!) : "";
 }
+@section styles
+{
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+    <style>
+        #traceContainer {
+            display: flex;
+            gap: 20px;
+        }
+        .json-container {
+            width: 50%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            overflow: auto;
+            max-height: 400px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .diff-highlight {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+}
 <div class="page-content">
     <div class="container-fluid">
         <div class="row">
@@ -22,7 +48,6 @@
                 </div>
             </div>
         </div>
-        
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -32,6 +57,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-3">
+                                <input id="clientId" value="@ViewData["id"]" hidden />
                                 <label class="form-label fw-bold">Business Name</label>
                                 <p>@ViewData["businessName"]</p>
                             </div>
@@ -96,5 +122,72 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Recent client traces</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <table id="dvTableTraces" class="table table-bordered align-middle mdl-data-table" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Trace Type Description</th>
+                                            <th>Username</th>
+                                            <th>Comments</th>
+                                            <th>Creation Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<div class="modal fade" id="traceInformationModal" tabindex="-1" aria-labelledby="traceInformationModal" aria-modal="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="traceInformationModal">Trace Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="javascript:void(0);">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <p>Before Changes:</p>
+                        </div>
+                        <div class="col-6">
+                            <p>After Changes:</p>
+                        </div>
+                        <div id="traceContainer">
+                            <div id="beforeChangeContainer" class="json-container"></div>
+                            <div id="afterChangeContainer" class="json-container"></div>
+                        </div>
+                        <div class="col-12">
+                            <div class="hstack gap-2 justify-content-end">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+    <script src="../assets/js/pages/clientDetail.js"></script>
+}

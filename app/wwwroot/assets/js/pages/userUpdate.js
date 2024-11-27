@@ -92,7 +92,30 @@ async function initializeCatalogs() {
 
 function update() {
     try {
-        if(!isValidForm())
+        var user = {
+            id: $('#inUserId').val(),
+            email: $('#inUserEmail').val(),
+            firstname: $('#inUserFirstname').val(),
+            lastname: $('#inUserLastname').val(),
+            status: $('#seUserStatus').val(),
+            newPassword: $('#inNewPassword').val(),
+            confirmNewPassword: $('#inConfirmNewPassword').val(),
+            userAccess: Array.from($('#seUserAccess')[0].options).filter(option => option.selected).map(option => option.value),
+            userRole: $('#seUserRoles').val(),
+            employee: {
+                id: $('#inEmployeeId').val(),
+                gender: $('#seEmployeeGender').val(),
+                address: $('#inEmployeeAddress').val(),
+                city: $('#inEmployeeCity').val(),
+                state: $('#inEmployeeState').val(),
+                zipcode: $('#inEmployeeZipcode').val(),
+                jobPosition: $('#inEmployeeJobPosition').val(),
+                profession: $('#inEmployeeProfession').val(),
+                contactPhones: $('#inEmployeeContactPhones').val().split(',')
+            }
+        };
+
+        if(!isValidForm(user))
             return;
 
         $('#loader').show();
@@ -101,26 +124,7 @@ function update() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                id: $('#inUserId').val(),
-                email: $('#inUserEmail').val(),
-                firstname: $('#inUserFirstname').val(),
-                lastname: $('#inUserLastname').val(),
-                status: $('#seUserStatus').val(),
-                userAccess: Array.from($('#seUserAccess')[0].options).filter(option => option.selected).map(option => option.value),
-                userRole: $('#seUserRoles').val(),
-                employee: {
-                    id: $('#inEmployeeId').val(),
-                    gender: $('#seEmployeeGender').val(),
-                    address: $('#inEmployeeAddress').val(),
-                    city: $('#inEmployeeCity').val(),
-                    state: $('#inEmployeeState').val(),
-                    zipcode: $('#inEmployeeZipcode').val(),
-                    jobPosition: $('#inEmployeeJobPosition').val(),
-                    profession: $('#inEmployeeProfession').val(),
-                    contactPhones: $('#inEmployeeContactPhones').val().split(',')
-                }
-            })
+            body: JSON.stringify(user)
         })
         .then(response => {return response.json();})
         .then(data => {
@@ -178,28 +182,10 @@ function update() {
     }
 }
 
-function isValidForm() {
+function isValidForm(user) {
     try {
-        var userId = $('#inUserId').val();
-        var employeeId = $('#inEmployeeId').val();
-        var email = $('#inUserEmail').val();
-        var firstname = $('#inUserFirstname').val();
-        var lastname = $('#inUserLastname').val();
-        var status = $('#seUserStatus').val();
-        var gender = $('#seEmployeeGender').val();
-        var address = $('#inEmployeeAddress').val();
-        var city = $('#inEmployeeCity').val();
-        var state = $('#inEmployeeState').val();
-        var zipcode = $('#inEmployeeZipcode').val();
-        var jobPosition = $('#inEmployeeJobPosition').val();
-        var profession = $('#inEmployeeProfession').val();
-        var contactPhones = $('#inEmployeeContactPhones').val();
-        var userAccess = Array.from($('#seUserAccess')[0].options).filter(option => option.selected).map(option => option.value);
-        var userRoles = $('#seUserRoles').val();
-
-        
-        if (!userId || !employeeId || !email || !firstname || !lastname || !status || !gender || !address ||
-            !address || !city || !state || !zipcode || !jobPosition || !profession || !contactPhones || !userAccess || userAccess.length == 0 || !userRoles) {
+        if (!user.id || !user.employee.id || !user.email || !user.firstname || !user.lastname || !user.status || !user.employee.gender || !user.employee.address ||
+            !user.employee.city || !user.employee.state || !user.employee.zipcode || !user.employee.jobPosition || !user.employee.profession || !user.employee.contactPhones || !user.userAccess || user.userAccess.length == 0 || !user.userRole) {
             Swal.fire({
                 title: 'Error!!',
                 html: 'The fields Email, First Name, Last Name, Status, Gender, Address, City, State, ZipCode, Job Position, Profession, Contact Phones, User Access and User Roles cannot be empty.',
@@ -211,6 +197,20 @@ function isValidForm() {
             });
             return false;
         }
+
+        if (user.newPassword != '' && user.newPassword !== user.confirmNewPassword) {
+            Swal.fire({
+                title: 'Error!!',
+                html: 'New password and confirmation do not match.',
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: !1,
+                footer: '',
+                showCloseButton: !1
+            });
+            return false;
+        }
+
         return true;
     } catch (exception) {
         Swal.fire({

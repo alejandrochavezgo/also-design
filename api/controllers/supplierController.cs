@@ -140,4 +140,30 @@ public class supplierController : ControllerBase
             return BadRequest(JsonConvert.SerializeObject(e));
         }
     }
+
+    [HttpGet("getSupplierTracesBySupplierId")]
+    public IActionResult getSupplierTracesBySupplierId(int id)
+    {
+        try
+        {
+            return Ok(_facadeSupplier.getSupplierTracesBySupplierId(id));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { isSuccess = false, message = e.Message });
+        }
+    }
+
+    [HttpGet("getSupplierTraceById")]
+    public IActionResult getSupplierTraceById(int id)
+    {
+        try
+        {
+            return Ok(_facadeSupplier.getSupplierTraceById(id));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { isSuccess = false, message = e.Message });
+        }
+    }
 }

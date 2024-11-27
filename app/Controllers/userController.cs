@@ -19,7 +19,7 @@ public class userController : Controller
     private readonly UserManager<applicationUser> _userManager;
     private readonly SignInManager<applicationUser> _signInManager;
     private readonly IHttpClientFactory _clientFactory;
-
+    
     public userController(ILogger<userController> logger, UserManager<applicationUser> userManager, SignInManager<applicationUser> signInManager, IHttpClientFactory clientFactory)
     {
         _logger = logger;
@@ -149,7 +149,7 @@ public class userController : Controller
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
             var user = new userModel { id = id };
             var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:user:getUserById"]}", new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
-
+            
             if(!responsePost.IsSuccessStatusCode)
             {
                 var errorMessage = await responsePost.Content.ReadAsStringAsync();
@@ -245,6 +245,7 @@ public class userController : Controller
     {
         try
         {
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             if (!ModelState.IsValid || !userFormHelper.isUpdateFormValid(user))
                 return Json(new
                 { 
@@ -252,8 +253,32 @@ public class userController : Controller
                     message = "Invalid data."
                 });
 
+            user.username = userCookie!.username;
+            if (!string.IsNullOrEmpty(user.newPassword))
+            {
+                var userIdentity = await _signInManager.UserManager.FindByNameAsync(user.username!);
+                if (userIdentity is null || string.IsNullOrEmpty(userIdentity.NormalizedUserName))
+                {
+                    return Json(new
+                    {
+                        isSuccess = false,
+                        message = "I can't find this username. Check it and try again please."
+                    });
+                }
+
+                user.newPasswordHash = userSecurityHelper.generateHash(_userManager,
+                new applicationUser()
+                {
+                    UserName = user.username,
+                    NormalizedUserName = user.username,
+                    Password = user.newPassword,
+                    Email = user.email,
+                    NormalizedEmail = user.email
+                },
+                user.newPassword!);
+            }
+
             var clientHttp = _clientFactory.CreateClient();
-            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
             var responsePost = await clientHttp.PostAsync(configurationManager.appSettings["api:routes:user:update"], new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
 
@@ -318,6 +343,133 @@ public class userController : Controller
             });
         }
         catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
+    [HttpGet("user/getUserTracesByUserId")]
+    public async Task<IActionResult> getUserTracesByUserId(int id)
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responseGet = await clientHttp.GetAsync($"{configurationManager.appSettings["api:routes:user:getUserTracesByUserId"]}?id={id}");
+            if (!responseGet.IsSuccessStatusCode)
+            {
+                var errorMessage = await responseGet.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responseGet.ReasonPhrase : errorMessage;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{message}"
+                });
+            }
+
+            var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
+            var results = JsonConvert.DeserializeObject<IEnumerable<traceModel>>(responseGetAsJson);
+            clientHttp.Dispose();
+
+            return Json(new
+            {
+                isSuccess = true,
+                message = "Ok.",
+                results
+            });
+        }
+        catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
+    [HttpGet("user/getUserTraceById")]
+    public async Task<IActionResult> getUserTraceById(int id)
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responseGet = await clientHttp.GetAsync($"{configurationManager.appSettings["api:routes:user:getUserTraceById"]}?id={id}");
+            if (!responseGet.IsSuccessStatusCode)
+            {
+                var errorMessage = await responseGet.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responseGet.ReasonPhrase : errorMessage;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{message}"
+                });
+            }
+
+            var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
+            var results = JsonConvert.DeserializeObject<traceModel>(responseGetAsJson);
+            clientHttp.Dispose();
+
+            return Json(new
+            {
+                isSuccess = true,
+                message = "Ok.",
+                results
+            });
+        }
+        catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
+    [HttpPost("user/delete")]
+    public async Task<JsonResult> delete([FromBody] userModel user)
+    {
+        try
+        {
+            if (!ModelState.IsValid || !userFormHelper.isUpdateFormValid(user, true))
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = "To delete a user, they must first be active."
+                });
+
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:user:delete"]}", new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
+
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{message}"
+                });
+            }
+            clientHttp.Dispose();
+
+            return Json(new
+            {
+                isSuccess = true,
+                message = "User deleted successfully."
+            });
+        }
+        catch(Exception exception)
         {
             return Json(new
             {

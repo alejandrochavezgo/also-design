@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System.Transactions;
 using entities.enums;
 using common.helpers;
+using common.utils;
 
 public class facadeUser
 {
@@ -56,6 +57,32 @@ public class facadeUser
         }
     }
 
+    public userModel getUserByEmailOrUsername(string email, string username)
+    {
+        try
+        {
+            return _repositoryUser.getUserByEmailOrUsername(email, username);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public userModel getUserByEmail(string email)
+    {
+        try
+        {
+            return _repositoryUser.getUserByEmail(email);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public userModel getUserById(int id)
     {
         try
@@ -78,6 +105,9 @@ public class facadeUser
         {
             try
             {
+                var facadeEmployee = new facadeEmployee(user);
+                var userBefore = getUserById(user.id);
+                var employeeBefore = userBefore;
                 user.modificationDate = DateTime.Now;
                 _repositoryUser.removeContactPhonesByEmployeeId(user.employee.id);
 
@@ -112,24 +142,43 @@ public class facadeUser
                                     _repositoryEmployee.updateEmployee(user.employee) &&
                                     _repositoryUser.updateUserRole(user.id, user.userRole) > 0;
 
+                var employeeAfter = getUserById(user.id);
+                var employeeSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new ignoringPropertiesContractResolver(new[]
+                    { 
+                        "status", "gender", "statusColor"
+                    })
+                };
                 var employeeTrace = _facadeTrace.addTrace(new traceModel
                 {
                     traceType = traceType.UPDATE_EMPLOYEE,
                     entityType = entityType.EMPLOYEE,
                     userId = _user.id,
                     comments = "EMPLOYEE UPDATED.",
-                    beforeChange = string.Empty,
-                    afterChange = string.Empty,
+                    beforeChange = JsonConvert.SerializeObject(employeeBefore, employeeSettings),
+                    afterChange = JsonConvert.SerializeObject(employeeAfter, employeeSettings),
                     entityId = user.employee.id
                 });
+                var userSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new ignoringPropertiesContractResolver(new[]
+                    { 
+                        "status", "password", "passwordHash", "newPasswordHash",
+                        "newPassword", "confirmNewPassword", "failCount",
+                        "creationDate", "modificationDate", "statusColor",
+                        "employee", "userRole"
+                    })
+                };
+                var userAfter = getUserById(user.id);
                 var userTrace = _facadeTrace.addTrace(new traceModel
                 {
                     traceType = traceType.UPDATE_USER,
                     entityType = entityType.USER,
                     userId = _user.id,
                     comments = "USER UPDATED.",
-                    beforeChange = string.Empty,
-                    afterChange = string.Empty,
+                    beforeChange = JsonConvert.SerializeObject(userBefore, userSettings),
+                    afterChange = JsonConvert.SerializeObject(userAfter, userSettings),
                     entityId = user.id
                 });
 
@@ -219,6 +268,14 @@ public class facadeUser
                     }
 
                 var result = userIdAdded > 0 && employeeIdAdded > 0 && userIdRoleAdded > 0;
+                var employeeAfter = new facadeEmployee(user).getEmployeeById(userIdAdded);
+                var employeeSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new ignoringPropertiesContractResolver(new[]
+                    { 
+                        "status", "gender", "statusColor"
+                    })
+                };
                 var employeeTrace = _facadeTrace.addTrace(new traceModel
                 {
                     traceType = traceType.ADD_EMPLOYEE,
@@ -226,9 +283,20 @@ public class facadeUser
                     userId = _user.id,
                     comments = "EMPLOYEE ADDED.",
                     beforeChange = string.Empty,
-                    afterChange = string.Empty,
+                    afterChange = JsonConvert.SerializeObject(employeeAfter.employee, employeeSettings),
                     entityId = employeeIdAdded
                 });
+                var userAfter = getUserById(userIdAdded);
+                var userSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new ignoringPropertiesContractResolver(new[]
+                    { 
+                        "status", "password", "passwordHash", "newPasswordHash",
+                        "newPassword", "confirmNewPassword", "failCount",
+                        "creationDate", "modificationDate", "statusColor",
+                        "employee", "userRole"
+                    })
+                };
                 var userTrace = _facadeTrace.addTrace(new traceModel
                 {
                     traceType = traceType.ADD_USER,
@@ -236,11 +304,75 @@ public class facadeUser
                     userId = _user.id,
                     comments = "USER ADDED.",
                     beforeChange = string.Empty,
-                    afterChange = string.Empty,
+                    afterChange = JsonConvert.SerializeObject(userAfter, userSettings),
                     entityId = userIdAdded
                 });
 
                 if(result && employeeTrace > 0 && userTrace > 0)
+                    transactionScope.Complete();
+                else
+                    transactionScope.Dispose();
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                transactionScope.Dispose();
+                _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+                throw exception;
+            }
+        }
+    }
+
+    public List<traceModel> getUserTracesByUserId(int id)
+    {
+        try
+        {
+            return _repositoryUser.getUserTracesByUserId(id);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public traceModel getUserTraceById(int id)
+    {
+        try
+        {
+            return _repositoryUser.getUserTraceById(id);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public bool deleteUserById(int id)
+    {
+        using (var transactionScope = new TransactionScope())
+        {
+            try
+            {
+                var user = _repositoryUser.getUserById(id);
+                if (user == null || user.status != (int)statusType.ACTIVE)
+                    return false;
+
+                var result = _repositoryUser.deleteUserById(user.id);
+                var trace = _facadeTrace.addTrace(new traceModel
+                {
+                    traceType = traceType.DELETE_USER,
+                    entityType = entityType.USER,
+                    userId = _user.id,
+                    comments = "USER DELETED.",
+                    beforeChange = string.Empty,
+                    afterChange = string.Empty,
+                    entityId = user.id
+                });
+
+                if(result && trace > 0)
                     transactionScope.Complete();
                 else
                     transactionScope.Dispose();

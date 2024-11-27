@@ -7,6 +7,7 @@ using entities.enums;
 using Newtonsoft.Json;
 using System.Transactions;
 using common.helpers;
+using common.utils;
 
 public class facadePurchaseOrder
 {
@@ -69,6 +70,14 @@ public class facadePurchaseOrder
                 }
 
                 var result = purchaseOrderIdAdded > 0;
+                var purchaseOrderAfter = getPurchaseOrderById(purchaseOrderIdAdded);
+                var purchaseOrderSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new ignoringPropertiesContractResolver(new[]
+                    { 
+                        "creationDate", "modificationDate", "status", "statusColor"
+                    })
+                };
                 var trace = _facadeTrace.addTrace(new traceModel
                 {
                     traceType = traceType.ADD_PURCHASE_ORDER,
@@ -76,7 +85,7 @@ public class facadePurchaseOrder
                     userId = _user.id,
                     comments = "PURCHASE ORDER ADDED.",
                     beforeChange = string.Empty,
-                    afterChange = string.Empty,
+                    afterChange = JsonConvert.SerializeObject(purchaseOrderAfter, purchaseOrderSettings),
                     entityId = purchaseOrderIdAdded
                 });
 
@@ -102,8 +111,8 @@ public class facadePurchaseOrder
         {
             try
             {
-                var purchaseOrderFromDatabase = _repositoryPurchaseOrder.getPurchaseOrderById(purchaseOrder.id);
-                if (purchaseOrderFromDatabase != null && purchaseOrderFromDatabase.status != (int)statusType.ACTIVE)
+                var purchaseOrderBefore = getPurchaseOrderById(purchaseOrder.id);
+                if (purchaseOrderBefore != null && purchaseOrderBefore.status != (int)statusType.ACTIVE)
                 {
                     transactionScope.Dispose();
                     return false;
@@ -127,15 +136,23 @@ public class facadePurchaseOrder
                     }
 
                 var result = purchaseOrderIdUpdated > 0;
+                var purchaseOrderAfter = getPurchaseOrderById(purchaseOrder.id);
+                var purchaseOrderSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new ignoringPropertiesContractResolver(new[]
+                    { 
+                        "creationDate", "modificationDate", "status", "statusColor"
+                    })
+                };
                 var trace = _facadeTrace.addTrace(new traceModel
                 {
                     traceType = traceType.UPDATE_PURCHASE_ORDER,
                     entityType = entityType.PURCHASE_ORDER,
                     userId = _user.id,
                     comments = "PURCHASE ORDER UPDATED.",
-                    beforeChange = string.Empty,
-                    afterChange = string.Empty,
-                    entityId = purchaseOrderFromDatabase.id
+                    beforeChange = JsonConvert.SerializeObject(purchaseOrderBefore, purchaseOrderSettings),
+                    afterChange = JsonConvert.SerializeObject(purchaseOrderAfter, purchaseOrderSettings),
+                    entityId = purchaseOrder.id
                 });
 
                 if(result && trace > 0)
@@ -308,8 +325,8 @@ public class facadePurchaseOrder
                     traceType = traceType.CHANGE_STATUS,
                     userId = changeStatus.userId,
                     comments = changeStatus.comments,
-                    beforeChange = $"{purchaseOrder.status}",
-                    afterChange = $"{changeStatus.newStatusId}"
+                    beforeChange = JsonConvert.SerializeObject(purchaseOrder.status),
+                    afterChange = JsonConvert.SerializeObject(changeStatus.newStatusId)
                 });
 
                 if(changeStatus.newStatusId == (int)statusType.PARTIALLY_FULFILLED && quantityCompletedItems > 0 && quantityPendingItems > 0 && quantityCompletedItems == quantityPendingItems)
@@ -410,6 +427,32 @@ public class facadePurchaseOrder
                 }
             purchaseOrderItems.RemoveAll(purchaseOrderItem => purchaseOrderItemsToRemove.Contains(purchaseOrderItem));
             return purchaseOrderItems;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<traceModel> getPurchaseOrderTracesByPurchaseOrderId(int id)
+    {
+        try
+        {
+            return _repositoryPurchaseOrder.getPurchaseOrderTracesByPurchaseOrderId(id);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public traceModel getPurchaseOrderTraceById(int id)
+    {
+        try
+        {
+            return _repositoryPurchaseOrder.getPurchaseOrderTraceById(id);
         }
         catch (Exception exception)
         {

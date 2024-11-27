@@ -11,6 +11,7 @@ using System.Net.Http.Headers;
 using common.configurations;
 using System.Text;
 using providerData.helpers;
+using app.helpers;
 
 [authorization]
 public class employeeController : Controller
@@ -143,7 +144,7 @@ public class employeeController : Controller
     {
         try
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || !employeeFormHelper.isAddFormValid(user))
                 {
                     return Json(new
                     { 
@@ -293,7 +294,7 @@ public class employeeController : Controller
     {
         try
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || !employeeFormHelper.isUpdateFormValid(user))
                 {
                     return Json(new
                     { 
@@ -358,6 +359,133 @@ public class employeeController : Controller
 
             var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
             var results = JsonConvert.DeserializeObject<IEnumerable<entities.models.userModel>>(responseGetAsJson);
+            clientHttp.Dispose();
+
+            return Json(new
+            {
+                isSuccess = true,
+                message = "Ok.",
+                results
+            });
+        }
+        catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
+    [HttpPost("employee/delete")]
+    public async Task<JsonResult> delete([FromBody] employeeModel employee)
+    {
+        try
+        {
+            if (!ModelState.IsValid || !employeeFormHelper.isUpdateFormValid(employee, true))
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = "To delete a employee, they must first be active."
+                });
+
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:employee:delete"]}", new StringContent(JsonConvert.SerializeObject(employee), Encoding.UTF8, "application/json"));
+
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{message}"
+                });
+            }
+            clientHttp.Dispose();
+
+            return Json(new
+            {
+                isSuccess = true,
+                message = "Employee deleted successfully."
+            });
+        }
+        catch(Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
+    [HttpGet("employee/getEmployeeTracesByEmployeeId")]
+    public async Task<IActionResult> getEmployeeTracesByEmployeeId(int id)
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responseGet = await clientHttp.GetAsync($"{configurationManager.appSettings["api:routes:employee:getEmployeeTracesByEmployeeId"]}?id={id}");
+            if (!responseGet.IsSuccessStatusCode)
+            {
+                var errorMessage = await responseGet.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responseGet.ReasonPhrase : errorMessage;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{message}"
+                });
+            }
+
+            var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
+            var results = JsonConvert.DeserializeObject<IEnumerable<traceModel>>(responseGetAsJson);
+            clientHttp.Dispose();
+
+            return Json(new
+            {
+                isSuccess = true,
+                message = "Ok.",
+                results
+            });
+        }
+        catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
+    [HttpGet("employee/getEmployeeTraceById")]
+    public async Task<IActionResult> getEmployeeTraceById(int id)
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responseGet = await clientHttp.GetAsync($"{configurationManager.appSettings["api:routes:employee:getEmployeeTraceById"]}?id={id}");
+            if (!responseGet.IsSuccessStatusCode)
+            {
+                var errorMessage = await responseGet.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responseGet.ReasonPhrase : errorMessage;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{message}"
+                });
+            }
+
+            var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
+            var results = JsonConvert.DeserializeObject<traceModel>(responseGetAsJson);
             clientHttp.Dispose();
 
             return Json(new

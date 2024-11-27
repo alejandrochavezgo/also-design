@@ -87,6 +87,27 @@ public class repositoryEmployee : baseRepository
         }
     }
 
+    public employeeModel getEmployeeById(int id)
+    {
+        try
+        {
+            return factoryGetEmployeeById.get((DbDataReader)_providerDB.GetDataReader("sp_getEmployeeById", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@employeeId", DbType.Int32, id)
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
     public List<string> getContactPhonesByEmployeeId(int id)
     {
         try
@@ -152,6 +173,70 @@ public class repositoryEmployee : baseRepository
             });
 
             return Convert.ToInt32(employeeIdUpdated.Value) > 0;
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public bool deleteEmployeeById(int id)
+    {
+        try
+        {
+            base._providerDB.ExecuteNonQuery("sp_deleteEmployeeById", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@employeeId", DbType.Int32, id),
+            });
+            return true;
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<traceModel> getEmployeeTracesByEmployeeId(int id)
+    {
+        try
+        {
+            return factoryGetEmployeeTracesByEmployeeId.getList((DbDataReader)_providerDB.GetDataReader("sp_getLastEmployeeTracesByEmployeeId", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB, "@employeeId", DbType.Int32, id)
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public traceModel getEmployeeTraceById(int id)
+    {
+        try
+        {
+            return factoryGetEmployeeTraceById.get((DbDataReader)_providerDB.GetDataReader("sp_getEmployeeTraceById", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB, "@traceId", DbType.Int32, id)
+            }));
         }
         catch (SqlException SqlException)
         {

@@ -170,4 +170,30 @@ public class purchaseOrderController : ControllerBase
             return BadRequest(JsonConvert.SerializeObject(e));
         }
     }
+
+    [HttpGet("getPurchaseOrderTracesByPurchaseOrderId")]
+    public IActionResult getPurchaseOrderTracesByPurchaseOrderId(int id)
+    {
+        try
+        {
+            return Ok(_facadePurchaseOrder.getPurchaseOrderTracesByPurchaseOrderId(id));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { isSuccess = false, message = e.Message });
+        }
+    }
+
+    [HttpGet("getPurchaseOrderTraceById")]
+    public IActionResult getPurchaseOrderTraceById(int id)
+    {
+        try
+        {
+            return Ok(_facadePurchaseOrder.getPurchaseOrderTraceById(id));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { isSuccess = false, message = e.Message });
+        }
+    }
 }

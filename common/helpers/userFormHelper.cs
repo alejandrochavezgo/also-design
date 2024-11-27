@@ -13,11 +13,7 @@ public class userFormHelper
         {
             if (string.IsNullOrEmpty(user.email) || string.IsNullOrEmpty(user.firstname) ||
                 string.IsNullOrEmpty(user.password) || string.IsNullOrEmpty(user.username) ||
-                string.IsNullOrEmpty(user.lastname) || user.status <= 0 || user.employee!.gender <= 0 ||
-                string.IsNullOrEmpty(user.employee!.address) || string.IsNullOrEmpty(user.employee!.city)||
-                string.IsNullOrEmpty(user.employee!.state) || string.IsNullOrEmpty(user.employee!.zipcode) ||
-                string.IsNullOrEmpty(user.employee!.jobPosition) || string.IsNullOrEmpty(user.employee!.profession) ||
-                user.employee!.contactPhones!.Count == 0 || user.status <= 0 || user.userRole <= 0 || user.userAccess!.Count == 0)
+                string.IsNullOrEmpty(user.lastname) || user.status <= 0 || user.userRole <= 0 || user.userAccess!.Count == 0)
                 return false;
 
             return true;
@@ -33,19 +29,13 @@ public class userFormHelper
         try
         {
             if (string.IsNullOrEmpty(user.email) || string.IsNullOrEmpty(user.firstname) ||
-                string.IsNullOrEmpty(user.lastname) || user.status <= 0 || user.employee!.gender <= 0 ||
-                string.IsNullOrEmpty(user.employee!.address) || string.IsNullOrEmpty(user.employee!.city)||
-                string.IsNullOrEmpty(user.employee!.state) || string.IsNullOrEmpty(user.employee!.zipcode) ||
-                string.IsNullOrEmpty(user.employee!.jobPosition) || string.IsNullOrEmpty(user.employee!.profession) ||
-                user.employee!.contactPhones!.Count == 0 || user.status <= 0 || user.id <= 0 || user.employee!.id <= 0 ||
-                user.userRole <= 0 || user.userAccess!.Count == 0)
+                string.IsNullOrEmpty(user.lastname) || user.status <= 0 || user.id <= 0 || 
+                user.employee!.id <= 0 || user.userRole <= 0 || user.userAccess!.Count == 0)
                 return false;
 
-            if (!string.IsNullOrEmpty(user.password))
-                if (string.IsNullOrEmpty(user.newPassword) || string.IsNullOrEmpty(user.confirmNewPassword) || user.newPassword != user.confirmNewPassword ||
-                    string.IsNullOrEmpty(user.newPasswordHash))
+            if (!string.IsNullOrEmpty(user.newPassword))
+                if (string.IsNullOrEmpty(user.confirmNewPassword) || user.newPassword != user.confirmNewPassword)
                     return false;
-
             return true;
         }
         catch (Exception exception)
@@ -53,4 +43,18 @@ public class userFormHelper
             throw exception;
         }
     }
+
+    public bool isUpdateFormValid(userModel user, bool isStatusChange)
+    {
+        try
+        {
+            if (user == null || user.id <= 0 || user.status != (int)statusType.ACTIVE)
+                return false;
+            return true;
+        }
+        catch (Exception exception)
+        {
+            throw exception;
+        }
+}
 }

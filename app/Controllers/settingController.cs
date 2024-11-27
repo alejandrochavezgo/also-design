@@ -39,7 +39,7 @@ public class settingController : Controller
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
             var user = new userModel { id = userCookie.id };
-            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:user:getUserById"]}", new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:setting:getUserById"]}", new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
 
             if(!responsePost.IsSuccessStatusCode)
             {
@@ -57,6 +57,8 @@ public class settingController : Controller
             ViewData["user.username"] = result!.username;
             ViewData["user.firstname"] = result!.firstname;
             ViewData["user.lastname"] = result!.lastname;
+            ViewData["user.userRole"] = result!.userRole;
+            ViewData["user.userAccess"] = result!.userAccess;
             ViewData["user.status"] = result!.status;
             ViewData["employee.id"] = result.employee!.id;
             ViewData["employee.gender"] = result.employee!.gender;
@@ -85,7 +87,7 @@ public class settingController : Controller
         try
         {
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
-            if (!ModelState.IsValid || !userFormHelper.isUpdateFormValid(user) || userCookie == null || string.IsNullOrEmpty(userCookie.username))
+            if (!ModelState.IsValid || !userSettingFormHelper.isUpdateFormValid(user) || userCookie == null || string.IsNullOrEmpty(userCookie.username))
                 return Json(new
                 { 
                     isSuccess = false,
@@ -141,7 +143,7 @@ public class settingController : Controller
 
             var clientHttp = _clientFactory.CreateClient();
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
-            var responsePost = await clientHttp.PostAsync(configurationManager.appSettings["api:routes:user:update"], new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
+            var responsePost = await clientHttp.PostAsync(configurationManager.appSettings["api:routes:setting:updateUser"], new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
 
             if(!responsePost.IsSuccessStatusCode)
             {
@@ -179,7 +181,7 @@ public class settingController : Controller
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
-            var responseGet = await clientHttp.GetAsync($"{configurationManager.appSettings["api:routes:user:getAllUserCatalogs"]}");
+            var responseGet = await clientHttp.GetAsync($"{configurationManager.appSettings["api:routes:setting:getAllUserCatalogs"]}");
             if(!responseGet.IsSuccessStatusCode)
             {
                 var errorMessage = await responseGet.Content.ReadAsStringAsync();

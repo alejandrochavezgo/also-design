@@ -36,25 +36,47 @@ async function initializeCatalogs() {
 
         var selectMapping = {
             seUserStatus: 0,
-            seEmployeeGender: 1
+            seEmployeeGender: 1,
+            seUserAccess: 2,
+            seUserRoles: 3
         };
 
         for (var selectId in selectMapping) {
             var index = selectMapping[selectId];
             var $select = $('#' + selectId);
-            $select.empty().append('<option value="">Select option</option>');
-            catalogs.results[index].forEach(function(item) {
-                $select.append(
-                    $('<option>', {
-                        value: item.id,
-                        text: item.description
-                    })
-                );
-            });
+
+            if (index == 2)
+            {
+                $select.empty();
+                catalogs.results[index].forEach(function(item) {
+                    $select.append(
+                        $('<option>', {
+                            text: item.description
+                        })
+                    );
+                });
+            } else {
+                $select.empty().append('<option value="">Select option</option>');
+                catalogs.results[index].forEach(function(item) {
+                    $select.append(
+                        $('<option>', {
+                            value: item.id,
+                            text: item.description
+                        })
+                    );
+                });
+            }
         }
 
         $('#seUserStatus').val($('#seUserStatus').attr('option-selected'));
         $('#seEmployeeGender').val($('#seEmployeeGender').attr('option-selected'));
+        $('#seUserRoles').val($('#seUserRoles').attr('option-selected'));
+        var optionSelected = $('#seUserAccess').attr('option-selected');
+        const selectElement = document.getElementById('seUserAccess');
+        Array.from(selectElement.options).forEach(option => {
+            if (optionSelected.includes(option.value))
+                option.selected = true;
+        });
     } catch (exception) {
         Swal.fire({
             title: 'Error!!',
@@ -70,7 +92,31 @@ async function initializeCatalogs() {
 
 function update() {
     try {
-        if(!isValidForm())
+        var user = {
+            id: $('#inUserId').val(),
+            email: $('#inUserEmail').val(),
+            firstname: $('#inUserFirstname').val(),
+            lastname: $('#inUserLastname').val(),
+            status: $('#seUserStatus').val(),
+            password: $('#inCurrentPassword').val(),
+            newPassword: $('#inNewPassword').val(),
+            confirmNewPassword: $('#inConfirmNewPassword').val(),
+            userAccess: Array.from($('#seUserAccess')[0].options).filter(option => option.selected).map(option => option.value),
+            userRole: $('#seUserRoles').val(),
+            employee: {
+                id: $('#inEmployeeId').val(),
+                gender: $('#seEmployeeGender').val(),
+                address: $('#inEmployeeAddress').val(),
+                city: $('#inEmployeeCity').val(),
+                state: $('#inEmployeeState').val(),
+                zipcode: $('#inEmployeeZipcode').val(),
+                jobPosition: $('#inEmployeeJobPosition').val(),
+                profession: $('#inEmployeeProfession').val(),
+                contactPhones: $('#inEmployeeContactPhones').val().split(',')
+            }
+        };
+
+        if(!isValidForm(user))
             return;
 
         $('#loader').show();
@@ -79,27 +125,7 @@ function update() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                id: $('#inUserId').val(),
-                email: $('#inUserEmail').val(),
-                firstname: $('#inUserFirstname').val(),
-                lastname: $('#inUserLastname').val(),
-                status: $('#seUserStatus').val(),
-                password: $('#inCurrentPassword').val(),
-                newPassword: $('#inNewPassword').val(),
-                confirmNewPassword: $('#inConfirmNewPassword').val(),
-                employee: {
-                    id: $('#inEmployeeId').val(),
-                    gender: $('#seEmployeeGender').val(),
-                    address: $('#inEmployeeAddress').val(),
-                    city: $('#inEmployeeCity').val(),
-                    state: $('#inEmployeeState').val(),
-                    zipcode: $('#inEmployeeZipcode').val(),
-                    jobPosition: $('#inEmployeeJobPosition').val(),
-                    profession: $('#inEmployeeProfession').val(),
-                    contactPhones: $('#inEmployeeContactPhones').val().split(',')
-                }
-            })
+            body: JSON.stringify(user)
         })
         .then(response => { return response.json(); })
         .then(data => {
@@ -157,31 +183,13 @@ function update() {
     }
 }
 
-function isValidForm() {
+function isValidForm(user) {
     try {
-        var userId = $('#inUserId').val();
-        var employeeId = $('#inEmployeeId').val();
-        var email = $('#inUserEmail').val();
-        var firstname = $('#inUserFirstname').val();
-        var lastname = $('#inUserLastname').val();
-        var status = $('#seUserStatus').val();
-        var gender = $('#seEmployeeGender').val();
-        var address = $('#inEmployeeAddress').val();
-        var city = $('#inEmployeeCity').val();
-        var state = $('#inEmployeeState').val();
-        var zipcode = $('#inEmployeeZipcode').val();
-        var jobPosition = $('#inEmployeeJobPosition').val();
-        var profession = $('#inEmployeeProfession').val();
-        var contactPhones = $('#inEmployeeContactPhones').val();
-        var currentPassword = $('#inCurrentPassword').val();
-        var newPassword = $('#inNewPassword').val();
-        var confirmNewPassword = $('#inConfirmNewPassword').val();
-
-        if (!userId || !employeeId || !email || !firstname || !lastname || !status || !gender || !address ||
-            !city || !state || !zipcode || !jobPosition || !profession || !contactPhones) {
+        if (!user.id || !user.employee.id || !user.email || !user.firstname || !user.lastname || !user.status || !user.employee.gender || !user.employee.address ||
+            !user.employee.city || !user.employee.state || !user.employee.zipcode || !user.employee.jobPosition || !user.employee.profession || !user.employee.contactPhones || !user.userAccess || user.userAccess.length == 0 || !user.userRole) {
             Swal.fire({
                 title: 'Error!!',
-                html: 'The fields Email, First Name, Last Name, Status, Gender, Address, City, State, ZipCode, Job Position, Profession and Contact Phones cannot be empty.',
+                html: 'The fields Email, First Name, Last Name, Status, Gender, Address, City, State, ZipCode, Job Position, Profession, Contact Phones, User Access and User Roles cannot be empty.',
                 icon: 'error',
                 confirmButtonClass: 'btn btn-danger w-xs mt-2',
                 buttonsStyling: !1,
@@ -191,8 +199,8 @@ function isValidForm() {
             return false;
         }
 
-        if (currentPassword) {
-            if (newPassword.length === 0 || confirmNewPassword.length === 0) {
+        if (user.password) {
+            if (user.newPassword.length === 0 || user.confirmNewPassword.length === 0) {
                 Swal.fire({
                     title: 'Error!!',
                     html: 'New password and confirmation cannot be empty.',
@@ -205,7 +213,7 @@ function isValidForm() {
                 return false;
             }
 
-            if (newPassword !== confirmNewPassword) {
+            if (user.newPassword !== user.confirmNewPassword) {
                 Swal.fire({
                     title: 'Error!!',
                     html: 'New password and confirmation do not match.',

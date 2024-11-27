@@ -208,7 +208,7 @@ async function getPackingUnitTypeCatalog() {
         if (!catalogPackingTypes || !catalogPackingTypes.isSuccess || catalogPackingTypes.results.length == 0) {
             Swal.fire({
                 title: 'Error!!',
-                html: 'Packing types catalog not downloaded. Please reload the page.',
+                html: catalogPackingTypes.message,
                 icon: 'error',
                 confirmButtonClass: 'btn btn-danger w-xs mt-2',
                 buttonsStyling: false,

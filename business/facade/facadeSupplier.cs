@@ -6,6 +6,7 @@ using entities.models;
 using Newtonsoft.Json;
 using System.Transactions;
 using entities.enums;
+using common.utils;
 
 public class facadeSupplier
 {
@@ -152,6 +153,14 @@ public class facadeSupplier
                             _repositorySupplier.addContactPhone(supplierIdAdded, phone);
                 
                 var result = supplierIdAdded > 0;
+                var supplierAfter = getSupplierById(supplierIdAdded);
+                var supplierSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new ignoringPropertiesContractResolver(new[]
+                    { 
+                        "creationDate", "modificationDate", "status", "statusColor"
+                    })
+                };
                 var trace = _facadeTrace.addTrace(new traceModel
                 {
                     traceType = traceType.ADD_SUPPLIER,
@@ -159,7 +168,7 @@ public class facadeSupplier
                     userId = _user.id,
                     comments = "SUPPLIER ADDED.",
                     beforeChange = string.Empty,
-                    afterChange = string.Empty,
+                    afterChange = JsonConvert.SerializeObject(supplierAfter, supplierSettings),
                     entityId = supplierIdAdded
                 });
 
@@ -185,6 +194,7 @@ public class facadeSupplier
         {
             try
             {
+                var supplierBefore = getSupplierById(supplier.id);
                 supplier.modificationDate = DateTime.Now;
                 _repositorySupplier.removeContactNamesEmailsAndPhonesBySupplierId(supplier.id);
 
@@ -201,14 +211,22 @@ public class facadeSupplier
                         _repositorySupplier.addContactPhone(supplier.id, phone);
 
                 var result = _repositorySupplier.updateSupplier(supplier) > 0;
+                var supplierAfter = getSupplierById(supplier.id);
+                var supplierSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new ignoringPropertiesContractResolver(new[]
+                    { 
+                        "creationDate", "modificationDate", "status", "statusColor"
+                    })
+                };
                 var trace = _facadeTrace.addTrace(new traceModel
                 {
                     traceType = traceType.UPDATE_SUPPLIER,
                     entityType = entityType.SUPPLIER,
                     userId = _user.id,
                     comments = "SUPPLIER UPDATED.",
-                    beforeChange = string.Empty,
-                    afterChange = string.Empty,
+                    beforeChange = JsonConvert.SerializeObject(supplierBefore, supplierSettings),
+                    afterChange = JsonConvert.SerializeObject(supplierAfter, supplierSettings),
                     entityId = supplier.id
                 });
 
@@ -263,6 +281,32 @@ public class facadeSupplier
                 _logger.logError($"{JsonConvert.SerializeObject(exception)}");
                 throw exception;
             }
+        }
+    }
+
+    public List<traceModel> getSupplierTracesBySupplierId(int id)
+    {
+        try
+        {
+            return _repositorySupplier.getSupplierTracesBySupplierId(id);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public traceModel getSupplierTraceById(int id)
+    {
+        try
+        {
+            return _repositorySupplier.getSupplierTraceById(id);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
         }
     }
 }

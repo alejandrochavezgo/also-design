@@ -141,4 +141,30 @@ public class quotationController : ControllerBase
             return BadRequest(JsonConvert.SerializeObject(e));
         }
     }
+
+    [HttpGet("getQuotationTracesByQuotationId")]
+    public IActionResult getQuotationTracesByQuotationId(int id)
+    {
+        try
+        {
+            return Ok(_facadeQuotation.getQuotationTracesByQuotationId(id));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { isSuccess = false, message = e.Message });
+        }
+    }
+
+    [HttpGet("getQuotationTraceById")]
+    public IActionResult getQuotationTraceById(int id)
+    {
+        try
+        {
+            return Ok(_facadeQuotation.getQuotationTraceById(id));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { isSuccess = false, message = e.Message });
+        }
+    }
 }

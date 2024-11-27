@@ -142,4 +142,30 @@ public class clientController : ControllerBase
             return BadRequest(JsonConvert.SerializeObject(e));
         }
     }
+
+    [HttpGet("getClientTracesByClientId")]
+    public IActionResult getClientTracesByClientId(int id)
+    {
+        try
+        {
+            return Ok(_facadeClient.getClientTracesByClientId(id));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { isSuccess = false, message = e.Message });
+        }
+    }
+
+    [HttpGet("getClientTraceById")]
+    public IActionResult getClientTraceById(int id)
+    {
+        try
+        {
+            return Ok(_facadeClient.getClientTraceById(id));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { isSuccess = false, message = e.Message });
+        }
+    }
 }

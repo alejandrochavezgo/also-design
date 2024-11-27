@@ -67,6 +67,23 @@
                             </div>
                         </div>
                         <div class="row pt-27px">
+                            <div class="col-12">
+                                <div class="alert alert-warning" role="alert">
+                                    If you want to <b>change your password</b>, you must enter your current password, the new one, and a confirmation. If you do not wish to change it, you can leave the fields blank.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="inNewPassword" class="form-label">New password</label>
+                                <input type="password" class="form-control" id="inNewPassword" placeholder="Enter your new password">
+                            </div>
+                            <div class="col-6">
+                                <label for="inConfirmNewPassword" class="form-label">Confirm new password</label>
+                                <input type="password" class="form-control" id="inConfirmNewPassword" placeholder="Confirm your new password">
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
                             <div class="col-6">
                                 <label for="seUserAccess" class="form-label">User Access</label>
                                 <form>
@@ -91,7 +108,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-5">
+                            <div class="col-6">
                                 <label for="inEmployeeAddress" class="form-label">Address</label>
                                 <input type="text" class="form-control uppercase-input" id="inEmployeeAddress" placeholder="Enter address" value="@ViewData["employee.address"]">
                             </div>
@@ -105,7 +122,7 @@
                             </div>
                         </div>
                         <div class="row pt-27px">
-                            <div class="col-2">
+                            <div class="col-3">
                                 <label for="inEmployeeZipcode" class="form-label">Zip Code</label>
                                 <input type="text" class="form-control uppercase-input" id="inEmployeeZipcode" placeholder="Enter zip code" value="@ViewData["employee.zipcode"]">
                             </div>
@@ -117,7 +134,7 @@
                                 <label for="inEmployeeProfession" class="form-label">Profession</label>
                                 <input type="text" class="form-control uppercase-input" id="inEmployeeProfession" placeholder="Enter profession (ING, LIC, etc.)" value="@ViewData["employee.profession"]">
                             </div>
-                            <div class="col-4">
+                            <div class="col-3">
                                 <label for="inEmployeeContactPhones" class="form-label">Contact phone</label>
                                 <input class="form-control uppercase-input" id="inEmployeeContactPhones" data-choices data-choices-limit="10" data-choices-removeItem type="text" value="@employeeContactPhonesString"/>
                             </div>

@@ -1,6 +1,5 @@
 function initializeTransactionTable() {
     try {
-        console.log("entra");
         $('#dvTableTransactions').DataTable({
             "scrollX": true,
             "autoWidth": false,

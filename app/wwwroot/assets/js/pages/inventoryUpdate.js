@@ -265,7 +265,8 @@ function update() {
 
 function isValidForm(inventoryItem) {
     try {
-        if (!inventoryItem.itemCode ||
+        if (!inventoryItem.id ||
+            !inventoryItem.itemCode ||
             !inventoryItem.itemName ||
             !inventoryItem.status ||
             !inventoryItem.description ||
