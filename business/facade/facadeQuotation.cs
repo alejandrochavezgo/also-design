@@ -296,4 +296,20 @@ public class facadeQuotation
             throw exception;
         }
     }
+
+    public List<quotationModel> getQuotationsByTerm(string code)
+    {
+        try
+        {
+            var quotations = _repositoryQuotation.getQuotationsByTerm(code);
+            foreach(var quotation in quotations)
+                quotation.items = _repositoryQuotation.getQuotationItemsByIdQuotation(quotation.id);
+            return quotations;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
 }

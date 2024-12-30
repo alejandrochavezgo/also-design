@@ -1,8 +1,10 @@
-document.querySelectorAll('.uppercase-input').forEach(input => {
-    input.addEventListener('input', function() {
-        this.value = this.value.toUpperCase();
+function initializeUpperCaseInput() {
+    document.querySelectorAll('.uppercase-input').forEach(input => {
+        input.addEventListener('input', function() {
+            this.value = this.value.toUpperCase();
+        });
     });
-});
+}
 
 function updateAddAndRemoveButtons() {
     try {
@@ -541,6 +543,7 @@ $(document).ready(function() {
     initializeInputTaxMasks();
     initializeInputNumericalMasks();
     initializeCounter(1);
+    initializeUpperCaseInput();
     initializeCatalogs().then(() => {
         $('#loader').hide();
     });

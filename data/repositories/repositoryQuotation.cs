@@ -360,4 +360,24 @@ public class repositoryQuotation : baseRepository
             throw exception;
         }
     }
+
+    public List<quotationModel> getQuotationsByTerm(string code)
+    {
+        try
+        {
+            return factoryGetQuotationsByTerm.getList((DbDataReader)_providerDB.GetDataReader("sp_getQuotationsByTerm", new DbParameter[] {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@code", DbType.String, code)
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
 }

@@ -679,4 +679,38 @@ public class quotationController : Controller
             });
         }
     }
+
+    [HttpGet("quotation/getQuotationsByTerm")]
+    public async Task<IActionResult> getQuotationsByTerm(string code)
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var quotation = new quotationModel { code = code };
+            var responseGet = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:quotation:getQuotationsByTerm"]}", new StringContent(JsonConvert.SerializeObject(quotation), Encoding.UTF8, "application/json"));
+
+            if(!responseGet.IsSuccessStatusCode)
+            {
+                var errorMessage = await responseGet.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responseGet.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+            }
+
+            var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
+            var results = JsonConvert.DeserializeObject<List<entities.models.quotationModel>>(responseGetAsJson);
+            clientHttp.Dispose();
+            foreach(var q in results!)
+                foreach(var qItem in q.items!)
+                    qItem.imageString = !string.IsNullOrEmpty(qItem.imagePath) ? $"data:image/jpg;base64,{Convert.ToBase64String(System.IO.File.ReadAllBytes(qItem.imagePath!))}" : string.Empty;
+
+            return Json(results);
+        }
+        catch (Exception e)
+        {
+            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+        }
+    }
+
 }

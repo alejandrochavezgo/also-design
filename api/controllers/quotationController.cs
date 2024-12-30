@@ -167,4 +167,17 @@ public class quotationController : ControllerBase
             return BadRequest(new { isSuccess = false, message = e.Message });
         }
     }
+
+    [HttpPost("getQuotationsByTerm")]
+    public IActionResult getQuotationsByTerm(entities.models.quotationModel quotation)
+    {
+        try
+        {
+            return Ok(_facadeQuotation.getQuotationsByTerm(quotation.code!));
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
 }

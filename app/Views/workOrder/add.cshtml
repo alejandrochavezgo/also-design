@@ -1,6 +1,10 @@
 @{
     ViewData["title"] = "Add Work Order | Also Design";
 }
+@section styles
+{
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet"  type="text/css">
+}
 <div class="page-content">
     <div class="container-fluid">
         <div class="row">
@@ -25,8 +29,10 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-3">
-                                <label for="inQuotation" class="form-label">QUOTATION</label>
-                                <input type="text" class="form-control uppercase-input" id="inQuotation" placeholder="Enter quotation code">
+                                <input id="inQuotationId" hidden>
+                                <input id="inClientId" hidden>
+                                <label for="inQuotationCode" class="form-label">QUOTATION</label>
+                                <input type="text" class="form-control uppercase-input" id="inQuotationCode" placeholder="SEARCH QUOTATION CODE...">
                             </div>
                             <div class="col-3">
                                 <label for="pCode" class="form-label fw-bold">CODE</label>
@@ -43,12 +49,12 @@
                         </div>
                         <div class="row pt-27px">
                             <div class="col-3">
-                                <label for="pCurrency" class="form-label fw-bold">CURRENCY</label>
-                                <p class="form-control bg-light border-0" id="pCurrency">&nbsp;</p>
+                                <label for="pCurrencyType" class="form-label fw-bold">CURRENCY</label>
+                                <p class="form-control bg-light border-0" id="pCurrencyType">&nbsp;</p>
                             </div>
                             <div class="col-3">
-                                <label for="pSubTotal" class="form-label fw-bold">SUB TOTAL</label>
-                                <p class="form-control bg-light border-0" id="pSubTotal">&nbsp;</p>
+                                <label for="pSubtotal" class="form-label fw-bold">SUB TOTAL</label>
+                                <p class="form-control bg-light border-0" id="pSubtotal">&nbsp;</p>
                             </div>
                             <div class="col-3">
                                 <label for="pTax" class="form-label fw-bold">TAX</label>
@@ -57,6 +63,26 @@
                             <div class="col-3">
                                 <label for="pTotal" class="form-label fw-bold">TOTAL</label>
                                 <p class="form-control bg-light border-0" id="pTotal">&nbsp;</p>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-12">
+                                <table class="table table-borderless text-center align-middle mb-0">
+                                    <thead>
+                                        <tr class="table-active">
+                                            <th scope="col" style=""></th>
+                                            <th scope="col" style="width: 50px;">#</th>
+                                            <th scope="col" class="w-50per">Description</th>
+                                            <th scope="col">Quantity</th>
+                                            <th scope="col">Unit</th>
+                                            <th scope="col" class="text-end">Unit value</th>
+                                            <th scope="col" class="text-end">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbQuotationItems">
+                                        <tr><td colspan="7">Nothing to show.</td></tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -70,72 +96,49 @@
                         <h5 class="card-title">2) Load Work Order Items</h5>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-6">
-                                <table class="table table-borderless text-center align-middle mb-0">
-                                    <thead>
-                                        <tr class="table-active">
-                                            <th scope="col" style=""></th>
-                                            <th scope="col" style="width: 50px;">#</th>
-                                            <th scope="col" class="w-50per">Description</th>
-                                            <th scope="col">Quantity</th>
-                                            <th scope="col">Unit</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tbItems">
-                                        <tr>
-                                            <td class="width-0per"></td>
-                                            <td scope="row">1</td>
-                                            <td class="text-start">
-                                                <p class="form-control fw-medium mb-1 bg-light border-0">&nbsp;</p>
-                                                <p class="form-control fw-medium mb-1 bg-light border-0">&nbsp;</p>
-                                                <p class="form-control fw-medium mb-1 bg-light border-0">&nbsp;</p>
-                                                <p class="form-control fw-medium bg-light border-0" placeholder="Notes">&nbsp;</p>
-                                            </td>
-                                            <td>
-                                                &nbsp;
-                                            </td>
-                                            <td>
-                                                &nbsp;
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="col-6 d-flex align-items-center">
-                                <div class="row d-flex align-items-center justify-content-center w-100">
-                                    <div class="col-3">
-                                        <label for="pMaterial" class="form-label">Material</label>
-                                        <input type="text" class="form-control uppercase-input" id="inMaterial" maxlength="200" placeholder="Search item...">
-                                    </div>
-                                    <div class="col-3">
-                                        <label for="inQuantity" class="form-label">Quantity</label>
-                                        <input type="text" class="form-control numerical-mask" id="inQuantity" value="0">
-                                    </div>
-                                    <div class="col-3">
-                                        <label for="pUnit" class="form-label">Unit</label>
-                                        <select class="form-select">
-                                            <option value="">Select option</option>
-                                            <option value="1">EACH (EA)</option>
-                                            <option value="2">BOX (BOX)</option>
-                                            <option value="3">PACKAGE (PKG)</option>
-                                            <option value="4">SET (SET)</option>
-                                            <option value="5">PALLET (PAL)</option>
-                                            <option value="6">POUND (LB)</option>
-                                            <option value="7">KILOGRAM (KG)</option>
-                                            <option value="8">METER (M)</option>
-                                            <option value="9">LITER (L)</option>
-                                            <option value="10">FOOT (FT)</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-3">
-                                        <label for="btSteps" class="form-label">&nbsp;</label>
-                                        <button id="btSteps" type="button" class="btn btn-secondary btn-label waves-effect waves-light w-100">
-                                            <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i> Add Steps
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="table table-borderless text-center table-nowrap align-middle mb-0">
+                                <thead>
+                                    <tr class="table-active">
+                                        <th scope="col" style=""></th>
+                                        <th scope="col" style="width: 50px;">#</th>
+                                        <th scope="col">Tool Number</th>
+                                        <th scope="col">Material</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col" class="text-center">Route</th>
+                                        <th scope="col" class="text-center">Comments</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbWorkOrderItems">
+                                    <tr>
+                                        <td class="width-0per">
+                                            <button id="addItem" type="button" class="btn btn-success btn-sm btn-icon waves-effect waves-light"><i class="ri-add-circle-fill"></i></button>
+                                        </td>
+                                        <td scope="row">
+                                            <span id="rowCount">1</span>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control uppercase-input" id="inToolNumber" maxlength="200" placeholder="Enter tool number">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control uppercase-input workorder-item" id="inMaterial" maxlength="200" placeholder="Search material...">
+                                        </td>
+                                        <td>
+                                            <div class="input-step">
+                                                <button type="button" class="minus_1">–</button>
+                                                <input type="number" class="product-quantity" value="1" min="1" max="100">
+                                                <button type="button" class="plus_1">+</button>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button id="btAddRoute_1" type="button" class="btn btn-secondary waves-effect waves-light route-modal"><i class="ri-list-ordered"></i></button>
+                                        </td>
+                                        <td>
+                                            <button id="btAddComment_1" type="button" class="btn btn-secondary waves-effect waves-light comment-modal"><i class="ri-sticky-note-fill"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -151,13 +154,7 @@
                         <div class="row">
                             <div class="col-4">
                                 <label class="form-label">PRIORITY</label>
-                                <select id="sePriority" class="form-select">
-                                    <option value="">Select option</option>
-                                    <option value="1">LOW</option>
-                                    <option value="2">MEDIUM</option>
-                                    <option value="3">HIGH</option>
-                                    <option value="4">CRITICAL</option>
-                                </select>
+                                <select id="sePriority" class="form-select"></select>
                             </div>
                             <div class="col-4">
                                 <label class="form-label"># RFQ</label>
@@ -182,7 +179,139 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="mdRoute" tabindex="-1" aria-labelledby="mdRouteLabel" aria-modal="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mdRouteLabel">Add Route</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div>
+                            <label class="form-label">Select the route this item will follow.</label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="1" id="routeBlueprints">
+                                    <label class="form-check-label" for="routeBlueprints">
+                                        Blueprints
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="2" id="routeMaterial">
+                                    <label class="form-check-label" for="routeMaterial">
+                                        Material
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="3" id="routeProgramming">
+                                    <label class="form-check-label" for="routeProgramming">
+                                        Programming
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="4" id="routeInternalMachining">
+                                    <label class="form-check-label" for="routeInternalMachining">
+                                        Internal Machining
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="5" id="routeExternalMachining">
+                                    <label class="form-check-label" for="routeExternalMachining">
+                                        External Machining
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="6" id="routeHeatTreatment">
+                                    <label class="form-check-label" for="routeHeatTreatment">
+                                        Heat Treatment
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="7" id="routeCleaning">
+                                    <label class="form-check-label" for="routeCleaning">
+                                        Cleaning
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="8" id="routeQualityControl">
+                                    <label class="form-check-label" for="routeQualityControl">
+                                        Quality Control
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="9" id="routeSurfaceFinishing">
+                                    <label class="form-check-label" for="routeSurfaceFinishing">
+                                        Surface Finishing
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="10" id="routeAssembly">
+                                    <label class="form-check-label" for="routeAssembly">
+                                        Assembly
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="11" id="routePackaging">
+                                    <label class="form-check-label" for="routePackaging">
+                                        Packaging
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="12" id="routeShipping">
+                                    <label class="form-check-label" for="routeShipping">
+                                        Shipping
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="hstack gap-2 justify-content-end">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success" onclick="addRoute()">Add Route</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="mdComment" tabindex="-1" aria-labelledby="mdCommentLabel" aria-modal="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mdCommentLabel">Add Comment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div>
+                            <label class="form-label">Add a comment to this item.</label>
+                            <textarea id="taComment" class="form-control fw-medium mb-1 bg-light border-0" rows="4" placeholder="Enter a comment"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="hstack gap-2 justify-content-end">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success" onclick="addComment()">Add Comment</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section scripts
 {
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="../assets/js/pages/workOrderAdd.js"></script>
 }
