@@ -133,7 +133,7 @@ public class clientController : ControllerBase
                 return BadRequest("Missing data.");
 
             if (!_facadeClient.deleteClientById(client.id))
-                return BadRequest("Purchase order can't be deleted.");
+                return BadRequest("Client can't be deleted.");
 
             return Ok();
         }

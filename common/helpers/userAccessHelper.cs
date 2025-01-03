@@ -47,6 +47,9 @@ public class userAccessHelper
                 case "SETTING":
                     idAccess = 19;
                     break;
+                case "PROJECT":
+                    idAccess = 20;
+                    break;
                 default:
                     idAccess = 0;
                     break;

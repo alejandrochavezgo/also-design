@@ -115,6 +115,7 @@ public class purchaseOrderController : Controller
             ViewData["supplier.contactNames"] = result!.supplier.contactNames;
             ViewData["supplier.contactPhones"] = result!.supplier.contactPhones;
             ViewData["purchaseOrder.id"] = result!.id;
+            ViewData["quotation.project.projectName"] = result!.projectName;
             ViewData["purchaseOrder.code"] = result!.code;
             ViewData["purchaseOrder.payment.description"] = result!.payment!.description;
             ViewData["purchaseOrder.currency.description"] = result!.currency!.description;
@@ -670,6 +671,8 @@ public class purchaseOrderController : Controller
             ViewData["purchaseOrder.taxAmount"] = result!.taxAmount;
             ViewData["purchaseOrder.totalAmount"] = result!.totalAmount;
             ViewData["purchaseOrder.items"] = result!.items;
+            ViewData["purchaseOrder.project.id"] = result.projectId;
+            ViewData["purchaseOrder.project.projectName"] = result.projectName;
             foreach(var item in result.items!)
                 if (!string.IsNullOrEmpty(item.imagePath))
                     item.imageString = $"data:image/jpg;base64,{Convert.ToBase64String(System.IO.File.ReadAllBytes(item.imagePath!))}";

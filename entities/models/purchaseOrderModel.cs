@@ -6,6 +6,8 @@ namespace entities.models;
 public class purchaseOrderModel
 {
     public int id { get; set; }
+    public int projectId { get; set; }
+    public string? projectName { get; set; }
     public int status { get; set; }
     public string? code { get; set; }
     public decimal? subtotal { get; set; }

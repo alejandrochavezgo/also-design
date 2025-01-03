@@ -26,6 +26,9 @@ namespace entities.enums
         DELETE_EMPLOYEE = 22,
         ADD_USER = 23,
         UPDATE_USER = 24,
-        DELETE_USER = 25
+        DELETE_USER = 25,
+        ADD_PROJECT = 26,
+        UPDATE_PROJECT = 27,
+        DELETE_PROJECT = 28
     }
 }

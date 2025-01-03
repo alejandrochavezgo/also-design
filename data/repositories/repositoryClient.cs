@@ -346,7 +346,7 @@ public class repositoryClient : baseRepository
         try
         {
             base._providerDB.ExecuteNonQuery("sp_deleteClientById", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id)
             });
             return true;
         }

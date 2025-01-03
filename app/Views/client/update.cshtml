@@ -5,7 +5,7 @@
     var emails = ViewData["contactEmails"] as List<string> ?? new List<string>();
     var contactEmailsString = emails != null ? string.Join(",", emails!) : "";
     var phones = ViewData["contactPhones"] as List<string> ?? new List<string>();
-    var contactPhonesString = emails != null ? string.Join(",", phones!) : "";
+    var contactPhonesString = phones != null ? string.Join(",", phones!) : "";
 }
 <div class="page-content">
     <div class="container-fluid">

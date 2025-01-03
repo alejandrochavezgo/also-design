@@ -18,6 +18,8 @@ internal class factoryGetPurchaseOrderById: baseMethod<factoryGetPurchaseOrderBy
             return new purchaseOrderModel
             {
                 id = conversionManager.toInt(dr["PURCHASEORDERS.IDPURCHASEORDER"]),
+                projectId = conversionManager.toInt(dr["PURCHASEORDERS.IDPROJECT"]),
+                projectName = conversionManager.toString(dr["PURCHASEORDERS.PROJECTNAME"]),
                 code = conversionManager.toString(dr["PURCHASEORDERS.CODE"]),
                 subtotal = conversionManager.toDecimal(dr["PURCHASEORDERS.SUBTOTAL"]),
                 taxAmount = conversionManager.toDecimal(dr["PURCHASEORDERS.TAX"]),

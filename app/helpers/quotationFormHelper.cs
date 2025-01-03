@@ -9,7 +9,7 @@ public static class quotationFormHelper
     {
         try
         {
-            if (quotation.client!.id <= 0 || string.IsNullOrEmpty(quotation.client!.mainContactName) || string.IsNullOrEmpty(quotation.client!.mainContactPhone) ||
+            if (quotation.projectId <= 0 || quotation.client!.id <= 0 || string.IsNullOrEmpty(quotation.client!.mainContactName) || string.IsNullOrEmpty(quotation.client!.mainContactPhone) ||
                 quotation.payment!.id <= 0 || quotation.user!.id <= 0 || string.IsNullOrEmpty(quotation.user.employee!.mainContactPhone) || quotation.currency!.id <= 0 || quotation.items!.Count == 0)
                 return false;
 
@@ -29,7 +29,7 @@ public static class quotationFormHelper
     {
         try
         {
-            if (quotation.status != (int)statusType.ACTIVE || quotation.client!.id <= 0 || string.IsNullOrEmpty(quotation.client!.mainContactName) || string.IsNullOrEmpty(quotation.client!.mainContactPhone) ||
+            if (quotation.projectId <= 0 || quotation.status != (int)statusType.ACTIVE || quotation.client!.id <= 0 || string.IsNullOrEmpty(quotation.client!.mainContactName) || string.IsNullOrEmpty(quotation.client!.mainContactPhone) ||
                 quotation.payment!.id <= 0 || quotation.user!.id <= 0 || string.IsNullOrEmpty(quotation.user.employee!.mainContactPhone) || quotation.currency!.id <= 0 || quotation.items!.Count == 0 || quotation.id <= 0)
                 return false;
 

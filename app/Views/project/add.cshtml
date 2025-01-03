@@ -1,0 +1,78 @@
+@{
+    ViewData["title"] = "Add Project | Also Design";
+}
+@section styles
+{
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet"  type="text/css">
+}
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Add Project</h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item color-495057">Project</li>
+                            <li class="breadcrumb-item color-495057">Add Project</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Project Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="inName" class="form-label">Name</label>
+                                <input type="text" class="form-control uppercase-input" id="inName" maxlength="200" placeholder="Enter name">
+                            </div>
+                            <div class="col-6">
+                                <label for="inClientBusinessName" class="form-label">Client</label>
+                                <input type="text" class="form-control uppercase-input" id="inClientBusinessName" placeholder="Enter client">
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-12">
+                                <label for="taDescription" class="form-label">Description</label>
+                                <textarea id="taDescription" class="form-control fw-medium bg-light border-0" rows="4" placeholder="Enter description"></textarea>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-4">
+                                <label for="inStartDate" class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="inStartDate">
+                            </div>
+                            <div class="col-4">
+                                <label for="inEndDate" class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="inEndDate">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" for="seStatus">Status</label>
+                                <select class="form-select" id="seStatus"></select>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-warning w-100per" onclick="window.location.reload(true)">Refresh</button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-success w-100per" onclick="add()">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="../assets/js/pages/projectAdd.js"></script>
+}

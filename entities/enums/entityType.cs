@@ -10,6 +10,7 @@ namespace entities.enums
         PURCHASE_ORDER = 5,
         QUOTATION = 6,
         WORKORDER = 7,
-        INVENTORY = 8
+        INVENTORY = 8,
+        PROJECT = 9
     }
 }

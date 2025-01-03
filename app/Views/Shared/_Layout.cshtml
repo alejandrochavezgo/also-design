@@ -253,6 +253,22 @@
                                                 </div>
                                             </li>
                                         }
+                                        @if (user.menus!.Any(x => x.description!.Equals("PROJECT")))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false"> Projects </a>
+                                                <div class="collapse menu-dropdown">
+                                                    <ul class="nav nav-sm flex-column">
+                                                        <li class="nav-item">
+                                                            <a href="@Url.Action("add", "project")" class="nav-link"> Add Project </a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a href="@Url.Action("list", "project")" class="nav-link"> Project List </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        }
                                         @if (user.menus!.Any(x => x.description!.Equals("REPORT")))
                                         {
                                             <li class="nav-item">

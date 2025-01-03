@@ -223,6 +223,59 @@ function initializeSupplierAutocomplete() {
     }
 }
 
+function initializeProjectAutocomplete() {
+    try {
+        $('#inProjectName').autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: '/project/getProjectByTerm',
+                    method: 'get',
+                    dataType: 'json',
+                    data: {
+                        name: request.term
+                    },
+                    success: function(data) {
+                        response($.map(data, function(item) {
+                            return {
+                                label: item.name,
+                                value: item.name,
+                                id: item.id,
+                                businessName: item.item
+                            };
+                        }));
+                    },
+                    error: function(error) {
+                        Swal.fire({
+                            title: 'Error!!',
+                            html: error,
+                            icon: 'error',
+                            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                            buttonsStyling: !1,
+                            footer: '',
+                            showCloseButton:!1
+                        });
+                    }
+                });
+            },
+            minLength: 2,
+            select: function(event, ui) {
+                $('#inProjectName').val(ui.item.id);
+                $('#inProjectName').attr('projectId', ui.item.id);
+            }
+        });
+    } catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: false,
+            footer: '',
+            showCloseButton: true
+        });
+    }
+}
+
 function initializeItemAutocomplete(element) {
     try {
         $(element).autocomplete({
@@ -499,6 +552,7 @@ function update() {
 
         let purchaseOrder = {
             id: $('#inPurchaseOrderId').val(),
+            projectId: $('#inProjectName').attr('projectId'),
             supplier: {
                 id: $('#inSupplierId').val(),
                 mainContactName: $('#seSupplierContactNames').val(),
@@ -601,7 +655,7 @@ $(document).on('click', '.delete-image', function() {
 
 function isValidForm(purchaseOrder) {
     try {
-        if (!purchaseOrder.supplier.id || !purchaseOrder.supplier.mainContactName || !purchaseOrder.supplier.mainContactPhone ||
+        if (!purchaseOrder.projectId || !purchaseOrder.supplier.id || !purchaseOrder.supplier.mainContactName || !purchaseOrder.supplier.mainContactPhone ||
             !purchaseOrder.payment.id || !purchaseOrder.user.id || !purchaseOrder.user.employee.mainContactPhone || !purchaseOrder.currency.id || purchaseOrder.items.length == 0) {
             Swal.fire({
                 title: 'Error!!',
@@ -639,6 +693,7 @@ $(document).ready(function() {
     });
     updateAddAndRemoveButtons();
     initializeSupplierAutocomplete();
+    initializeProjectAutocomplete();
     initializeInputTaxMasks();
     initializeInputNumericalMasks();
     initializeAllCounters();

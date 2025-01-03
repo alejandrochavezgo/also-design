@@ -22,7 +22,7 @@ public static class userSecurityHelper
 
     public static string? evaluateHash(UserManager<applicationUser> userManager, applicationUser user, string providedPassword)
     {
-        var decodedHashedPassword = Convert.FromBase64String(user.Password);
+        var decodedHashedPassword = Convert.FromBase64String(user.Password!);
 
         switch (decodedHashedPassword[0])
         {

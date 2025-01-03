@@ -54,11 +54,11 @@
                         <div class="row pt-4 text-center border-bottom border-bottom-dashed">
                         </div>
                         <div class="row pt-4 text-center">
-                            <div class="col-1">
+                            <div class="col-4">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">ID</p>
                                 <input type="text" class="form-control text-center" id="inSupplierId" disabled value="@ViewData["supplier.id"]">
                             </div>
-                            <div class="col-5">
+                            <div class="col-4">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">SUPPLIER</p>
                                 <input type="text" class="form-control text-center" id="inSupplierBusinessName" placeholder="SEARCH SUPPLIER..." value="@ViewData["supplier.businessName"]">
                             </div>
@@ -71,13 +71,17 @@
                                     }
                                 </select>
                             </div>
-                            <div class="col-2">
+                        </div>
+                        <div class="row pt-27px text-center">
+                            <div class="col-4">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">CITY</p>
                                 <input type="text" class="form-control text-center" id="inSupplierCity" disabled value="@ViewData["supplier.city"]">
                             </div>
-                        </div>
-                        <div class="row pt-27px text-center">
-                            <div class="col-2">
+                            <div class="col-4">
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">ADDRESS</p>
+                                <input type="text" class="form-control text-center" id="inSupplierAddress" disabled value="@ViewData["supplier.address"]">
+                            </div>
+                            <div class="col-4">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">MAIN PHONE</p>
                                 <select class="form-select" id="seSupplierContactPhones">
                                     @foreach (var supplierContactPhone in supplierContactPhones!)
@@ -86,19 +90,21 @@
                                     }
                                 </select>
                             </div>
-                            <div class="col-4">
-                                <p class="text-muted mb-2 text-uppercase fw-semibold">ADDRESS</p>
-                                <input type="text" class="form-control text-center" id="inSupplierAddress" disabled value="@ViewData["supplier.address"]">
-                            </div>
-                            <div class="col-2">
+                        </div>
+                        <div class="row pt-27px text-center">
+                            <div class="col-3">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">RFC</p>
                                 <input type="text" class="form-control text-center" id="inSupplierRfc" disabled value="@ViewData["supplier.rfc"]">
                             </div>
-                            <div class="col-2">
+                            <div class="col-3">
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">PROJECT</p>
+                                <input type="text" class="form-control uppercase-input" id="inProjectName" placeholder="SEARCH PROJECT..." value="@ViewData["purchaseOrder.project.projectName"]" projectId="@ViewData["purchaseOrder.project.id"]">
+                            </div>
+                            <div class="col-3">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">PAYMENT TYPE</p>
                                 <select class="form-select" id="sePurchaseOrderPaymentType" option-selected="@ViewData["purchaseOrder.payment.id"]"></select>
                             </div>
-                            <div class="col-2">
+                            <div class="col-3">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">CURRENCY</p>
                                 <select class="form-select" id="purchaseOrderCurrencyType" option-selected="@ViewData["purchaseOrder.currency.id"]"></select>
                             </div>

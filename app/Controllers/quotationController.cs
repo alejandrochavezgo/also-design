@@ -420,6 +420,8 @@ public class quotationController : Controller
             ViewData["quotation.taxRate"] = result!.taxRate;
             ViewData["quotation.taxAmount"] = result!.taxAmount;
             ViewData["quotation.totalAmount"] = result!.totalAmount;
+            ViewData["quotation.project.id"] = result.projectId;
+            ViewData["quotation.project.projectName"] = result.projectName;
             foreach(var item in result.items!)
                 item.imageString = !string.IsNullOrEmpty(item.imagePath) ? $"data:image/jpg;base64,{Convert.ToBase64String(System.IO.File.ReadAllBytes(item.imagePath!))}" : string.Empty;
             ViewData["quotation.items"] = result!.items;
@@ -501,6 +503,7 @@ public class quotationController : Controller
             ViewData["client.contactNames"] = result!.client.contactNames;
             ViewData["client.contactPhones"] = result!.client.contactPhones;
             ViewData["quotation.id"] = result!.id;
+            ViewData["quotation.project.projectName"] = result!.projectName;
             ViewData["quotation.code"] = result!.code;
             ViewData["quotation.payment.description"] = result!.payment!.description;
             ViewData["quotation.currency.description"] = result!.currency!.description;

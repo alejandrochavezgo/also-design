@@ -212,6 +212,59 @@ function initializeClientAutocomplete() {
     }
 }
 
+function initializeProjectAutocomplete() {
+    try {
+        $('#inProjectName').autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: '/project/getProjectByTerm',
+                    method: 'get',
+                    dataType: 'json',
+                    data: {
+                        name: request.term
+                    },
+                    success: function(data) {
+                        response($.map(data, function(item) {
+                            return {
+                                label: item.name,
+                                value: item.name,
+                                id: item.id,
+                                businessName: item.item
+                            };
+                        }));
+                    },
+                    error: function(error) {
+                        Swal.fire({
+                            title: 'Error!!',
+                            html: error,
+                            icon: 'error',
+                            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                            buttonsStyling: !1,
+                            footer: '',
+                            showCloseButton:!1
+                        });
+                    }
+                });
+            },
+            minLength: 2,
+            select: function(event, ui) {
+                $('#inProjectName').val(ui.item.id);
+                $('#inProjectName').attr('projectId', ui.item.id);
+            }
+        });
+    } catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: false,
+            footer: '',
+            showCloseButton: true
+        });
+    }
+}
+
 function initializeInputNumericalMasks()
 {
     try {
@@ -431,6 +484,7 @@ function update() {
 
         let quotation = {
             id: $('#inQuotationId').val(),
+            projectId: $('#inProjectName').attr('projectId'),
             client: {
                 id: $('#inClientId').val(),
                 mainContactName: $('#seClientContactNames').val(),
@@ -571,6 +625,7 @@ $(document).ready(function() {
     });
     updateAddAndRemoveButtons();
     initializeClientAutocomplete();
+    initializeProjectAutocomplete();
     initializeInputTaxMasks();
     initializeInputNumericalMasks();
     initializeAllCounters();

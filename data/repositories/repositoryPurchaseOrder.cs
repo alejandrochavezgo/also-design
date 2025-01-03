@@ -123,6 +123,7 @@ public class repositoryPurchaseOrder : baseRepository
             var purchaseOrderIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@purchaseOrderIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
             base._providerDB.ExecuteNonQuery("sp_addPurchaseOrder", new DbParameter[] {
                 purchaseOrderIdAdded,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@projectId", DbType.Int32, purchaseOrder.projectId),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@supplierId", DbType.Int32, purchaseOrder.supplier!.id),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@userId", DbType.Int32, purchaseOrder.user!.id),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@status", DbType.Int32, purchaseOrder.status),
@@ -160,6 +161,7 @@ public class repositoryPurchaseOrder : baseRepository
 
             base._providerDB.ExecuteNonQuery("sp_updatePurchaseOrder", new DbParameter[] {
                 purchaseOrderIdUpdated,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@projectId", DbType.Int32, purchaseOrder.projectId),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@purchaseOrderId", DbType.Int32, purchaseOrder!.id),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@supplierId", DbType.Int32, purchaseOrder.supplier!.id),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@userId", DbType.Int32, purchaseOrder.user!.id),

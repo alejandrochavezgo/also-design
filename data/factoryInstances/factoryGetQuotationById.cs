@@ -17,6 +17,8 @@ internal class factoryGetQuotationById: baseMethod<factoryGetQuotationById, quot
             return new quotationModel
             {
                 id = conversionManager.toInt(dr["QUOTATIONS.IDQUOTATION"]),
+                projectId = conversionManager.toInt(dr["QUOTATIONS.IDPROJECT"]),
+                projectName = conversionManager.toString(dr["QUOTATIONS.PROJECTNAME"]),
                 code = conversionManager.toString(dr["QUOTATIONS.CODE"]),
                 subtotal = conversionManager.toDecimal(dr["QUOTATIONS.SUBTOTAL"]),
                 taxAmount = conversionManager.toDecimal(dr["QUOTATIONS.TAX"]),

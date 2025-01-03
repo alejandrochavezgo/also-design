@@ -18,7 +18,7 @@ public class purchaseOrderFormHelper
     {
         try
         {
-            if (purchaseOrder.status != (int)statusType.ACTIVE || purchaseOrder.supplier!.id <= 0 || string.IsNullOrEmpty(purchaseOrder.supplier!.mainContactName) || string.IsNullOrEmpty(purchaseOrder.supplier!.mainContactPhone) ||
+            if (purchaseOrder.projectId <= 0 || purchaseOrder.status != (int)statusType.ACTIVE || purchaseOrder.supplier!.id <= 0 || string.IsNullOrEmpty(purchaseOrder.supplier!.mainContactName) || string.IsNullOrEmpty(purchaseOrder.supplier!.mainContactPhone) ||
                 purchaseOrder.payment!.id <= 0 || purchaseOrder.user!.id <= 0 || string.IsNullOrEmpty(purchaseOrder.user.employee!.mainContactPhone) || purchaseOrder.currency!.id <= 0 || purchaseOrder.items!.Count == 0)
                 return false;
 
@@ -39,7 +39,7 @@ public class purchaseOrderFormHelper
     {
         try
         {
-            if (purchaseOrder.supplier!.id <= 0 || string.IsNullOrEmpty(purchaseOrder.supplier!.mainContactName) || string.IsNullOrEmpty(purchaseOrder.supplier!.mainContactPhone) ||
+            if (purchaseOrder.projectId <= 0 || purchaseOrder.supplier!.id <= 0 || string.IsNullOrEmpty(purchaseOrder.supplier!.mainContactName) || string.IsNullOrEmpty(purchaseOrder.supplier!.mainContactPhone) ||
                 purchaseOrder.payment!.id <= 0 || purchaseOrder.user!.id <= 0 || string.IsNullOrEmpty(purchaseOrder.user.employee!.mainContactPhone) || purchaseOrder.currency!.id <= 0 || purchaseOrder.items!.Count == 0 || purchaseOrder.id <= 0)
                 return false;
 

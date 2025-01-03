@@ -1,0 +1,75 @@
+@{
+    ViewData["title"] = "Project List | Also Design";
+}
+@section styles
+{
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+}
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Project List</h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item color-495057">Project</li>
+                            <li class="breadcrumb-item color-495057">Project List</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Projects Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-10 ml-1remN">
+                                <div class="card ribbon-box shadow-none mb-lg-0">
+                                    <div class="card-body">
+                                        <div id="dvTotalProjects" class="ribbon ribbon-success round-shape">Total Projects: 0</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2 text-right pr-0">
+                                <button type="button" class="btn btn-success btn-label waves-effect waves-light" onclick="window.location.href='@Url.Action("add", "project")'">
+                                    <i class="ri-user-add-fill label-icon align-middle fs-16 me-2"></i> Add Project
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-12">
+                                <table id="tbProjects" class="table table-bordered dt-responsive nowrap align-middle mdl-data-table" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Client</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Modification Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script src="../assets/js/pages/projectList.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+}

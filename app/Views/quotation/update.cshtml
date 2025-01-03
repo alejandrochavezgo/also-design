@@ -58,11 +58,11 @@
                             </div>
                         </div>
                         <div class="row pt-4 text-center">
-                            <div class="col-1">
+                            <div class="col-4">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">ID</p>
                                 <input type="text" class="form-control text-center" id="inClientId" disabled value="@ViewData["client.id"]">
                             </div>
-                            <div class="col-5">
+                            <div class="col-4">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">CLIENT</p>
                                 <input type="text" class="form-control text-center" id="inClientBusinessName" placeholder="SEARCH CLIENT..." value="@ViewData["client.businessName"]">
                             </div>
@@ -75,13 +75,17 @@
                                     }
                                 </select>
                             </div>
-                            <div class="col-2">
+                        </div>
+                        <div class="row pt-27px text-center">
+                            <div class="col-4">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">CITY</p>
                                 <input type="text" class="form-control text-center" id="inClientCity" disabled value="@ViewData["client.city"]">
                             </div>
-                        </div>
-                        <div class="row pt-27px text-center">
-                            <div class="col-2">
+                            <div class="col-4">
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">ADDRESS</p>
+                                <input type="text" class="form-control text-center" id="inClientAddress" disabled value="@ViewData["client.address"]">
+                            </div>
+                            <div class="col-4">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">MAIN PHONE</p>
                                 <select class="form-select" id="seClientContactPhones">
                                     @foreach (var clientContactPhone in clientContactPhones!)
@@ -90,19 +94,21 @@
                                     }
                                 </select>
                             </div>
-                            <div class="col-4">
-                                <p class="text-muted mb-2 text-uppercase fw-semibold">ADDRESS</p>
-                                <input type="text" class="form-control text-center" id="inClientAddress" disabled value="@ViewData["client.address"]">
-                            </div>
-                            <div class="col-2">
+                        </div>
+                        <div class="row pt-27px text-center">
+                            <div class="col-3">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">RFC</p>
                                 <input type="text" class="form-control text-center" id="inClientRfc" disabled value="@ViewData["client.rfc"]">
                             </div>
-                            <div class="col-2">
+                            <div class="col-3">
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">PROJECT</p>
+                                <input type="text" class="form-control uppercase-input" id="inProjectName" placeholder="SEARCH PROJECT..." value="@ViewData["quotation.project.projectName"]" projectId="@ViewData["quotation.project.id"]">
+                            </div>
+                            <div class="col-3">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">PAYMENT TYPE</p>
                                 <select class="form-select" id="seQuotationPaymentType" option-selected="@ViewData["quotation.payment.id"]"></select>
                             </div>
-                            <div class="col-2">
+                            <div class="col-3">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">CURRENCY</p>
                                 <select class="form-select" id="seQuotationCurrencyType" option-selected="@ViewData["quotation.currency.id"]"></select>
                             </div>

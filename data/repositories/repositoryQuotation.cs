@@ -140,6 +140,7 @@ public class repositoryQuotation : baseRepository
             var quotationIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@quotationIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
             base._providerDB.ExecuteNonQuery("sp_addQuotation", new DbParameter[] {
                 quotationIdAdded,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@projectId", DbType.Int32, quotation.projectId),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, quotation.client!.id),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@userId", DbType.Int32, quotation.user!.id),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@status", DbType.Int32, quotation.status),
@@ -177,6 +178,7 @@ public class repositoryQuotation : baseRepository
 
             base._providerDB.ExecuteNonQuery("sp_updateQuotation", new DbParameter[] {
                 quotationIdUpdated,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@projectId", DbType.Int32, quotation.projectId),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@quotationId", DbType.Int32, quotation!.id),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, quotation.client!.id),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@userId", DbType.Int32, quotation.user!.id),
