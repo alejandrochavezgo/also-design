@@ -11,8 +11,8 @@ public static class projectFormHelper
         try
         {
             if (string.IsNullOrEmpty(project.name) || project.client == null || project.client.id <= 0 ||
-                string.IsNullOrEmpty(project.description) || project.startDate == null || project.startDate.Value.Date < DateTime.Now.Date ||
-                project.endDate == null || project.endDate.Value.Date < DateTime.Now.Date ||
+                string.IsNullOrEmpty(project.description) || project.startDate == null || project.startDate.Value.Date < dateHelper.pstNow().Date ||
+                project.endDate == null || project.endDate.Value.Date < dateHelper.pstNow().Date ||
                 project.endDate.Value.Date < project.startDate.Value.Date || project.status <= 0)
                 return false;
             return true;
@@ -28,8 +28,8 @@ public static class projectFormHelper
         try
         {
             if (string.IsNullOrEmpty(project.name) || project.client == null || project.client.id <= 0 ||
-                string.IsNullOrEmpty(project.description) || project.startDate == null || project.startDate.Value.Date < DateTime.Now.Date ||
-                project.endDate == null || project.endDate.Value.Date < DateTime.Now.Date ||
+                string.IsNullOrEmpty(project.description) || project.startDate == null || project.startDate.Value.Date < dateHelper.pstNow().Date ||
+                project.endDate == null || project.endDate.Value.Date < dateHelper.pstNow().Date ||
                 project.endDate.Value.Date < project.startDate.Value.Date || project.status <= 0 || project.id <= 0)
                 return false;
             return true;

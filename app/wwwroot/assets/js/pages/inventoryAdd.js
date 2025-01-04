@@ -87,7 +87,7 @@ async function initializeCatalogs()
         for (var selectId in selectMapping) {
             var index = selectMapping[selectId];
             var $select = $('#' + selectId);
-            $select.empty().append('<option value="">Select option</option>');
+            $select.empty().append('<option value="0">Select option</option>');
 
             if (selectId === 'seUnitDiameter' || selectId === 'seUnitLength') {
                 catalogs.results[index].forEach(function(item) {
@@ -225,24 +225,10 @@ function isValidForm(inventoryItem) {
         if (!inventoryItem.itemCode ||
             !inventoryItem.itemName ||
             !inventoryItem.status ||
-            !inventoryItem.description ||
-            !inventoryItem.notes ||
-            !inventoryItem.material ||
-            !inventoryItem.finishType ||
-            !inventoryItem.classificationType ||
-            isNaN(inventoryItem.diameter) ||
-            !inventoryItem.unitDiameter ||
-            isNaN(inventoryItem.length) ||
-            !inventoryItem.unitLength ||
-            isNaN(inventoryItem.weight) ||
-            !inventoryItem.unitWeight ||
-            isNaN(inventoryItem.tolerance) ||
-            !inventoryItem.unitTolerance ||
-            !inventoryItem.warehouseLocation ||
-            isNaN(inventoryItem.reorderQty)) {
+            !inventoryItem.description) {
             Swal.fire({
                 title: 'Error!!',
-                html: 'The fields Item Code, Item Name, Status, Description, Notes, Material, Finish Type, Diameter, Diameter Unit, Length, Length Unit, Weight, Weight Unit, Tolerance, Tolerance Unit, Warehouse Location, Reorder Quantity and Notes cannot be empty.',
+                html: 'The fields Item Code, Item Name, Status and Description cannot be empty.',
                 icon: 'error',
                 confirmButtonClass: 'btn btn-danger w-xs mt-2',
                 buttonsStyling: !1,

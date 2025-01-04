@@ -8,10 +8,12 @@ using Newtonsoft.Json;
 public class projectFormHelper
 {
     private log _logger;
+    private DateTime _dateTime;
 
     public projectFormHelper ()
     {
         _logger = new log();
+        _dateTime = new dateHelper().pstNow();
     }
 
     public bool isAddFormValid(projectModel project)
@@ -19,8 +21,8 @@ public class projectFormHelper
         try
         {
             if (string.IsNullOrEmpty(project.name) || project.client == null || project.client.id <= 0 ||
-                string.IsNullOrEmpty(project.description) || project.startDate == null || project.startDate.Value.Date < DateTime.Now.Date ||
-                project.endDate == null || project.endDate.Value.Date < DateTime.Now.Date ||
+                string.IsNullOrEmpty(project.description) || project.startDate == null || project.startDate.Value.Date < _dateTime.Date ||
+                project.endDate == null || project.endDate.Value.Date < _dateTime.Date ||
                 project.endDate.Value.Date < project.startDate.Value.Date || project.status <= 0)
                 return false;
             return true;
@@ -37,8 +39,8 @@ public class projectFormHelper
         try
         {
             if (string.IsNullOrEmpty(project.name) || project.client == null || project.client.id <= 0 ||
-                string.IsNullOrEmpty(project.description) || project.startDate == null || project.startDate.Value.Date < DateTime.Now.Date ||
-                project.endDate == null || project.endDate.Value.Date < DateTime.Now.Date ||
+                string.IsNullOrEmpty(project.description) || project.startDate == null || project.startDate.Value.Date < _dateTime.Date ||
+                project.endDate == null || project.endDate.Value.Date < _dateTime.Date ||
                 project.endDate.Value.Date < project.startDate.Value.Date || project.status <= 0 || project.id <= 0)
                 return false;
             return true;

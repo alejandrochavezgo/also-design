@@ -7,6 +7,7 @@ using entities.enums;
 using Newtonsoft.Json;
 using System.Transactions;
 using common.utils;
+using common.helpers;
 
 public class facadeQuotation
 {
@@ -14,6 +15,7 @@ public class facadeQuotation
     private userModel _user;
     private facadeTrace _facadeTrace;
     private repositoryQuotation _repositoryQuotation;
+    private DateTime _dateTime;
 
     public facadeQuotation(userModel user)
     {
@@ -21,6 +23,7 @@ public class facadeQuotation
         _logger = new log();
         _facadeTrace = new facadeTrace();
         _repositoryQuotation = new repositoryQuotation();
+        _dateTime = new dateHelper().pstNow();
     }
 
     public List<quotationModel> getQuotations()
@@ -42,7 +45,7 @@ public class facadeQuotation
         {
             try
             {
-                quotation.creationDate = DateTime.Now;
+                quotation.creationDate = _dateTime;
                 var quotationIdAdded = _repositoryQuotation.addQuotation(quotation);
 
                 foreach (var item in quotation.items)
@@ -117,7 +120,7 @@ public class facadeQuotation
                     return false;
                 }
 
-                quotation.modificationDate = DateTime.Now;
+                quotation.modificationDate = _dateTime;
                 var quotationIdUpdated = _repositoryQuotation.updateQuotation(quotation);
 
                 foreach (var item in quotation.items)

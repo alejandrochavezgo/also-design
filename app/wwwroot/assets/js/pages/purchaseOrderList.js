@@ -262,6 +262,9 @@ async function getPurchaseOrderItems(purchaseOrderId, packingUnitTypeCatalog) {
             });
             return false;
         }
+        
+        console.log('purchaseOrderItems:');
+        console.log(purchaseOrderItems);
 
         const container = document.getElementById('dvPurchaseOrderItems');
         container.innerHTML = '';
@@ -275,7 +278,7 @@ async function getPurchaseOrderItems(purchaseOrderId, packingUnitTypeCatalog) {
         let purchaseOrderItemsHtml = '';
         purchaseOrderItems.results.forEach(purchaseOrderItem => {
             purchaseOrderItemsHtml += `
-                <div class="row pl-1x05r pr-1x05r" inventoryitemid="${purchaseOrderItem.inventoryItemId}">
+                <div class="row pl-1x05r pr-1x05r" purchaseorderitemid="${purchaseOrderItem.id}" inventoryitemid="${purchaseOrderItem.inventoryItemId}">
                     <div class="col-12 pb-05r">
                         <span class="badge badge-soft-dark badge-border purchaseorder-item-title">${purchaseOrderItem.material}</span>
                     </div>
@@ -378,11 +381,13 @@ function updateStatus()
         const purchaseOrderItems = [];
         $('#dvPurchaseOrderItems .row[inventoryitemid]').each(function() {
             const inventoryItemId = $(this).attr('inventoryitemid');
+            const purchaseOrderItemId = $(this).attr('purchaseorderitemid');
             const unit = $(this).find('.purchaseorder-item-unittype').val();
             const quantity = $(this).find('.purchaseorder-item-qty').val();
             const unitValue = $(this).find('.purchaseorder-item-unitprice').val();
             const totalValue = $(this).find('.purchaseorder-item-total').val();
             purchaseOrderItems.push({
+                id: purchaseOrderItemId,
                 inventoryItemId,
                 unit,
                 quantity,

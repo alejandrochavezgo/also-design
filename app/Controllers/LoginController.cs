@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using common.configurations;
 using providerData.entitiesData;
 using entities.enums;
+using app.helpers;
 
 public class loginController : Controller
 {
@@ -111,7 +112,7 @@ public class loginController : Controller
                 });
             }
 
-            var expirationDate = DateTime.Now.AddDays(7);
+            var expirationDate = dateHelper.pstNow().AddDays(7);
             var client = _clientFactory.CreateClient();
             var responsePost = await client.PostAsync(configurationManager.appSettings["api:routes:login:authenticate"], new StringContent(JsonConvert.SerializeObject(new
             {

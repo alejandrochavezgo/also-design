@@ -567,7 +567,7 @@ function isValidForm(quotation) {
             !quotation.payment.id || !quotation.user.id || !quotation.user.employee.mainContactPhone || !quotation.currency.id || quotation.items.length == 0) {
             Swal.fire({
                 title: 'Error!!',
-                html: 'The fields Client, Payment Type, User Phone Contact, Currency and Items cannot be empty.',
+                html: 'The fields Client, Project, Payment Type, User Phone Contact, Currency and Items cannot be empty.',
                 icon: 'error',
                 confirmButtonClass: 'btn btn-danger w-xs mt-2',
                 buttonsStyling: !1,

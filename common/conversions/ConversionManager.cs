@@ -11,6 +11,7 @@ using common.logging;
 using entities.models;
 using common.constants;
 using entities.enums;
+using common.helpers;
 
 public sealed class conversionManager
 {
@@ -75,7 +76,7 @@ public sealed class conversionManager
     /// <returns></returns>
     public static DateTime kendoCalToDate(string kendoDate)
     {
-        DateTime result = DateTime.Now;
+        DateTime result = new dateHelper().pstNow().Date;
         try
         {
             result = DateTime.ParseExact(kendoDate, "MMM/dd/yyyy", CultureInfo.InvariantCulture);
@@ -1184,7 +1185,7 @@ public sealed class conversionManager
     /// <returns></returns>
     public static string dateSeal()
     {
-        return DateTime.Now.ToString("yyMMdd");
+        return new dateHelper().pstNow().ToString("yyMMdd");
     }
 
     /// <summary>
@@ -1200,7 +1201,7 @@ public sealed class conversionManager
     /// </summary>
     public static string timeSeal()
     {
-        return DateTime.Now.ToString("yyMMddHHmmss");
+        return new dateHelper().pstNow().Date.ToString("yyMMddHHmmss");
     }
 
     /// <summary>
@@ -1635,7 +1636,7 @@ public sealed class julianToDateTime
         julianDate = julianDate - 1;
         DateTime date;
         long day = new long();
-        int year = DateTime.Now.Year;
+        int year = new dateHelper().pstNow().Year;
 
         if (isLeapYear(year))
             day = (TimeSpan.TicksPerDay * julianDate) + (TimeSpan.TicksPerDay * leapYear);

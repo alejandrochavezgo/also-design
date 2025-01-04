@@ -659,7 +659,7 @@ function isValidForm(purchaseOrder) {
             !purchaseOrder.payment.id || !purchaseOrder.user.id || !purchaseOrder.user.employee.mainContactPhone || !purchaseOrder.currency.id || purchaseOrder.items.length == 0) {
             Swal.fire({
                 title: 'Error!!',
-                html: 'The fields Supplier, Payment Type, User Phone Contact, Currency and Items cannot be empty.',
+                html: 'The fields Supplier, Project, Payment Type, User Phone Contact, Currency and Items cannot be empty.',
                 icon: 'error',
                 confirmButtonClass: 'btn btn-danger w-xs mt-2',
                 buttonsStyling: !1,

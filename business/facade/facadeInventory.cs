@@ -5,16 +5,19 @@ using data.repositories;
 using entities.models;
 using Newtonsoft.Json;
 using entities.enums;
+using common.helpers;
 
 public class facadeInventory
 {
     private log _logger;
     private repositoryInventory _repositoryInventory;
+    private DateTime _dateTime;
 
     public facadeInventory()
     {
         _logger = new log();
         _repositoryInventory = new repositoryInventory();
+        _dateTime = new dateHelper().pstNow();
     }
 
     public List<inventoryListModel> getItemByTerm(string term)
@@ -60,7 +63,7 @@ public class facadeInventory
     {
         try
         {
-            var today = DateTime.Now;
+            var today = _dateTime;
             inventoryItem.quantity = 0;
             inventoryItem.creationDate = today;
             inventoryItem.itemImagePath = string.IsNullOrEmpty(inventoryItem.itemImagePath) ? string.Empty : inventoryItem.itemImagePath;
@@ -133,11 +136,11 @@ public class facadeInventory
         }
     }
 
-    public List<inventoryMovementModel> getInventoryMovementsByPurchaseOrderIdAndInventoryId(int purchaseOrderId, int inventoryItemId)
+    public List<inventoryMovementModel> getInventoryMovementsByPurchaseOrderIdAndInventoryId(int purchaseOrderItemId, int purchaseOrderId, int inventoryItemId)
     {
         try
         {
-            return _repositoryInventory.getInventoryMovementsByPurchaseOrderIdAndInventoryId(purchaseOrderId, inventoryItemId);
+            return _repositoryInventory.getInventoryMovementsByPurchaseOrderIdAndInventoryId(purchaseOrderItemId, purchaseOrderId, inventoryItemId);
         }
         catch (Exception exception)
         {
@@ -159,11 +162,11 @@ public class facadeInventory
         }
     }
 
-    public int addMovement(int inventoryItemId, inventoryMovementType inventoryMovementType, int purchaseOrderId, int userId, double quantity, int unit, string comments, decimal unitValue, decimal totalValue, DateTime entryDateTime)
+    public int addMovement(int purchaseOrderItemId, int inventoryItemId, inventoryMovementType inventoryMovementType, int purchaseOrderId, int userId, double quantity, int unit, string comments, decimal unitValue, decimal totalValue, DateTime entryDateTime)
     {
         try
         {
-            return _repositoryInventory.addMovement(inventoryItemId, inventoryMovementType, purchaseOrderId, userId, quantity, unit, comments, unitValue, totalValue, entryDateTime);
+            return _repositoryInventory.addMovement(purchaseOrderItemId, inventoryItemId, inventoryMovementType, purchaseOrderId, userId, quantity, unit, comments, unitValue, totalValue, entryDateTime);
         }
         catch (Exception exception)
         {
@@ -176,7 +179,7 @@ public class facadeInventory
     {
         try
             {
-                inventoryItem.modificationDate = DateTime.Now;
+                inventoryItem.modificationDate = _dateTime;
                 if(inventoryItem.itemImageHasOriginalImage)
                     inventoryItem.itemImagePath = string.Empty;
                 else

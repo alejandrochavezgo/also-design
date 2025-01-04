@@ -8,6 +8,7 @@ public class inventoryMovementModel
     public int id { get; set; }
     public inventoryMovementType inventoryMovementType { get; set; }
     public int purchaseOrderId { get; set; }
+    public int purchaseOrderItemId { get; set; }
     public int inventoryItemId { get; set; }
     public packingUnitType packingUnitType { get; set; }
     public int userId { get; set; }

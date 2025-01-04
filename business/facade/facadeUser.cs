@@ -16,6 +16,7 @@ public class facadeUser
     private facadeTrace _facadeTrace;
     private repositoryUser _repositoryUser;
     private repositoryEmployee _repositoryEmployee;
+    private DateTime _dateTime;
 
     public facadeUser(userModel user)
     {
@@ -24,6 +25,7 @@ public class facadeUser
         _facadeTrace = new facadeTrace();
         _repositoryUser = new repositoryUser();
         _repositoryEmployee = new repositoryEmployee();
+        _dateTime = new dateHelper().pstNow();
     }
 
     public List<List<catalogModel>> getAllUserCatalogs()
@@ -108,7 +110,7 @@ public class facadeUser
                 var facadeEmployee = new facadeEmployee(user);
                 var userBefore = getUserById(user.id);
                 var employeeBefore = userBefore;
-                user.modificationDate = DateTime.Now;
+                user.modificationDate = _dateTime;
                 _repositoryUser.removeContactPhonesByEmployeeId(user.employee.id);
 
                 foreach(var phone in user.employee.contactPhones)
@@ -204,7 +206,7 @@ public class facadeUser
         {
             try
             {
-                user.creationDate = DateTime.Now;
+                user.creationDate = _dateTime;
                 user.username = user.username.Trim().ToUpper();
                 var result = _repositoryUser.addUserToEmployee(user);
                 var trace = _facadeTrace.addTrace(new traceModel
@@ -243,7 +245,7 @@ public class facadeUser
                 user.username = user.username.Trim().ToUpper();
                 user.firstname = user.firstname.Trim().ToUpper();
                 user.lastname = user.lastname.Trim().ToUpper();
-                user.creationDate = DateTime.Now;
+                user.creationDate = _dateTime;
                 user.email = user.email.Trim().ToUpper();
                 user.status = user.status;
                 user.failCount = 0;

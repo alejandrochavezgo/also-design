@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System.Transactions;
 using entities.enums;
 using common.utils;
+using common.helpers;
 
 public class facadeEmployee
 {
@@ -15,6 +16,7 @@ public class facadeEmployee
     private facadeTrace _facadeTrace;
     private repositoryUser _repositoryUser;
     private repositoryEmployee _repositoryEmployee;
+    private DateTime _dateTime;
 
     public facadeEmployee(userModel user)
     {
@@ -23,6 +25,7 @@ public class facadeEmployee
         _facadeTrace = new facadeTrace();
         _repositoryUser = new repositoryUser();
         _repositoryEmployee = new repositoryEmployee();
+        _dateTime = new dateHelper().pstNow();
     }
 
     public List<List<catalogModel>> getAllEmployeeCatalogs()
@@ -76,7 +79,7 @@ public class facadeEmployee
             try
             {
                 var employeeBefore = getEmployeeById(user.id);
-                user.modificationDate = DateTime.Now;
+                user.modificationDate = _dateTime;
                 _repositoryUser.removeContactPhonesByEmployeeId(user.employee.id);
 
                 foreach(var phone in user.employee.contactPhones)
@@ -184,7 +187,7 @@ public class facadeEmployee
             {
                 user.firstname = user.firstname.Trim().ToUpper();
                 user.lastname = user.lastname.Trim().ToUpper();
-                user.creationDate = DateTime.Now;
+                user.creationDate = _dateTime;
                 user.email = user.email.Trim().ToUpper();
                 user.status = user.status;
                 user.failCount = 0;

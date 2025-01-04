@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System.Transactions;
 using entities.enums;
 using common.utils;
+using common.helpers;
 
 public class facadeProject
 {
@@ -14,6 +15,7 @@ public class facadeProject
     private userModel _user;
     private facadeTrace _facadeTrace;
     private repositoryProject _repositoryProject;
+    private DateTime _dateTime;
 
     public facadeProject(userModel user)
     {
@@ -21,6 +23,7 @@ public class facadeProject
         _logger = new log();
         _facadeTrace = new facadeTrace();
         _repositoryProject = new repositoryProject();
+        _dateTime = new dateHelper().pstNow();
     }
 
     public List<List<catalogModel>> getAllProjectCatalogs()
@@ -46,7 +49,7 @@ public class facadeProject
         {
             try
             {
-                project.creationDate = DateTime.Now;
+                project.creationDate = _dateTime;
                 var projectIdAdded = _repositoryProject.addProject(project);
                 var projectAfter = getProjectById(projectIdAdded);
                 var projectSettings = new JsonSerializerSettings
@@ -143,7 +146,7 @@ public class facadeProject
             try
             {
                 var projectBefore = getProjectById(project.id);
-                project.modificationDate = DateTime.Now;
+                project.modificationDate = _dateTime;
                 var result = _repositoryProject.updateProject(project) > 0;
                 var projectAfter = getProjectById(project.id);
                 var projectSettings = new JsonSerializerSettings

@@ -15,6 +15,7 @@ public class facadePurchaseOrder
     private userModel _user;
     private facadeTrace _facadeTrace;
     private repositoryPurchaseOrder _repositoryPurchaseOrder;
+    private DateTime _dateTime;
 
     public facadePurchaseOrder(userModel user)
     {
@@ -22,6 +23,7 @@ public class facadePurchaseOrder
         _logger = new log();
         _facadeTrace = new facadeTrace();
         _repositoryPurchaseOrder = new repositoryPurchaseOrder();
+        _dateTime = new dateHelper().pstNow();
     }
 
     public List<List<catalogModel>> getAllPurchaseOrderCatalogs()
@@ -59,7 +61,7 @@ public class facadePurchaseOrder
         {
             try
             {
-                purchaseOrder.creationDate = DateTime.Now;
+                purchaseOrder.creationDate = _dateTime;
                 var purchaseOrderIdAdded = _repositoryPurchaseOrder.addPurchaseOrder(purchaseOrder);
 
                 foreach (var item in purchaseOrder.items)
@@ -118,7 +120,7 @@ public class facadePurchaseOrder
                     return false;
                 }
 
-                purchaseOrder.modificationDate = DateTime.Now;
+                purchaseOrder.modificationDate = _dateTime;
                 var purchaseOrderIdUpdated = _repositoryPurchaseOrder.updatePurchaseOrder(purchaseOrder);
 
                 foreach (var item in purchaseOrder.items)
@@ -222,7 +224,7 @@ public class facadePurchaseOrder
                 }
 
                 var trace = 0;
-                var today = DateTime.Now;
+                var today = _dateTime;
                 var quantityPendingItems = 0;
                 var quantityCompletedItems = 0;
                 var _facadeTrace = new facadeTrace();
@@ -240,7 +242,7 @@ public class facadePurchaseOrder
                     foreach (var purchaseOrderItem in changeStatus.purchaseOrderItems)
                     {
                         var purchaseOrderItemFromDatabase = purchaseOrderItems.FirstOrDefault(x => x.inventoryItemId == purchaseOrderItem.inventoryItemId);
-                        var inventoryMovements = _facadeInventory.getInventoryMovementsByPurchaseOrderIdAndInventoryId(purchaseOrder.id, purchaseOrderItem.inventoryItemId);
+                        var inventoryMovements = _facadeInventory.getInventoryMovementsByPurchaseOrderIdAndInventoryId(purchaseOrderItem.id, purchaseOrder.id, purchaseOrderItem.inventoryItemId);
                         var newQuantity = 0d;
                         var maxQuantityAllowed = 0d;
                         if (purchaseOrderItemFromDatabase != null && inventoryMovements != null)
@@ -255,7 +257,7 @@ public class facadePurchaseOrder
                         }
 
                         var entry = _facadeInventory.addEntry(purchaseOrderItem.inventoryItemId, purchaseOrderItem.quantity, today);
-                        var movement = _facadeInventory.addMovement(purchaseOrderItem.inventoryItemId, inventoryMovementType.PARTIAL_RECEIPT, purchaseOrder.id, changeStatus.userId, purchaseOrderItem.quantity, purchaseOrderItem.unit, changeStatus.comments, purchaseOrderItem.unitValue, purchaseOrderItem.totalValue, today);
+                        var movement = _facadeInventory.addMovement(purchaseOrderItem.id, purchaseOrderItem.inventoryItemId, inventoryMovementType.PARTIAL_RECEIPT, purchaseOrder.id, changeStatus.userId, purchaseOrderItem.quantity, purchaseOrderItem.unit, changeStatus.comments, purchaseOrderItem.unitValue, purchaseOrderItem.totalValue, today);
                         trace = _facadeTrace.addTrace(new traceModel
                         {
                             entityType = entityType.INVENTORY,
@@ -291,14 +293,14 @@ public class facadePurchaseOrder
                     foreach (var purchaseOrderItem in purchaseOrderItems)
                     {
                         var quantity = 0d;
-                        var inventoryMovements = _facadeInventory.getInventoryMovementsByPurchaseOrderIdAndInventoryId(purchaseOrder.id, purchaseOrderItem.inventoryItemId);
+                        var inventoryMovements = _facadeInventory.getInventoryMovementsByPurchaseOrderIdAndInventoryId(purchaseOrderItem.id, purchaseOrder.id, purchaseOrderItem.inventoryItemId);
                         if (inventoryMovements != null)
                         {
                             quantity = purchaseOrderItem.quantity - inventoryMovements.Sum(x => x.quantity);
                         }
 
                         var entry = _facadeInventory.addEntry(purchaseOrderItem.inventoryItemId, quantity, today);
-                        var movement = _facadeInventory.addMovement(purchaseOrderItem.inventoryItemId, inventoryMovementType.RECEIPT, purchaseOrder.id, changeStatus.userId, quantity, purchaseOrderItem.unit, changeStatus.comments, purchaseOrderItem.unitValue, purchaseOrderItem.totalValue, today);
+                        var movement = _facadeInventory.addMovement(purchaseOrderItem.id, purchaseOrderItem.inventoryItemId, inventoryMovementType.RECEIPT, purchaseOrder.id, changeStatus.userId, quantity, purchaseOrderItem.unit, changeStatus.comments, purchaseOrderItem.unitValue, purchaseOrderItem.totalValue, today);
                         trace = _facadeTrace.addTrace(new traceModel
                         {
                             entityType = entityType.INVENTORY,
@@ -369,7 +371,16 @@ public class facadePurchaseOrder
         try
         {
             var catalogs = new List<List<catalogModel>>();
-            var purchaseOrderStatus = new HashSet<int> {1, 6, 7, 9, 10, 8, 12};
+            var purchaseOrderStatus = new HashSet<int>
+            {
+                (int)statusType.ACTIVE,
+                (int)statusType.APPROVED,
+                (int)statusType.PENDING,
+                (int)statusType.REJECTED,
+                (int)statusType.PARTIALLY_FULFILLED,
+                (int)statusType.FULFILLED,
+                (int)statusType.CANCELLED
+            };
             catalogs.Add(new repositoryInventory().getStatusTypesCatalog().Where(x => purchaseOrderStatus.Contains(x.id)).ToList());
             return catalogs;
         }
@@ -421,7 +432,7 @@ public class facadePurchaseOrder
             if (purchaseOrderItems != null)
                 foreach (var purchaseOrderItem in purchaseOrderItems)
                 {
-                    var inventoryMovements = _facadeInventory.getInventoryMovementsByPurchaseOrderIdAndInventoryId(purchaseOrderId, purchaseOrderItem.inventoryItemId);
+                    var inventoryMovements = _facadeInventory.getInventoryMovementsByPurchaseOrderIdAndInventoryId(purchaseOrderItem.id, purchaseOrderId, purchaseOrderItem.inventoryItemId);
                     if (inventoryMovements != null && inventoryMovements.Sum(x => x.quantity) == purchaseOrderItem.quantity)
                         purchaseOrderItemsToRemove.Add(purchaseOrderItem);
                 }

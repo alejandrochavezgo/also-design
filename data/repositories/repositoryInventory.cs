@@ -264,7 +264,7 @@ public class repositoryInventory : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB, "@tolerance", DbType.Double, inventoryItem.tolerance!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@unitTolerance", DbType.Int32, inventoryItem.unitTolerance!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@warehouseLocation", DbType.Int32, inventoryItem.warehouseLocation!),
-                dataFactory.getObjParameter(configurationManager.providerDB, "@reorderQty", DbType.Int32, inventoryItem.reorderQty!),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@reorderQty", DbType.Decimal, inventoryItem.reorderQty!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@creationDate", DbType.DateTime, inventoryItem.creationDate!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@notes", DbType.String, inventoryItem.notes!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@itemImagePath", DbType.String, inventoryItem.itemImagePath!),
@@ -325,13 +325,14 @@ public class repositoryInventory : baseRepository
         }
     }
 
-    public List<inventoryMovementModel> getInventoryMovementsByPurchaseOrderIdAndInventoryId(int purchaseOrderId, int inventoryItemId)
+    public List<inventoryMovementModel> getInventoryMovementsByPurchaseOrderIdAndInventoryId(int purchaseOrderItemId, int purchaseOrderId, int inventoryItemId)
     {
         try
         {
             return factoryGetInventoryMovements.getList((DbDataReader)_providerDB.GetDataReader("sp_getInventoryMovementsByPurchaseOrderIdAndInventoryId", new DbParameter[]
             {
                 dataFactory.getObjParameter(configurationManager.providerDB,"@purchaseOrderId", DbType.Int32, purchaseOrderId),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@purchaseOrderItemId", DbType.Int32, purchaseOrderItemId),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@inventoryItemId", DbType.Int32, inventoryItemId)
             }));
         }
@@ -371,7 +372,7 @@ public class repositoryInventory : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB, "@tolerance", DbType.Double, inventoryItem.tolerance!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@unitTolerance", DbType.Int32, inventoryItem.unitTolerance!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@warehouseLocation", DbType.Int32, inventoryItem.warehouseLocation!),
-                dataFactory.getObjParameter(configurationManager.providerDB, "@reorderQty", DbType.Int32, inventoryItem.reorderQty!),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@reorderQty", DbType.Decimal, inventoryItem.reorderQty!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@modificationDate", DbType.DateTime, inventoryItem.modificationDate!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@notes", DbType.String, inventoryItem.notes!),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@itemImagePath", DbType.String, inventoryItem.itemImagePath!),
@@ -417,13 +418,14 @@ public class repositoryInventory : baseRepository
         }
     }
 
-    public int addMovement(int inventoryItemId, inventoryMovementType inventoryMovementType, int purchaseOrderId, int userId, double quantity, int unit, string comments, decimal unitValue, decimal totalValue, DateTime entryDateTime)
+    public int addMovement(int purchaseOrderItemId, int inventoryItemId, inventoryMovementType inventoryMovementType, int purchaseOrderId, int userId, double quantity, int unit, string comments, decimal unitValue, decimal totalValue, DateTime entryDateTime)
     {
         try
         {
             var movementIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@movementIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
             base._providerDB.ExecuteNonQuery("sp_addInventoryMovement", new DbParameter[] {
                 movementIdAdded,
+                dataFactory.getObjParameter(configurationManager.providerDB, "@purchaseOrderItemId", DbType.Int32, purchaseOrderItemId),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@inventoryItemId", DbType.Int32, inventoryItemId),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@inventoryMovementType", DbType.Int32, (int)inventoryMovementType),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@purchaseOrderId", DbType.Int32, purchaseOrderId),

@@ -20,6 +20,7 @@ internal class factoryGetInventoryMovements: baseMethod<factoryGetInventoryMovem
                 id = conversionManager.toInt(dr["IDINVENTORYMOVEMENT"]),
                 inventoryMovementType = (inventoryMovementType)conversionManager.toInt(dr["IDINVENTORYMOVEMENTTYPE"]),
                 purchaseOrderId = conversionManager.toInt(dr["IDPURCHASEORDER"]),
+                purchaseOrderItemId = conversionManager.toInt(dr["IDPURCHASEORDERSITEM"]),
                 inventoryItemId = conversionManager.toInt(dr["IDINVENTORY"]),
                 userId = conversionManager.toInt(dr["IDUSER"]),
                 quantity = conversionManager.toDouble(dr["QUANTITY"]),

@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System.Transactions;
 using entities.enums;
 using common.utils;
+using common.helpers;
 
 public class facadeSupplier
 {
@@ -14,6 +15,7 @@ public class facadeSupplier
     private userModel _user;
     private facadeTrace _facadeTrace;
     private repositorySupplier _repositorySupplier;
+    private DateTime _dateTime;
 
     public facadeSupplier(userModel user)
     {
@@ -21,6 +23,7 @@ public class facadeSupplier
         _logger = new log();
         _facadeTrace = new facadeTrace();
         _repositorySupplier = new repositorySupplier();
+        _dateTime = new dateHelper().pstNow();
     }
 
     public List<List<catalogModel>> getAllSupplierCatalogs()
@@ -134,7 +137,7 @@ public class facadeSupplier
         {
             try
             {
-                supplier.creationDate = DateTime.Now;
+                supplier.creationDate = _dateTime;
                 var supplierIdAdded = _repositorySupplier.addSupplier(supplier);
 
                 if (supplier.contactNames.Count > 0)
@@ -195,7 +198,7 @@ public class facadeSupplier
             try
             {
                 var supplierBefore = getSupplierById(supplier.id);
-                supplier.modificationDate = DateTime.Now;
+                supplier.modificationDate = _dateTime;
                 _repositorySupplier.removeContactNamesEmailsAndPhonesBySupplierId(supplier.id);
 
                 foreach(var name in supplier.contactNames)
