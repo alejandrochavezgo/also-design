@@ -6,6 +6,7 @@ using entities.models;
 using Newtonsoft.Json;
 using entities.enums;
 using common.helpers;
+using System.Transactions;
 
 public class facadeInventory
 {
@@ -46,11 +47,11 @@ public class facadeInventory
         }
     }
 
-    public List<inventoryMovementModel> getInventoryMovementsByPurchaseOrderIdAndInventoryItemId(int inventoryItemId)
+    public List<inventoryMovementModel> getInventoryMovementsByInventoryItemId(int inventoryItemId)
     {
         try
         {
-            return _repositoryInventory.getInventoryMovementsByPurchaseOrderIdAndInventoryItemId(inventoryItemId);
+            return _repositoryInventory.getInventoryMovementsByInventoryItemId(inventoryItemId);
         }
         catch (Exception exception)
         {
@@ -162,11 +163,24 @@ public class facadeInventory
         }
     }
 
-    public int addMovement(int purchaseOrderItemId, int inventoryItemId, inventoryMovementType inventoryMovementType, int purchaseOrderId, int userId, double quantity, int unit, string comments, decimal unitValue, decimal totalValue, DateTime entryDateTime)
+    public int addExit(int inventoryItemId, double quantityToRelease)
     {
         try
         {
-            return _repositoryInventory.addMovement(purchaseOrderItemId, inventoryItemId, inventoryMovementType, purchaseOrderId, userId, quantity, unit, comments, unitValue, totalValue, entryDateTime);
+            return _repositoryInventory.addExit(inventoryItemId, quantityToRelease, _dateTime);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public int addMovement(int purchaseOrderItemId, int inventoryItemId, inventoryMovementType inventoryMovementType, int purchaseOrderId, int userId, double quantity, int unit, string comments, decimal unitValue, decimal totalValue, DateTime transactionDateTime, int projectId, int receivingUserId)
+    {
+        try
+        {
+            return _repositoryInventory.addMovement(purchaseOrderItemId, inventoryItemId, inventoryMovementType, purchaseOrderId, userId, quantity, unit, comments, unitValue, totalValue, transactionDateTime, projectId, receivingUserId);
         }
         catch (Exception exception)
         {
@@ -217,6 +231,40 @@ public class facadeInventory
         {
             _logger.logError($"{JsonConvert.SerializeObject(exception)}");
             throw exception;
+        }
+    }
+
+    public bool updateInventoryStockByInventoryItemId(inventoryReleaseModel inventoryRelease)
+    {
+        using (TransactionScope transactionScope = new TransactionScope())
+        {
+            try
+            {
+                var inventoryItem = _repositoryInventory.getItemInventoryById(inventoryRelease.id);
+                if (inventoryItem == null || inventoryItem.status != (int)statusType.ACTIVE || inventoryItem.quantity <= 0 || inventoryRelease.quantityToRelease > inventoryItem.quantity)
+                {
+                    transactionScope.Dispose();
+                    return false;
+                }
+
+                if (_repositoryInventory.addExit(inventoryItem.id, inventoryRelease.quantityToRelease, _dateTime) > 0 &&
+                    _repositoryInventory.addMovement(0, inventoryItem.id, inventoryMovementType.EXIT, 0, inventoryRelease.deliveringUserId, -1 * inventoryRelease.quantityToRelease, 0, inventoryRelease.comments, 0, 0, _dateTime, inventoryRelease.projectId, inventoryRelease.receivingUserId) > 0)
+                {
+                    transactionScope.Complete();
+                    return true;
+                }
+                else
+                {
+                    transactionScope.Dispose();
+                    return false;
+                }
+            }
+            catch (Exception exception)
+            {
+                transactionScope.Dispose();
+                _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+                return false;
+            }
         }
     }
 }

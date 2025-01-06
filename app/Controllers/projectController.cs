@@ -432,8 +432,8 @@ public class projectController : Controller
         }
     }
 
-    [HttpGet("project/getProjectByTerm")]
-    public async Task<IActionResult> getProjectByTerm(string name)
+    [HttpGet("project/getProjectsByTerm")]
+    public async Task<IActionResult> getProjectsByTerm(string name)
     {
         try
         {

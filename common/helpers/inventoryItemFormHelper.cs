@@ -44,11 +44,27 @@ public class inventoryItemFormHelper
         }
     }
 
-    public static bool isUpdateFormValid(inventoryItemModel inventoryItem, bool isStatusChange)
+    public bool isUpdateFormValid(inventoryItemModel inventoryItem, bool isStatusChange)
     {
         try
         {
             if (inventoryItem == null || inventoryItem.id <= 0 || inventoryItem.quantity > 0)
+                return false;
+            return true;
+        }
+        catch (Exception exception)
+        {
+            throw exception;
+        }
+    }
+
+    public bool isUpdateFormValid(inventoryReleaseModel inventoryRelease, bool isStatusChange, bool isStockValid)
+    {
+        try
+        {
+            if (inventoryRelease == null || inventoryRelease.id <= 0 || inventoryRelease.quantityToRelease <= 0 || inventoryRelease.stock <= 0 ||
+                inventoryRelease.quantityToRelease > inventoryRelease.stock || inventoryRelease.projectId <= 0 || inventoryRelease.deliveringUserId <=0 ||
+                inventoryRelease.receivingUserId <= 0)
                 return false;
             return true;
         }

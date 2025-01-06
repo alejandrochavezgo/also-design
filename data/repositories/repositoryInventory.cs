@@ -220,11 +220,11 @@ public class repositoryInventory : baseRepository
         }
     }
 
-    public List<inventoryMovementModel> getInventoryMovementsByPurchaseOrderIdAndInventoryItemId(int inventoryItemId)
+    public List<inventoryMovementModel> getInventoryMovementsByInventoryItemId(int inventoryItemId)
     {
         try
         {
-            return factoryGetInventoryMovementsByPurchaseOrderIdAndInventoryItemId.getList((DbDataReader)_providerDB.GetDataReader("sp_getLastInventoryMovementsByPurchaseorderIdAndInventoryItemId", new DbParameter[]
+            return factoryGetInventoryMovementsByInventoryItemId.getList((DbDataReader)_providerDB.GetDataReader("sp_getLastInventoryMovementsByInventoryItemId", new DbParameter[]
             {
                 dataFactory.getObjParameter(configurationManager.providerDB, "@inventoryItemId", DbType.Int32, inventoryItemId)
             }));
@@ -418,7 +418,7 @@ public class repositoryInventory : baseRepository
         }
     }
 
-    public int addMovement(int purchaseOrderItemId, int inventoryItemId, inventoryMovementType inventoryMovementType, int purchaseOrderId, int userId, double quantity, int unit, string comments, decimal unitValue, decimal totalValue, DateTime entryDateTime)
+    public int addMovement(int purchaseOrderItemId, int inventoryItemId, inventoryMovementType inventoryMovementType, int purchaseOrderId, int userId, double quantity, int unit, string comments, decimal unitValue, decimal totalValue, DateTime transactionDateTime, int projectId, int receivingUserId)
     {
         try
         {
@@ -429,13 +429,15 @@ public class repositoryInventory : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB, "@inventoryItemId", DbType.Int32, inventoryItemId),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@inventoryMovementType", DbType.Int32, (int)inventoryMovementType),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@purchaseOrderId", DbType.Int32, purchaseOrderId),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@projectId", DbType.Int32, projectId),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@userId", DbType.Int32, userId),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@receivingUserId", DbType.Int32, receivingUserId),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@quantity", DbType.Double, quantity),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@unit", DbType.Int32, unit),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@comments", DbType.String, comments),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@unitValue", DbType.Decimal, unitValue),
                 dataFactory.getObjParameter(configurationManager.providerDB, "@totalValue", DbType.Decimal, totalValue),
-                dataFactory.getObjParameter(configurationManager.providerDB, "@entryDateTime", DbType.DateTime, entryDateTime)
+                dataFactory.getObjParameter(configurationManager.providerDB, "@transactionDateTime", DbType.DateTime, transactionDateTime)
             });
             return Convert.ToInt32(movementIdAdded.Value);
         }
@@ -471,4 +473,31 @@ public class repositoryInventory : baseRepository
             throw exception;
         }
     }
+
+    public int addExit(int inventoryItemId, double quantityToRelease, DateTime transactionDate)
+    {
+        try
+        {
+            var exitIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@exitIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+            base._providerDB.ExecuteNonQuery("sp_addInventoryExit", new DbParameter[] {
+                exitIdAdded,
+                dataFactory.getObjParameter(configurationManager.providerDB, "@inventoryItemId", DbType.Int32, inventoryItemId),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@quantityToRelease", DbType.Double, quantityToRelease),
+                dataFactory.getObjParameter(configurationManager.providerDB, "@transactionDate", DbType.DateTime, transactionDate)
+
+            });
+            return Convert.ToInt32(exitIdAdded.Value);
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
 }

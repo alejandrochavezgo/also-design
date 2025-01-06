@@ -6,7 +6,7 @@ using common.logging;
 using entities.models;
 using Newtonsoft.Json;
 
-internal class factoryGetInventoryMovementsByPurchaseOrderIdAndInventoryItemId: baseMethod<factoryGetInventoryMovementsByPurchaseOrderIdAndInventoryItemId, inventoryMovementModel>
+internal class factoryGetInventoryMovementsByInventoryItemId: baseMethod<factoryGetInventoryMovementsByInventoryItemId, inventoryMovementModel>
 {
     private log _logger = new log();
     
@@ -22,7 +22,9 @@ internal class factoryGetInventoryMovementsByPurchaseOrderIdAndInventoryItemId: 
                 creationDate = conversionManager.toValidDate(dr["CREATIONDATE"]),
                 unitValue = conversionManager.toDecimal(dr["UNITVALUE"]),
                 totalValue = conversionManager.toDecimal(dr["TOTALVALUE"]),
-                creatorUsername = conversionManager.toString(dr["USERNAME"]),
+                approvedDeliveredUsername = conversionManager.toString(dr["APPROVEDDELIVEREDUSERNAME"]),
+                receivedUsername = conversionManager.toString(dr["RECEIVEDUSERNAME"]),
+                projectName = conversionManager.toString(dr["PROJECTNAME"]),
                 packingUnitTypeDescription = conversionManager.toString(dr["PACKINGUNITTYPES.DESCRIPTION"]),
                 inventoryMovementTypeDescription = conversionManager.toString(dr["INVENTORYMOVEMENTS.DESCRIPTION"])
             };

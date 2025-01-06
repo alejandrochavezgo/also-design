@@ -478,4 +478,34 @@ public class userController : Controller
             });
         }
     }
+
+    [HttpGet("user/getUsersByTerm")]
+    public async Task<IActionResult> getUsersByTerm(string username)
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var user = new userModel { username = username };
+            var responseGet = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:user:getUsersByTerm"]}", new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json"));
+
+            if(!responseGet.IsSuccessStatusCode)
+            {
+                var errorMessage = await responseGet.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responseGet.ReasonPhrase : errorMessage;
+                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+            }
+
+            var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
+            var results = JsonConvert.DeserializeObject<List<userModel>>(responseGetAsJson);
+            clientHttp.Dispose();
+
+            return Json(results);
+        }
+        catch (Exception e)
+        {
+            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+        }
+    }
 }

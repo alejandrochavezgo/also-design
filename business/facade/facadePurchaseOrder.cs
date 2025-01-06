@@ -257,7 +257,7 @@ public class facadePurchaseOrder
                         }
 
                         var entry = _facadeInventory.addEntry(purchaseOrderItem.inventoryItemId, purchaseOrderItem.quantity, today);
-                        var movement = _facadeInventory.addMovement(purchaseOrderItem.id, purchaseOrderItem.inventoryItemId, inventoryMovementType.PARTIAL_RECEIPT, purchaseOrder.id, changeStatus.userId, purchaseOrderItem.quantity, purchaseOrderItem.unit, changeStatus.comments, purchaseOrderItem.unitValue, purchaseOrderItem.totalValue, today);
+                        var movement = _facadeInventory.addMovement(purchaseOrderItem.id, purchaseOrderItem.inventoryItemId, inventoryMovementType.PARTIAL_RECEIPT, purchaseOrder.id, changeStatus.userId, purchaseOrderItem.quantity, purchaseOrderItem.unit, changeStatus.comments, purchaseOrderItem.unitValue, purchaseOrderItem.totalValue, today, 0, 0);
                         trace = _facadeTrace.addTrace(new traceModel
                         {
                             entityType = entityType.INVENTORY,
@@ -300,7 +300,7 @@ public class facadePurchaseOrder
                         }
 
                         var entry = _facadeInventory.addEntry(purchaseOrderItem.inventoryItemId, quantity, today);
-                        var movement = _facadeInventory.addMovement(purchaseOrderItem.id, purchaseOrderItem.inventoryItemId, inventoryMovementType.RECEIPT, purchaseOrder.id, changeStatus.userId, quantity, purchaseOrderItem.unit, changeStatus.comments, purchaseOrderItem.unitValue, purchaseOrderItem.totalValue, today);
+                        var movement = _facadeInventory.addMovement(purchaseOrderItem.id, purchaseOrderItem.inventoryItemId, inventoryMovementType.RECEIPT, purchaseOrder.id, changeStatus.userId, quantity, purchaseOrderItem.unit, changeStatus.comments, purchaseOrderItem.unitValue, purchaseOrderItem.totalValue, today, 0, 0);
                         trace = _facadeTrace.addTrace(new traceModel
                         {
                             entityType = entityType.INVENTORY,

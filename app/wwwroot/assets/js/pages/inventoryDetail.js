@@ -4,12 +4,13 @@ function initializeTransactionTable() {
             "scrollX": true,
             "autoWidth": false,
             "ajax": {
-                "url": "getInventoryMovementsByPurchaseOrderIdAndInventoryItemId",
+                "url": "getInventoryMovementsByInventoryItemId",
                 "type": "get",
                 "data": function(d) {
                     d.inventoryItemId = $('#inventoryItemId').val();
                 },
                 "dataSrc": function(data) {
+                    console.log(data);
                     if (!data.isSuccess) {
                         Swal.fire({
                             title: 'Error!!',
@@ -31,13 +32,25 @@ function initializeTransactionTable() {
                 { "data": "packingUnitTypeDescription" },
                 { "data": "unitValue", "render": $.fn.dataTable.render.number(',', '.', 2, '$') },
                 { "data": "totalValue", "render": $.fn.dataTable.render.number(',', '.', 2, '$') },
-                { "data": "creatorUsername" },
+                { "data": "approvedDeliveredUsername" },
+                { "data": "receivedUsername" },
+                { "data": "projectName" },
                 { "data": "comments" },
                 { "data": "creationDate", "render": function(data) {
-                    return data ? new Date(data).toLocaleDateString() : '-';
+                    if (data) {
+                        const date = new Date(data);
+                        const year = date.getFullYear();
+                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                        const day = String(date.getDate()).padStart(2, '0');
+                        const hours = String(date.getHours()).padStart(2, '0');
+                        const minutes = String(date.getMinutes()).padStart(2, '0');
+                        const seconds = String(date.getSeconds()).padStart(2, '0');
+                        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                    }
+                    return '-';
                 }}
             ],
-            "order": [[7, 'desc']]
+            "order": [[9, 'desc']]
         }).on('xhr', function() {
             $('#loader').hide();
         });

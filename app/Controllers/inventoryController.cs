@@ -170,15 +170,15 @@ public class inventoryController : Controller
         }
     }
 
-    [HttpGet("inventory/getInventoryMovementsByPurchaseOrderIdAndInventoryItemId")]
-    public async Task<IActionResult> getInventoryMovementsByPurchaseOrderIdAndInventoryItemId(int purchaseOrderId, int inventoryItemId)
+    [HttpGet("inventory/getInventoryMovementsByInventoryItemId")]
+    public async Task<IActionResult> getInventoryMovementsByInventoryItemId(int purchaseOrderId, int inventoryItemId)
     {
         try
         {
             var clientHttp = _clientFactory.CreateClient();
             var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
             clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
-            var url = $"{configurationManager.appSettings["api:routes:inventory:getInventoryMovementsByPurchaseOrderIdAndInventoryItemId"]}?purchaseOrderId={purchaseOrderId}&inventoryItemId={inventoryItemId}";
+            var url = $"{configurationManager.appSettings["api:routes:inventory:getInventoryMovementsByInventoryItemId"]}?purchaseOrderId={purchaseOrderId}&inventoryItemId={inventoryItemId}";
             var responseGet = await clientHttp.GetAsync(url);
             if (!responseGet.IsSuccessStatusCode)
             {
@@ -572,6 +572,93 @@ public class inventoryController : Controller
             { 
                 isSuccess = true,
                 message = "Inventory item deleted successfully."
+            });
+        }
+        catch(Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
+    [HttpGet("inventory/getItemInventoryById")]
+    public async Task<JsonResult> getItemInventoryById(int id)
+    {
+        try
+        {
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var inventoryItem = new inventoryItemModel { id = id };
+            var responsePostCatalog = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:inventory:getItemInventoryById"]}", new StringContent(JsonConvert.SerializeObject(inventoryItem), Encoding.UTF8, "application/json"));
+            var contentResponsePostCatalog = await responsePostCatalog.Content.ReadAsStringAsync();
+
+            if(!responsePostCatalog.IsSuccessStatusCode)
+            {
+                var message = string.IsNullOrEmpty(contentResponsePostCatalog) ? responsePostCatalog.ReasonPhrase : contentResponsePostCatalog;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = "message"
+                });
+            }
+            var results = JsonConvert.DeserializeObject<inventoryItemModel>(contentResponsePostCatalog);
+            clientHttp.Dispose();
+
+            return Json(new
+            {
+                isSuccess = true,
+                message = "Ok.",
+                results
+            });
+        }
+        catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
+
+    [HttpPost("inventory/updateInventoryStockByInventoryItemId")]
+    public async Task<JsonResult> updateInventoryStockByInventoryItemId([FromBody] inventoryReleaseModel inventoryRelease)
+    {
+        try
+        {
+            if (!ModelState.IsValid || !inventoryItemFormHelper.isUpdateFormValid(inventoryRelease, false, true))
+                return Json(new
+                { 
+                    isSuccess = false,
+                    message = "Invalid data."
+                });
+
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            inventoryRelease.deliveringUserId = userCookie.id;
+            var responsePost = await clientHttp.PostAsync($"{configurationManager.appSettings["api:routes:inventory:updateInventoryStockByInventoryItemId"]}", new StringContent(JsonConvert.SerializeObject(inventoryRelease), Encoding.UTF8, "application/json"));
+
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{message}"
+                });
+            }
+            clientHttp.Dispose();
+
+            return Json(new
+            { 
+                isSuccess = true,
+                message = "The stock for this item was updated successfully."
             });
         }
         catch(Exception exception)

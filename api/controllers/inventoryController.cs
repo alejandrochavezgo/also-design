@@ -61,12 +61,12 @@ public class inventoryController : ControllerBase
         }
     }
 
-    [HttpGet("getInventoryMovementsByPurchaseOrderIdAndInventoryItemId")]
-    public IActionResult getInventoryMovementsByPurchaseOrderIdAndInventoryItemId(int inventoryItemId)
+    [HttpGet("getInventoryMovementsByInventoryItemId")]
+    public IActionResult getInventoryMovementsByInventoryItemId(int inventoryItemId)
     {
         try
         {
-            return Ok(_facadeInventory.getInventoryMovementsByPurchaseOrderIdAndInventoryItemId(inventoryItemId));
+            return Ok(_facadeInventory.getInventoryMovementsByInventoryItemId(inventoryItemId));
         }
         catch (Exception e)
         {
@@ -146,11 +146,30 @@ public class inventoryController : ControllerBase
     {
         try
         {
-            if(!inventoryItemFormHelper.isUpdateFormValid(inventoryItem, true))
+            if(!new inventoryItemFormHelper().isUpdateFormValid(inventoryItem, true))
                 return BadRequest("Missing data.");
 
             if (!_facadeInventory.deleteItemInventoryById(inventoryItem.id))
                 return BadRequest("Invetory item can't be deleted.");
+
+            return Ok();
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
+
+    [HttpPost("updateInventoryStockByInventoryItemId")]
+    public IActionResult updateInventoryStockByInventoryItemId(entities.models.inventoryReleaseModel inventoryRelease)
+    {
+        try
+        {
+            if(inventoryRelease == null || !new inventoryItemFormHelper().isUpdateFormValid(inventoryRelease, false, true))
+                return BadRequest("The stock was not modified.");
+
+            if (!_facadeInventory.updateInventoryStockByInventoryItemId(inventoryRelease))
+                return BadRequest("The status was not change.");
 
             return Ok();
         }

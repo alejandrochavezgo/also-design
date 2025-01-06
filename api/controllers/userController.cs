@@ -193,4 +193,17 @@ public class userController : ControllerBase
             return BadRequest(JsonConvert.SerializeObject(e));
         }
     }
+
+    [HttpPost("getUsersByTerm")]
+    public IActionResult getUsersByTerm(entities.models.userModel user)
+    {
+        try
+        {
+            return Ok(_facadeUser.getUsersByTerm(user.username!));
+        }
+        catch(Exception e)
+        {
+            return BadRequest(JsonConvert.SerializeObject(e));
+        }
+    }
 }

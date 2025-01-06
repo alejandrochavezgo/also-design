@@ -44,6 +44,7 @@ internal class factoryGetItemInventoryById: baseMethod<factoryGetItemInventoryBy
                 warehouseLocation = conversionManager.toInt(dr["IDWAREHOUSELOCATIONTYPE"]),
                 warehouseLocationDescription = conversionManager.toString(dr["WAREHOUSELOCATIONTYPES.DESCRIPTION"]),
                 reorderQty = conversionManager.toDouble(dr["REORDERQUANTITY"]),
+                quantity = conversionManager.toDouble(dr["QUANTITY"]),
                 notes = conversionManager.toString(dr["NOTES"]),
                 itemImagePath = conversionManager.toString(dr["ITEMIMAGEPATH"]),
                 bluePrintsPath = conversionManager.toString(dr["BLUEPRINTSPATH"]),

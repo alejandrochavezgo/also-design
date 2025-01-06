@@ -389,4 +389,17 @@ public class facadeUser
             }
         }
     }
+
+    public List<userModel> getUsersByTerm(string username)
+    {
+        try
+        {
+            return _repositoryUser.getUsersByTerm(username);
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
 }

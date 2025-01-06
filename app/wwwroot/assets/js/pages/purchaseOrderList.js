@@ -414,7 +414,7 @@ function updateStatus()
                 purchaseOrderItems: purchaseOrderItems
             })
         })
-        .then(response => { return response.json(); })
+        .then(response => {return response.json()})
         .then(data => {
             if(!data.isSuccess) {
                 Swal.fire({

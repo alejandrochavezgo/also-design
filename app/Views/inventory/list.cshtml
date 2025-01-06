@@ -1,10 +1,13 @@
+@using Newtonsoft.Json
 @{
     ViewData["title"] = "Inventory List | Also Design";
+    var user = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Context.Request.Cookies["userCookie"]!);
 }
 @section styles
 {
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet"  type="text/css">
 }
 <div class="page-content">
     <div class="container-fluid">
@@ -63,10 +66,51 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="inventoryReleaseModal" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalgridLabel">Inventory Release Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="javascript:void(0);">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label for="inReceivingUser" class="form-label">Receiving User</label>
+                            <input id="inReceivingUser" type="text" class="form-control text-center" placeholder="Search username...">
+                        </div>
+                        <div class="col-6">
+                            <label for="inDeliveringUser" class="form-label">Delivering User</label>
+                            <input id="inDeliveringUser" type="text" class="form-control text-center" disabled value="@user!.username" deliveringUserId="@user.id">
+                        </div>
+                        <div class="col-8">
+                            <label for="inProjectName" class="form-label">Target Project</label>
+                            <input id="inProjectName" type="text" class="form-control text-center" placeholder="Search project...">
+                        </div>
+                        <div class="col-4">
+                            <label for="inQuantityToRelease" class="form-label">Quantity to Release</label>
+                            <input id="inQuantityToRelease" type="text" class="form-control numerical-mask text-center" placeholder="Enter quantity">
+                        </div>
+                        <div class="col-12">
+                            <label for="taComments" class="form-label">Comments</label>
+                            <textarea id="taComments" class="form-control fw-medium mb-1 bg-light border-0 uppercase-input" rows="4"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <div class="hstack gap-2 justify-content-end">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="inventoryRelease()">Release</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @section scripts
 {
-    @* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script> *@
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="../assets/js/pages/inventoryList.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>

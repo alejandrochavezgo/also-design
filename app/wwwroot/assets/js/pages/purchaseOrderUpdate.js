@@ -228,7 +228,7 @@ function initializeProjectAutocomplete() {
         $('#inProjectName').autocomplete({
             source: function(request, response) {
                 $.ajax({
-                    url: '/project/getProjectByTerm',
+                    url: '/project/getProjectsByTerm',
                     method: 'get',
                     dataType: 'json',
                     data: {

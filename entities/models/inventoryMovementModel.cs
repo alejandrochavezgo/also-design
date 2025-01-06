@@ -16,7 +16,9 @@ public class inventoryMovementModel
     public packingUnitType unit { get; set; }
     public string? comments { get; set; }
     public string? inventoryItemName { get; set; }
-    public string? creatorUsername { get; set; }
+    public string? approvedDeliveredUsername { get; set; }
+    public string? receivedUsername { get; set; }
+    public string? projectName { get; set; }
     public string? packingUnitTypeDescription { get; set; }
     public string? inventoryMovementTypeDescription { get; set; }
     public DateTime creationDate { get; set; }

@@ -312,7 +312,7 @@ public class repositoryUser : baseRepository
         try
         {
             var userIdAdded = dataFactory.getObjParameter(configurationManager.providerDB, "@userIdAdded", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
-            base._providerDB.ExecuteNonQuery("sp_addUser", new DbParameter[] {
+            base._providerDB.ExecuteNonQuery("sp_addUserRev2", new DbParameter[] {
                 userIdAdded,
                 dataFactory.getObjParameter(configurationManager.providerDB,"@status", DbType.Int32, user.status),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@username", DbType.String, user.username!),
@@ -555,6 +555,26 @@ public class repositoryUser : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB,"@userId", DbType.Int32, id),
             });
             return true;
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<userModel> getUsersByTerm(string username)
+    {
+        try
+        {
+            return factoryGetUsersByTerm.getList((DbDataReader)_providerDB.GetDataReader("sp_getUsersByTerm", new DbParameter[] {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@username", DbType.String, username)
+            }));
         }
         catch (SqlException SqlException)
         {
