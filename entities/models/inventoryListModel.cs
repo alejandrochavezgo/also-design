@@ -7,5 +7,6 @@ public class inventoryListModel
     public string? itemName { get; set; }
     public string? itemDescription { get; set; }
     public string? itemImagePath { get; set; }
+    public decimal? quantity { get; set; }
     public string? idQuantityLastRestockDate { get; set; }
 }

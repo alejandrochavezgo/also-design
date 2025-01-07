@@ -81,7 +81,7 @@ $(document).on('click', '#addItem', function() {
                 '<td>' +
                     '<div class="input-step">' +
                         '<button type="button" class="minus_' + rowCounter + '">–</button>' +
-                        '<input type="number" class="product-quantity" value="1" min="1" max="100" readonly>' +
+                        '<input type="number" class="product-quantity" value="1" min="1" max="999">' +
                         '<button type="button" class="plus_' + rowCounter + '">+</button>' +
                     '</div>' +
                 '</td>' +

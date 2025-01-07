@@ -19,6 +19,7 @@ internal class factoryGetItemByTerm: baseMethod<factoryGetItemByTerm, inventoryL
                 id = conversionManager.toInt(dr["IDINVENTORY"]),
                 itemCode = conversionManager.toString(dr["CODE"]),
                 itemName = conversionManager.toString(dr["NAME"]),
+                quantity = conversionManager.toDecimal(dr["QUANTITY"]),
                 itemDescription = conversionManager.toString(dr["DESCRIPTION"])
             };
         }

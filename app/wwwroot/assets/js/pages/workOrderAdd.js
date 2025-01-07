@@ -127,25 +127,25 @@ $(document).on('click', '#addItem', function() {
                     '</span>' +
                 '</td>' +
                 '<td>' +
-                    '<input type="text" class="form-control uppercase-input" id="inToolNumber" maxlength="200" placeholder="Enter tool number">' +
+                    '<input type="text" class="form-control uppercase-input toolNumber" maxlength="200" placeholder="Enter tool number">' +
                 '</td>' +
                 '<td>' +
-                    '<input type="text" class="form-control uppercase-input workorder-item" id="inMaterial" maxlength="200" placeholder="Search material...">' +
+                    '<input type="text" class="form-control uppercase-input workorder-item" maxlength="200" placeholder="Search material...">' +
                 '</td>' +
                 '<td>' +
                     '<div class="input-step">' +
                         '<button type="button" class="minus_' + rowCounter + '">–</button>' +
-                        '<input type="number" class="product-quantity" value="1" min="1" max="100" readonly>' +
+                        '<input type="number" class="product-quantity" value="1" min="1" max="100">' +
                         '<button type="button" class="plus_' + rowCounter + '">+</button>' +
                     '</div>' +
                 '</td>' +
                 '<td>' +
-                    '<button id="btAddRoute_' + rowCounter + '" type="button" class="btn btn-secondary waves-effect waves-light route-modal">' +
+                    '<button id="btAddRoute_' + rowCounter + '" type="button" class="btn btn-secondary waves-effect waves-light route-modal route">' +
                         '<i class="ri-list-ordered"></i>' +
                     '</button>' +
                 '</td>' +
                 '<td>' +
-                    '<button id="btAddComment_' + rowCounter + '" type="button" class="btn btn-secondary waves-effect waves-light comment-modal">' +
+                    '<button id="btAddComment_' + rowCounter + '" type="button" class="btn btn-secondary waves-effect waves-light comment-modal comment">' +
                         '<i class="ri-sticky-note-fill"></i>' +
                     '</button>' +
                 '</td>' +
@@ -339,7 +339,8 @@ function initializeItemAutocomplete(element) {
                                 value: item.itemCode + " - " + item.itemName,
                                 id: item.id,
                                 description: item.itemDescription,
-                                code: item.itemCode
+                                code: item.itemCode,
+                                quantity: item.quantity
                             };
                         }));
                     },
@@ -361,6 +362,7 @@ function initializeItemAutocomplete(element) {
                 var row = $(this).closest('tr');
                 row.find('.workorder-item').val(ui.item.description);
                 row.find('.workorder-item').attr('inventorItemId', ui.item.id);
+                row.find('.workorder-item').attr('inventorItemQuantity', ui.item.quantity);
             }
         });
     } catch (exception) {
@@ -466,6 +468,58 @@ function initializeCounter(counter) {
                 updateQuotationAmounts();
             }
         }
+    } catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: false,
+            footer: '',
+            showCloseButton: true
+        });
+    }
+}
+
+function getWorkOrderItems() {
+    try {
+        var items = [];
+        $('#tbWorkOrderItems tr').each(function () {
+            var item = {
+                toolNumber: $(this).find('.toolNumber').val() || '',
+                material: $(this).find('.workorder-item').val() || '',
+                quantity: parseInt($(this).find('.product-quantity').val()) || 0,
+                routes: $(this).find('.route').attr('data-routes') || [],
+                comment: $(this).find('.comment').attr('data-comment') || ''
+            };
+            items.push(item);
+        });
+        return items;
+    } catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: false,
+            footer: '',
+            showCloseButton: true
+        });
+    }
+}
+
+function add() {
+    try {
+        var workOrder = {
+            quotationId: $('#inQuotationId').val(),
+            workOrderItems: getWorkOrderItems(),
+            priorityId: $('#sePriority').val(),
+            rfq: parseInt($('#inRfq').val()),
+            deliveryDate: $('#inDeliveryDate').val()
+        };
+
+        console.log(workOrder);
+
     } catch (exception) {
         Swal.fire({
             title: 'Error!!',
