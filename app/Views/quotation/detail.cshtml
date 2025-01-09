@@ -306,48 +306,12 @@
 </div>
 @section scripts
 {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="../assets/js/pages/html2canvas.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"></script>
     <script>
-        var quotationCode = $('#quotationCode').val();
-        document.getElementById('download-pdf').addEventListener('click', function() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const margin = 10;
-            html2canvas(document.getElementById('toPrint'), { scale: 2 }).then(function(canvas) {
-                const imgData = canvas.toDataURL('image/png');
-                const pageWidth = doc.internal.pageSize.getWidth();
-                const pageHeight = doc.internal.pageSize.getHeight();
-                const imgWidth = pageWidth - 2 * margin;
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                const x = margin;
-                const y = margin;
-                if (imgHeight > pageHeight - 2 * margin) {
-                    Swal.fire({
-                        title: 'Error!!',
-                        html: 'The image is too tall and may be cropped. Adjust the margins or scale.',
-                        icon: 'error',
-                        confirmButtonClass: 'btn btn-danger w-xs mt-2',
-                        buttonsStyling: false,
-                        footer: '',
-                        showCloseButton: true
-                    });
-                }
-                doc.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
-                doc.save('Purchase_Order_' + quotationCode + '.pdf');
-            }).catch(function(error) {
-                Swal.fire({
-                        title: 'Error!!',
-                        html: error,
-                        icon: 'error',
-                        confirmButtonClass: 'btn btn-danger w-xs mt-2',
-                        buttonsStyling: false,
-                        footer: '',
-                        showCloseButton: true
-                    });
-            });
-        });
-
         $('#hideTaxTotal').change(function() {
             if ($(this).prop('checked')) {
                 $('#trEstimatedTax').hide();
@@ -357,6 +321,30 @@
                 $('#trTotalAmount').show();
             }
         });
+
+        var quotationCode = $('#quotationCode').val();
+        const button = document.getElementById('download-pdf');
+        function generatePDF() {
+            const element = document.getElementById('toPrint');
+            const options = {
+                margin: 10,
+                filename: 'Quotation_' + quotationCode + '.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: {
+                    scale: 4,
+                    width: 1000
+                },
+                jsPDF: {
+                    unit: 'mm',
+                    format: [290, 397],
+                    orientation: 'portrait',
+                    x: 10,
+                    y: 10
+                }
+            };
+            html2pdf().set(options).from(element).save();
+        }
+        button.addEventListener('click', generatePDF);
     </script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
