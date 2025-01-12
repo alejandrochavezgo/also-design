@@ -240,7 +240,7 @@ public class purchaseOrderController : Controller
                     message = "message"
                 });
             }
-            var results = JsonConvert.DeserializeObject<IEnumerable<entities.models.purchaseOrderItemsModel>>(contentResponsePostPurchaseOrder);
+            var results = JsonConvert.DeserializeObject<IEnumerable<purchaseOrderItemsModel>>(contentResponsePostPurchaseOrder);
             clientHttp.Dispose();
 
             return Json(new

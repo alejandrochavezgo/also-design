@@ -65,7 +65,7 @@ public static class purchaseOrderFormHelper
                         return false;
                     break;
                 case statusType.PENDING:
-                    if (changeStatus.newStatusId != (int)statusType.APPROVED && changeStatus.newStatusId != (int)statusType.REJECTED)
+                    if (changeStatus.newStatusId != (int)statusType.ACTIVE && changeStatus.newStatusId != (int)statusType.APPROVED && changeStatus.newStatusId != (int)statusType.REJECTED)
                         return false;
                     break;
                 case statusType.APPROVED:

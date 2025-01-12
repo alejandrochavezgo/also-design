@@ -147,7 +147,7 @@ async function loadStatusCatalog(statusName) {
                 optionsToShow = ['PENDING'];
                 break;
             case 'PENDING':
-                optionsToShow = ['APPROVED', 'REJECTED', 'EXPIRED', 'CANCELLED'];
+                optionsToShow = ['ACTIVE', 'APPROVED', 'REJECTED', 'EXPIRED', 'CANCELLED'];
                 break;
             case 'APPROVED':
                 optionsToShow = ['LINKED', 'CANCELLED', 'CLOSED'];

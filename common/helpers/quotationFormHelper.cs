@@ -72,7 +72,7 @@ public class quotationFormHelper
                         return false;
                     break;
                 case statusType.PENDING:
-                    if (changeStatus.newStatusId != (int)statusType.APPROVED && changeStatus.newStatusId != (int)statusType.REJECTED && changeStatus.newStatusId != (int)statusType.EXPIRED && changeStatus.newStatusId != (int)statusType.CANCELLED)
+                    if (changeStatus.newStatusId != (int)statusType.ACTIVE && changeStatus.newStatusId != (int)statusType.APPROVED && changeStatus.newStatusId != (int)statusType.REJECTED && changeStatus.newStatusId != (int)statusType.EXPIRED && changeStatus.newStatusId != (int)statusType.CANCELLED)
                         return false;
                     break;
                 case statusType.APPROVED:
