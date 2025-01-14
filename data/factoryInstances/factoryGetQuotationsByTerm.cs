@@ -18,6 +18,9 @@ internal class factoryGetQuotationsByTerm: baseMethod<factoryGetQuotationsByTerm
             {
                 id = conversionManager.toInt(dr["QUOTATIONS.IDQUOTATION"]),
                 code = conversionManager.toString(dr["QUOTATIONS.CODE"]),
+                creationDate = conversionManager.toValidDate(dr["QUOTATIONS.CREATIONDATE"]),
+                creationDateAsString = conversionManager.toValidDate(dr["QUOTATIONS.CREATIONDATE"]).ToString("yyyy-MM-dd hh:mm:ss"),
+                projectName = conversionManager.toString(dr["PROJECTS.NAME"]),
                 client = new clientModel
                 {
                     id = conversionManager.toInt(dr["CLIENTS.IDCLIENT"]),

@@ -42,50 +42,50 @@ public class workOrderController : Controller
         }
     }
 
-    // [HttpPost("workOrder/add")]
-    // public async Task<JsonResult> add([FromBody] workOrderModel workOrder)
-    // {
-    //     try
-    //     {
-    //         if (!ModelState.IsValid || !clientFormHelper.isAddFormValid(client))
-    //             return Json(new
-    //             { 
-    //                 isSuccess = false,
-    //                 message = "Invalid data."
-    //             });
+    [HttpPost("workOrder/add")]
+    public async Task<JsonResult> add([FromBody] workOrderModel workOrder)
+    {
+        try
+        {
+            if (!ModelState.IsValid || !workOrderFormHelper.isAddFormValid(workOrder))
+                return Json(new
+                { 
+                    isSuccess = false,
+                    message = "Invalid data."
+                });
 
-    //         var clientHttp = _clientFactory.CreateClient();
-    //         var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
-    //         clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
-    //         var responsePost = await clientHttp.PostAsync(configurationManager.appSettings["api:routes:client:add"], new StringContent(JsonConvert.SerializeObject(client), Encoding.UTF8, "application/json"));
+            var clientHttp = _clientFactory.CreateClient();
+            var userCookie = JsonConvert.DeserializeObject<providerData.entitiesData.userModel>(Request.HttpContext.Request.Cookies["userCookie"]!);
+            clientHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{userCookie!.token}");
+            var responsePost = await clientHttp.PostAsync(configurationManager.appSettings["api:routes:workOrder:add"], new StringContent(JsonConvert.SerializeObject(workOrder), Encoding.UTF8, "application/json"));
 
-    //         if(!responsePost.IsSuccessStatusCode)
-    //         {
-    //             var errorMessage = await responsePost.Content.ReadAsStringAsync();
-    //             var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
-    //             return Json(new
-    //             {
-    //                 isSuccess = false,
-    //                 message = $"{message}"
-    //             });
-    //         }
-    //         clientHttp.Dispose();
+            if(!responsePost.IsSuccessStatusCode)
+            {
+                var errorMessage = await responsePost.Content.ReadAsStringAsync();
+                var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = $"{message}"
+                });
+            }
+            clientHttp.Dispose();
 
-    //         return Json(new
-    //         {
-    //             isSuccess = true,
-    //             message = "Client added successfully."
-    //         });
-    //     }
-    //     catch (Exception exception)
-    //     {
-    //         return Json(new
-    //         {
-    //             isSuccess = false,
-    //             message = $"{exception.Message}"
-    //         });
-    //     }
-    // }
+            return Json(new
+            {
+                isSuccess = true,
+                message = "Work Order added successfully."
+            });
+        }
+        catch (Exception exception)
+        {
+            return Json(new
+            {
+                isSuccess = false,
+                message = $"{exception.Message}"
+            });
+        }
+    }
 
     [HttpGet("workOrder/getCatalogs")]
     public async Task<IActionResult> getCatalogs()
@@ -109,7 +109,7 @@ public class workOrderController : Controller
             }
 
             var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<IEnumerable<IEnumerable<entities.models.catalogModel>>>(responseGetAsJson);
+            var results = JsonConvert.DeserializeObject<IEnumerable<IEnumerable<catalogModel>>>(responseGetAsJson);
             clientHttp.Dispose();
 
             return Json(new

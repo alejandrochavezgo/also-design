@@ -499,5 +499,4 @@ public class repositoryInventory : baseRepository
             throw exception;
         }
     }
-
 }

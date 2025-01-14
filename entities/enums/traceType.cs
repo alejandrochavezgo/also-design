@@ -29,6 +29,9 @@ namespace entities.enums
         DELETE_USER = 25,
         ADD_PROJECT = 26,
         UPDATE_PROJECT = 27,
-        DELETE_PROJECT = 28
+        DELETE_PROJECT = 28,
+        ADD_WORKORDER = 29,
+        UPDATE_WORKORDER = 30,
+        DELETE_WORKORDER = 31,
     }
 }

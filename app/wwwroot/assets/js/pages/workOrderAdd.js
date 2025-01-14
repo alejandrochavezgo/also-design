@@ -24,8 +24,9 @@ function initializeQuotationAutocomplete() {
                                 value: item.code,
                                 id: item.id,
                                 code: item.code,
+                                projectName: item.projectName,
+                                creationDateAsString: item.creationDateAsString,
                                 clientBusinessName: item.client.businessName,
-                                clientId: item.client.id,
                                 paymentType: item.payment.description,
                                 currencyType: item.currency.description,
                                 items: item.items,
@@ -51,7 +52,9 @@ function initializeQuotationAutocomplete() {
             minLength: 2,
             select: function(event, ui) {
                 $('#inQuotationId').val(ui.item.id);
-                $('#inClientId').val(ui.item.clientId);
+                $('#pProjectName').text(ui.item.projectName);
+                $('#pCreationDate').text(ui.item.creationDateAsString);
+                $('#pCode').text(ui.item.code);
                 $('#pCode').text(ui.item.code);
                 $('#pClient').text(ui.item.clientBusinessName);
                 $('#pPaymentType').text(ui.item.paymentType);
@@ -361,8 +364,8 @@ function initializeItemAutocomplete(element) {
             select: function(event, ui) {
                 var row = $(this).closest('tr');
                 row.find('.workorder-item').val(ui.item.description);
-                row.find('.workorder-item').attr('inventorItemId', ui.item.id);
-                row.find('.workorder-item').attr('inventorItemQuantity', ui.item.quantity);
+                row.find('.workorder-item').attr('inventorytemid', ui.item.id);
+                row.find('.workorder-item').attr('inventorytemquantity', ui.item.quantity);
             }
         });
     } catch (exception) {
@@ -485,12 +488,15 @@ function getWorkOrderItems() {
     try {
         var items = [];
         $('#tbWorkOrderItems tr').each(function () {
+            var rawRoutes = $(this).find('.route').attr('data-routes');
+            var routesAsList = JSON.parse(rawRoutes).map(route => route.toString());
             var item = {
                 toolNumber: $(this).find('.toolNumber').val() || '',
-                material: $(this).find('.workorder-item').val() || '',
-                quantity: parseInt($(this).find('.product-quantity').val()) || 0,
-                routes: $(this).find('.route').attr('data-routes') || [],
-                comment: $(this).find('.comment').attr('data-comment') || ''
+                inventoryItemId: $(this).find('.workorder-item').attr('inventorytemid') || '',
+                quantityInStock: $(this).find('.workorder-item').attr('inventorytemquantity') || '',
+                quantity: parseFloat($(this).find('.product-quantity').val()) || 0,
+                routes: routesAsList || [],
+                comments: $(this).find('.comment').attr('data-comment') || ''
             };
             items.push(item);
         });
@@ -512,14 +518,64 @@ function add() {
     try {
         var workOrder = {
             quotationId: $('#inQuotationId').val(),
-            workOrderItems: getWorkOrderItems(),
+            items: getWorkOrderItems(),
             priorityId: $('#sePriority').val(),
             rfq: parseInt($('#inRfq').val()),
             deliveryDate: $('#inDeliveryDate').val()
         };
 
-        console.log(workOrder);
+        if(!isValidForm(workOrder))
+            return;
 
+        $('#loader').show();
+        fetch('add', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(workOrder)
+        })
+        .then(response => {return response.json()})
+        .then(data => {
+            if (!data.isSuccess) {
+                Swal.fire({
+                    title: 'Error!!',
+                    html: data.message,
+                    icon: 'error',
+                    confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                    buttonsStyling: !1,
+                    footer: '',
+                    showCloseButton: !1
+                });
+                $('#loader').hide();
+                return;
+            }
+
+            Swal.fire({
+                title: 'Success',
+                html: data.message,
+                icon: 'success',
+                confirmButtonClass: 'btn btn-success w-xs mt-2',
+                buttonsStyling: !1,
+                footer: '',
+                showCloseButton: !1
+            }).then(function (t) {
+                window.location.href = 'list';
+            });
+            $('#loader').hide();
+        })
+        .catch(error => {
+            Swal.fire({
+                title: 'Error!',
+                text: error,
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: false,
+                footer: '',
+                showCloseButton: true
+            });
+            $('#loader').hide();
+        });
     } catch (exception) {
         Swal.fire({
             title: 'Error!!',
@@ -529,6 +585,133 @@ function add() {
             buttonsStyling: false,
             footer: '',
             showCloseButton: true
+        });
+    }
+}
+
+function isValidForm(workOrder) {
+    try {
+        if (!workOrder.quotationId || !workOrder.priorityId || !workOrder.deliveryDate || !workOrder.items || workOrder.items.length === 0) {
+            Swal.fire({
+                title: 'Error!!',
+                html: 'The fields Quotation, Priority, Delivery Date, and Items cannot be empty.',
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: false,
+                footer: '',
+                showCloseButton: false
+            });
+            return false;
+        }
+
+        const today = new Date();
+        const todayUTC = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+        const deliveryDate = new Date(workOrder.deliveryDate);
+        const deliveryDateUTC = new Date(Date.UTC(deliveryDate.getUTCFullYear(), deliveryDate.getUTCMonth(), deliveryDate.getUTCDate()));
+
+        if (deliveryDateUTC < deliveryDate) {
+            Swal.fire({
+                title: 'Error!!',
+                html: 'Delivery Date must be today or a future date.',
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: false,
+                footer: '',
+                showCloseButton: false
+            });
+            return false;
+        }
+
+        for (const item of workOrder.items) {
+            if (!item.toolNumber || item.toolNumber.trim() === '') {
+                Swal.fire({
+                    title: 'Error!!',
+                    html: 'Tool Number cannot be empty.',
+                    icon: 'error',
+                    confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                    buttonsStyling: false,
+                    footer: '',
+                    showCloseButton: false
+                });
+                return false;
+            }
+
+            if (!item.inventoryItemId || item.inventoryItemId <= 0) {
+                Swal.fire({
+                    title: 'Error!!',
+                    html: 'Inventory Item cannot be empty.',
+                    icon: 'error',
+                    confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                    buttonsStyling: false,
+                    footer: '',
+                    showCloseButton: false
+                });
+                return false;
+            }
+
+            if (!item.quantity || item.quantity <= 0) {
+                Swal.fire({
+                    title: 'Error!!',
+                    html: 'Quantity must be greater than 0 for: ' + item.toolNumber,
+                    icon: 'error',
+                    confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                    buttonsStyling: false,
+                    footer: '',
+                    showCloseButton: false
+                });
+                return false;
+            }
+
+            if (!item.quantityInStock || item.quantityInStock <= 0) {
+                Swal.fire({
+                    title: 'Error!!',
+                    html: 'There are no items in stock for this material:' + item.toolNumber,
+                    icon: 'error',
+                    confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                    buttonsStyling: false,
+                    footer: '',
+                    showCloseButton: false
+                });
+                return false;
+            }
+
+            if (item.quantity > item.quantityInStock) {
+                Swal.fire({
+                    title: 'Error!!',
+                    html: 'The quantity must be less than the 24 items available in stock for this material: ' + item.toolNumber,
+                    icon: 'error',
+                    confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                    buttonsStyling: false,
+                    footer: '',
+                    showCloseButton: false
+                });
+                return false;
+            }
+
+            if (!item.routes || item.routes === '[]') {
+                Swal.fire({
+                    title: 'Error!!',
+                    html: 'Routes cannot be empty.',
+                    icon: 'error',
+                    confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                    buttonsStyling: false,
+                    footer: '',
+                    showCloseButton: false
+                });
+                return false;
+            }
+        }
+
+        return true;
+    } catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: !1,
+            footer: '',
+            showCloseButton: !1
         });
     }
 }

@@ -9,8 +9,8 @@ namespace entities.enums
         SUPPLIER = 4,
         PURCHASE_ORDER = 5,
         QUOTATION = 6,
-        WORKORDER = 7,
+        WORK_ORDER = 7,
         INVENTORY = 8,
-        PROJECT = 9
+        PROJECT = 9,
     }
 }
