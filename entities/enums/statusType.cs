@@ -15,6 +15,7 @@ namespace entities.enums
         CLOSED = 11,
         CANCELLED = 12,
         DELETEDHIDDEN = 13,
-        EXPIRED = 14
+        EXPIRED = 14,
+        INPROGRESS = 15
     }
 }

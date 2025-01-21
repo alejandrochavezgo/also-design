@@ -175,7 +175,6 @@ public class repositoryQuotation : baseRepository
         try
         {
             var quotationIdUpdated = dataFactory.getObjParameter(configurationManager.providerDB, "@quotationIdUpdated", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
-
             base._providerDB.ExecuteNonQuery("sp_updateQuotation", new DbParameter[] {
                 quotationIdUpdated,
                 dataFactory.getObjParameter(configurationManager.providerDB,"@projectId", DbType.Int32, quotation.projectId),
@@ -195,7 +194,6 @@ public class repositoryQuotation : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB,"@clientMainContactPhone", DbType.String, quotation.client!.mainContactPhone!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@generalNotes", DbType.String, quotation.generalNotes!)
             });
-
             return Convert.ToInt32(quotationIdUpdated.Value);
         }
         catch (SqlException SqlException)

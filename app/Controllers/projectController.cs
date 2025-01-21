@@ -80,7 +80,7 @@ public class projectController : Controller
         }
         catch (Exception e)
         {
-            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+            return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = e.Message });
         }
     }
 
@@ -179,7 +179,7 @@ public class projectController : Controller
         }
         catch (Exception e)
         {
-            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+            return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = e.Message });
         }
     }
 
@@ -198,7 +198,7 @@ public class projectController : Controller
             {
                 var errorMessage = await responsePost.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
 
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
@@ -217,7 +217,7 @@ public class projectController : Controller
         }
         catch(Exception e)
         {
-            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+            return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = e.Message });
         }
     }
 
@@ -318,7 +318,7 @@ public class projectController : Controller
             {
                 var errorMessage = await responsePost.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
 
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
@@ -338,7 +338,7 @@ public class projectController : Controller
         }
         catch(Exception e)
         {
-            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+            return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = e.Message });
         }
     }
 
@@ -447,7 +447,7 @@ public class projectController : Controller
             {
                 var errorMessage = await responseGet.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responseGet.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
 
             var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
@@ -458,7 +458,7 @@ public class projectController : Controller
         }
         catch (Exception e)
         {
-            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+            return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = e.Message });
         }
     }
 }

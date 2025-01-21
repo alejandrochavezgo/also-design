@@ -38,7 +38,7 @@ public class quotationController : Controller
         }
         catch (Exception e)
         {
-            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+            return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = e.Message });
         }
     }
 
@@ -139,7 +139,7 @@ public class quotationController : Controller
             {
                 var errorMessage = await responsePostUser.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePostUser.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostUserAsJson = await responsePostUser.Content.ReadAsStringAsync();
             var resultUser = JsonConvert.DeserializeObject<entities.models.userModel>(responsePostUserAsJson);
@@ -157,7 +157,7 @@ public class quotationController : Controller
             {
                 var errorMessage = await responsePostEnterprise.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePostEnterprise.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostEnterpriseAsJson = await responsePostEnterprise.Content.ReadAsStringAsync();
             var resultEnterprises = JsonConvert.DeserializeObject<List<entities.models.enterpriseModel>>(responsePostEnterpriseAsJson);
@@ -178,7 +178,7 @@ public class quotationController : Controller
         }
         catch (Exception e)
         {
-            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+            return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = e.Message });
         }
     }
 
@@ -357,7 +357,7 @@ public class quotationController : Controller
             {
                 var errorMessage = await responsePostUser.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePostUser.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostUserAsJson = await responsePostUser.Content.ReadAsStringAsync();
             var resultUser = JsonConvert.DeserializeObject<entities.models.userModel>(responsePostUserAsJson);
@@ -368,7 +368,7 @@ public class quotationController : Controller
             {
                 var errorMessage = await responsePost.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<entities.models.quotationModel>(responsePostAsJson);
@@ -386,7 +386,7 @@ public class quotationController : Controller
             {
                 var errorMessage = await responsePostEnterprise.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePostEnterprise.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostEnterpriseAsJson = await responsePostEnterprise.Content.ReadAsStringAsync();
             var resultEnterprises = JsonConvert.DeserializeObject<List<entities.models.enterpriseModel>>(responsePostEnterpriseAsJson);
@@ -430,7 +430,7 @@ public class quotationController : Controller
         }
         catch(Exception e)
         {
-            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+            return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = e.Message });
         }
     }
 
@@ -448,7 +448,7 @@ public class quotationController : Controller
             {
                 var errorMessage = await responsePostUser.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePostUser.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostUserAsJson = await responsePostUser.Content.ReadAsStringAsync();
             var resultUser = JsonConvert.DeserializeObject<entities.models.userModel>(responsePostUserAsJson);
@@ -459,7 +459,7 @@ public class quotationController : Controller
             {
                 var errorMessage = await responsePost.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<entities.models.quotationModel>(responsePostAsJson);
@@ -477,7 +477,7 @@ public class quotationController : Controller
             {
                 var errorMessage = await responsePostEnterprise.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePostEnterprise.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostEnterpriseAsJson = await responsePostEnterprise.Content.ReadAsStringAsync();
             var resultEnterprises = JsonConvert.DeserializeObject<List<entities.models.enterpriseModel>>(responsePostEnterpriseAsJson);
@@ -520,7 +520,7 @@ public class quotationController : Controller
         }
         catch(Exception e)
         {
-            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+            return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = e.Message });
         }
     }
 
@@ -698,7 +698,7 @@ public class quotationController : Controller
             {
                 var errorMessage = await responseGet.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responseGet.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
 
             var responseGetAsJson = await responseGet.Content.ReadAsStringAsync();
@@ -712,7 +712,7 @@ public class quotationController : Controller
         }
         catch (Exception e)
         {
-            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+            return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = e.Message });
         }
     }
 

@@ -7,7 +7,7 @@ using entities.enums;
 using entities.models;
 using Newtonsoft.Json;
 
-internal class factoryGetWorkOrderById: baseMethod<factoryGetWorkOrderById, workOrderModel>
+internal class factoryGetWorkOrders: baseMethod<factoryGetWorkOrders, workOrderModel>
 {
     private log _logger = new log();
 
@@ -18,27 +18,18 @@ internal class factoryGetWorkOrderById: baseMethod<factoryGetWorkOrderById, work
             return new workOrderModel
             {
                 id = conversionManager.toInt(dr["WORKORDERS.IDWORKORDER"]),
-                code = conversionManager.toString(dr["WORKORDERS.CODE"]),
                 userId = conversionManager.toInt(dr["WORKORDERS.IDUSER"]),
-                quotationId = conversionManager.toInt(dr["WORKORDERS.IDQUOTATION"]),
-                priorityId = conversionManager.toInt(dr["PRIORITYTYPES.IDPRIORITYTYPE"]),
-                rfq = conversionManager.toString(dr["WORKORDERS.RFQ"]),
-                deliveryDate = conversionManager.toValidDate(dr["WORKORDERS.DELIVERYDATE"]),
-                deliveryDateAsString = conversionManager.toValidDate(dr["WORKORDERS.DELIVERYDATE"]) > DateTime.MinValue ? conversionManager.toValidDate(dr["WORKORDERS.DELIVERYDATE"]).ToString("yyyy-MM-dd") : "-",
+                code = conversionManager.toString(dr["WORKORDERS.CODE"]),
+                quotationCode = conversionManager.toString(dr["QUOTATIONS.CODE"]),
+                priorityDescription = conversionManager.toString(dr["PRIORITYTYPES.DESCRIPTION"]),
+                projectName = conversionManager.toString(dr["PROJECTS.NAME"]),
+                clientName = conversionManager.toString(dr["CLIENTS.BUSINESSNAME"]),
                 creationDateAsString = conversionManager.toValidDate(dr["WORKORDERS.CREATIONDATE"]).ToString("yyyy-MM-dd hh:mm:ss"),
                 modificationDateAsString = conversionManager.toValidDate(dr["WORKORDERS.MODIFICATIONDATE"]) > DateTime.MinValue ? conversionManager.toValidDate(dr["WORKORDERS.MODIFICATIONDATE"]).ToString("yyyy-MM-dd hh:mm:ss") : "-",
+                deliveryDateAsString = conversionManager.toValidDate(dr["WORKORDERS.DELIVERYDATE"]) > DateTime.MinValue ? conversionManager.toValidDate(dr["WORKORDERS.DELIVERYDATE"]).ToString("yyyy-MM-dd") : "-",
                 status = conversionManager.toInt(dr["WORKORDERS.IDSTATUS"]),
                 statusColor =  getStatusColor(conversionManager.toInt(dr["WORKORDERS.IDSTATUS"])),
-                statusName = getStatusName(conversionManager.toInt(dr["WORKORDERS.IDSTATUS"])),
-                quotationCode = conversionManager.toString(dr["QUOTATIONS.CODE"]),
-                quotationSubtotal = conversionManager.toDecimal(dr["QUOTATIONS.SUBTOTAL"]),
-                quotationTax = conversionManager.toDecimal(dr["QUOTATIONS.TAX"]),
-                quotationTotal = conversionManager.toDecimal(dr["QUOTATIONS.TOTAL"]),
-                clientName = conversionManager.toString(dr["CLIENTS.BUSINESSNAME"]),
-                projectName = conversionManager.toString(dr["PROJECTS.NAME"]),
-                quotationPaymentDescription = conversionManager.toString(dr["PAYMENTTYPES.DESCRIPTION"]),
-                priorityDescription = conversionManager.toString(dr["PRIORITYTYPES.DESCRIPTION"]),
-                quotationCurrencyDescription = conversionManager.toString(dr["CURRENCIES.DESCRIPTION"])
+                statusName = getStatusName(conversionManager.toInt(dr["WORKORDERS.IDSTATUS"]))
             };
         }
         catch (Exception exception)

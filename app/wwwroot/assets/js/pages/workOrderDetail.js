@@ -5,10 +5,10 @@ function initializeTracesTable() {
             "autoWidth": false,
             "responsive": true,
             "ajax": {
-                "url": 'getClientTracesByClientId',
+                "url": 'getWorkOrderTracesByWorkOrderId',
                 "type": 'get',
                 "data": function(d) {
-                    d.id = $('#clientId').val();
+                    d.id = $('#inWorkOrderId').val();
                 },
                 "dataSrc": function(data) {
                     if (!data.isSuccess) {
@@ -72,7 +72,7 @@ function initializeTracesTable() {
 async function showTraceInformation(traceId) {
     try {
         $('#loader').show();
-        var response = await fetch(window.location.origin + '/client/getClientTraceById?id=' + traceId);
+        var response = await fetch(window.location.origin + '/workOrder/getWorkOrderTraceById?id=' + traceId);
         if (!response ||!response.ok) {
             Swal.fire({
                 title: 'Error!!',

@@ -42,7 +42,7 @@ public class purchaseOrderController : Controller
         }
         catch (Exception e)
         {
-            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+            return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = e.Message });
         }
     }
 
@@ -60,7 +60,7 @@ public class purchaseOrderController : Controller
             {
                 var errorMessage = await responsePostUser.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePostUser.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostUserAsJson = await responsePostUser.Content.ReadAsStringAsync();
             var resultUser = JsonConvert.DeserializeObject<entities.models.userModel>(responsePostUserAsJson);
@@ -71,7 +71,7 @@ public class purchaseOrderController : Controller
             {
                 var errorMessage = await responsePostUser.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePostUser.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<entities.models.purchaseOrderModel>(responsePostAsJson);
@@ -89,7 +89,7 @@ public class purchaseOrderController : Controller
             {
                 var errorMessage = await responsePostEnterprise.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePostEnterprise.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostEnterpriseAsJson = await responsePostEnterprise.Content.ReadAsStringAsync();
             var resultEnterprises = JsonConvert.DeserializeObject<List<entities.models.enterpriseModel>>(responsePostEnterpriseAsJson);
@@ -133,7 +133,7 @@ public class purchaseOrderController : Controller
         }
         catch(Exception e)
         {
-            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+            return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = e.Message });
         }
     }
 
@@ -274,7 +274,7 @@ public class purchaseOrderController : Controller
             {
                 var errorMessage = await responsePostUser.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePostUser.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostUserAsJson = await responsePostUser.Content.ReadAsStringAsync();
             var resultUser = JsonConvert.DeserializeObject<entities.models.userModel>(responsePostUserAsJson);
@@ -292,7 +292,7 @@ public class purchaseOrderController : Controller
             {
                 var errorMessage = await responsePostEnterprise.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePostEnterprise.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostEnterpriseAsJson = await responsePostEnterprise.Content.ReadAsStringAsync();
             var resultEnterprises = JsonConvert.DeserializeObject<List<entities.models.enterpriseModel>>(responsePostEnterpriseAsJson);
@@ -312,7 +312,7 @@ public class purchaseOrderController : Controller
         }
         catch (Exception e)
         {
-            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+            return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = e.Message });
         }
     }
 
@@ -540,7 +540,7 @@ public class purchaseOrderController : Controller
             {
                 var errorMessage = await responsePostUser.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePostUser.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostUserAsJson = await responsePostUser.Content.ReadAsStringAsync();
             user = JsonConvert.DeserializeObject<userModel>(responsePostUserAsJson);
@@ -551,7 +551,7 @@ public class purchaseOrderController : Controller
             {
                 var errorMessage = await responsePostUser.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePostUser.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
             purchaseOrder = JsonConvert.DeserializeObject<purchaseOrderModel>(responsePostAsJson);
@@ -570,7 +570,7 @@ public class purchaseOrderController : Controller
             {
                 var errorMessage = await responsePostEnterprise.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePostEnterprise.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostEnterpriseAsJson = await responsePostEnterprise.Content.ReadAsStringAsync();
             enterprises = JsonConvert.DeserializeObject<List<enterpriseModel>>(responsePostEnterpriseAsJson);
@@ -604,7 +604,7 @@ public class purchaseOrderController : Controller
             {
                 var errorMessage = await responsePostUser.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePostUser.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostUserAsJson = await responsePostUser.Content.ReadAsStringAsync();
             var resultUser = JsonConvert.DeserializeObject<entities.models.userModel>(responsePostUserAsJson);
@@ -615,13 +615,13 @@ public class purchaseOrderController : Controller
             {
                 var errorMessage = await responsePostUser.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePostUser.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<entities.models.purchaseOrderModel>(responsePostAsJson);
 
             if (result!.status != (int)statusType.ACTIVE)
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = "Only purchase orders with an ACTIVE status can be updated." });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = "Only purchase orders with an ACTIVE status can be updated." });
 
             var enterprise = new enterpriseModel
             {
@@ -636,7 +636,7 @@ public class purchaseOrderController : Controller
             {
                 var errorMessage = await responsePostEnterprise.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePostEnterprise.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
             var responsePostEnterpriseAsJson = await responsePostEnterprise.Content.ReadAsStringAsync();
             var resultEnterprises = JsonConvert.DeserializeObject<List<entities.models.enterpriseModel>>(responsePostEnterpriseAsJson);
@@ -681,7 +681,7 @@ public class purchaseOrderController : Controller
         }
         catch(Exception e)
         {
-            return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = e.Message });
+            return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = e.Message });
         }
     }
 

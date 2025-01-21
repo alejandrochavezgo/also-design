@@ -223,68 +223,6 @@ $(document).on('click', '.comment-modal', function () {
     $('#mdComment').modal('show');
 });
 
-async function initializeCatalogs()
-{
-    try {
-        const response = await fetch('getCatalogs');
-        if (!response ||!response.ok) {
-            Swal.fire({
-                title: 'Error!!',
-                html: `HTTP error! Status: ${response.status}`,
-                icon: 'error',
-                confirmButtonClass: 'btn btn-danger w-xs mt-2',
-                buttonsStyling: false,
-                footer: '',
-                showCloseButton: true
-            });
-            return;
-        }
-
-        const catalogs = await response.json();
-        if (!catalogs || !catalogs.isSuccess || catalogs.results.length !== 2) {
-            Swal.fire({
-                title: 'Error!!',
-                html: 'Catalogs not downloaded. Please reload the page.',
-                icon: 'error',
-                confirmButtonClass: 'btn btn-danger w-xs mt-2',
-                buttonsStyling: false,
-                footer: '',
-                showCloseButton: true
-            });
-            return;
-        }
-
-        var selectMapping = {
-            seStatus: 0,
-            sePriority: 1
-        };
-
-        for (var selectId in selectMapping) {
-            var index = selectMapping[selectId];
-            var $select = $('#' + selectId);
-            $select.empty().append('<option value="">Select option</option>');
-            catalogs.results[index].forEach(function(item) {
-                $select.append(
-                    $('<option>', {
-                        value: item.id,
-                        text: item.description
-                    })
-                );
-            });
-        }
-    } catch (exception) {
-        Swal.fire({
-            title: 'Error!!',
-            html: exception,
-            icon: 'error',
-            confirmButtonClass: 'btn btn-danger w-xs mt-2',
-            buttonsStyling: false,
-            footer: '',
-            showCloseButton: true
-        });
-    }
-}
-
 function addRoute() {
     try {
         var routeButton = $('#' + $('#mdRoute').attr('idButtonOrigin'));
@@ -365,8 +303,8 @@ function initializeItemAutocomplete(element) {
             select: function(event, ui) {
                 var row = $(this).closest('tr');
                 row.find('.workorder-item').val(ui.item.description);
-                row.find('.workorder-item').attr('inventorytemid', ui.item.id);
-                row.find('.workorder-item').attr('inventorytemquantity', ui.item.quantity);
+                row.find('.workorder-item').attr('inventoryitemid', ui.item.id);
+                row.find('.workorder-item').attr('inventoryitemquantity', ui.item.quantity);
             }
         });
     } catch (exception) {
@@ -490,9 +428,10 @@ function getWorkOrderItems() {
             var rawRoutes = $(this).find('.route').attr('data-routes');
             var routesAsList = JSON.parse(rawRoutes).map(route => route.toString());
             var item = {
+                id: parseInt($(this).find('.item-id').val()) || 0,
                 toolNumber: $(this).find('.toolNumber').val() || '',
-                inventoryItemId: parseInt($(this).find('.workorder-item').attr('inventorytemid')) || 0,
-                quantityInStock: parseFloat($(this).find('.workorder-item').attr('inventorytemquantity')) || 0,
+                inventoryItemId: parseInt($(this).find('.workorder-item').attr('inventoryitemid')) || 0,
+                quantityInStock: parseFloat($(this).find('.workorder-item').attr('inventoryitemquantity')) || 0,
                 quantity: parseFloat($(this).find('.product-quantity').val()) || 0,
                 routes: routesAsList || [],
                 comments: $(this).find('.comment').attr('data-comment') || ''
@@ -513,22 +452,91 @@ function getWorkOrderItems() {
     }
 }
 
-function add() {
+async function initializeCatalogs()
+{
+    try {
+        const response = await fetch('getCatalogs');
+        if (!response ||!response.ok) {
+            Swal.fire({
+                title: 'Error!!',
+                html: `HTTP error! Status: ${response.status}`,
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: false,
+                footer: '',
+                showCloseButton: true
+            });
+            return;
+        }
+
+        const catalogs = await response.json();
+        if (!catalogs || !catalogs.isSuccess || catalogs.results.length !== 2) {
+            Swal.fire({
+                title: 'Error!!',
+                html: 'Catalogs not downloaded. Please reload the page.',
+                icon: 'error',
+                confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: false,
+                footer: '',
+                showCloseButton: true
+            });
+            return;
+        }
+
+        var selectMapping = {
+            seStatus: 0,
+            sePriority: 1
+        };
+
+        for (var selectId in selectMapping) {
+            var index = selectMapping[selectId];
+            var $select = $('#' + selectId);
+            $select.empty().append('<option value="">Select option</option>');
+            catalogs.results[index].forEach(function(item) {
+                $select.append(
+                    $('<option>', {
+                        value: item.id,
+                        text: item.description
+                    })
+                );
+            });
+        }
+
+        $('#seStatus').val($('#seStatus').attr('option-selected'));
+        $('#sePriority').val($('#sePriority').attr('option-selected'));
+    } catch (exception) {
+        Swal.fire({
+            title: 'Error!!',
+            html: exception,
+            icon: 'error',
+            confirmButtonClass: 'btn btn-danger w-xs mt-2',
+            buttonsStyling: false,
+            footer: '',
+            showCloseButton: true
+        });
+    }
+}
+
+function update() {
     try {
         var workOrder = {
+            id: parseInt($('#inWorkOrderId').val()),
             userId: parseInt($('#inUserId').val()),
             quotationId: parseInt($('#inQuotationId').val()),
             items: getWorkOrderItems(),
             priorityId:parseInt($('#sePriority').val()),
             rfq: $('#inRfq').val(),
-            deliveryDate: $('#inDeliveryDate').val()
+            deliveryDate: $('#inDeliveryDate').val(),
+            status: $('#seStatus').val()
         };
 
         if(!isValidForm(workOrder))
             return;
 
+        console.log(workOrder);
+
         $('#loader').show();
-        fetch('add', {
+        fetch('update', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -591,7 +599,8 @@ function add() {
 
 function isValidForm(workOrder) {
     try {
-        if (!workOrder.userId || !workOrder.quotationId || !workOrder.priorityId || !workOrder.deliveryDate || !workOrder.items || workOrder.items.length === 0) {
+        console.log(workOrder);
+        if (!workOrder.id || !workOrder.quotationId || !workOrder.priorityId || !workOrder.deliveryDate || !workOrder.items || workOrder.items.length === 0) {
             Swal.fire({
                 title: 'Error!!',
                 html: 'The fields Quotation, Priority, Delivery Date, and Items cannot be empty.',

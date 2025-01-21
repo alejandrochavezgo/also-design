@@ -1,0 +1,233 @@
+@using Newtonsoft.Json
+@{
+    ViewData["title"] = "Detail Work Order | Also Design";
+}
+@section styles
+{
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet"  type="text/css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+    <style>
+        #traceContainer {
+            display: flex;
+            gap: 20px;
+        }
+        .json-container {
+            width: 50%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            overflow: auto;
+            max-height: 400px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .diff-highlight {
+            color: red;
+            font-weight: bold;
+        }
+        .custom-header {
+            padding: .5rem;
+            background: #f4f6f9;
+            width: 100%;
+            color: black;
+        }
+    </style>
+}
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Detail Work Order</h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item color-495057">Work Order</li>
+                            <li class="breadcrumb-item color-495057">Detail Work Order</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">General Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-3">
+                                <input id="inWorkOrderId" value="@ViewData["workOrder.id"]" hidden />
+                                <label for="inCode" class="form-label fw-bold">WORK ORDER</label>
+                                <p class="form-control bg-light border-0" id="pCode">@ViewData["workOrder.code"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label for="pClientName" class="form-label fw-bold">CLIENT</label>
+                                <p class="form-control bg-light border-0" id="pClientName">@ViewData["client.businessName"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label for="pRfq" class="form-label fw-bold">RFQ</label>
+                                <p class="form-control bg-light border-0" id="pRfq">@ViewData["workOrder.rfq"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label for="pDeliveryDate" class="form-label fw-bold">DELIVERY DATE</label>
+                                <p class="form-control bg-light border-0" id="pDeliveryDate">@ViewData["workOrder.deliveryDateAsString"]</p>
+                            </div>
+                        </div>
+                        <div class="row pt-27px">
+                            <div class="col-3">
+                                <label for="pQuotationCode" class="form-label fw-bold">QUOTATION</label>
+                                <p class="form-control bg-light border-0" id="pQuotationCode">@ViewData["quotation.code"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label for="pProjectName" class="form-label fw-bold">PROJECT</label>
+                                <p class="form-control bg-light border-0" id="pProjectName">@ViewData["project.name"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label for="pPriorityDescription" class="form-label fw-bold">PRIORITY</label>
+                                <p class="form-control bg-light border-0" id="pPriorityDescription">@ViewData["priority.description"]</p>
+                            </div>
+                            <div class="col-3">
+                                <label for="pStatusDescription" class="form-label fw-bold">STATUS</label>
+                                <p class="form-control bg-@ViewData["status.color"] border-0 fw-bold color-fff" id="pStatusDescription">@ViewData["status.description"]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Work Order Items</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-borderless text-center table-nowrap align-middle mb-0">
+                                <thead>
+                                    <tr class="table-active">
+                                        <th scope="col" style="width: 50px;">#</th>
+                                        <th scope="col">Tool Number</th>
+                                        <th scope="col">Material</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Manufacturing Date</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col" class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbWorkOrderItems">
+                                    @if (ViewData["workOrder.items"] != null)
+                                        {
+                                            var workOrderItems = ViewData["workOrder.items"] as List<entities.models.workOrderItemModel>;
+                                            if (workOrderItems != null)
+                                            {
+                                                var index = 1;
+                                                foreach (var item in workOrderItems)
+                                                {
+                                                    <tr>
+                                                        <td scope="row">
+                                                            <span id="rowCount">@index</span>
+                                                        </td>
+                                                        <td>
+                                                            <p class="form-control bg-light border-0 uppercase-input">@item.toolNumber</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="form-control bg-light border-0 uppercase-input">@item.inventoryItemDescription</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="form-control bg-light border-0 uppercase-input">@item.quantity</p>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge bg-@item.statusColor">@item.statusName</span>
+                                                        </td>
+                                                        <td>
+                                                            <button id="history@index" type="button" class="btn btn-secondary waves-effect waves-light history-modal" data-item-id="@item.id"><i class="ri-sticky-note-fill"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                    index++;
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr><td colspan="7">Nothing to show.</td></tr>
+                                        }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Recent quotation traces</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <table id="dvTableTraces" class="table table-bordered align-middle mdl-data-table" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Trace Type Description</th>
+                                            <th>Username</th>
+                                            <th>Comments</th>
+                                            <th>Creation Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="traceInformationModal" tabindex="-1" aria-labelledby="traceInformationModal" aria-modal="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="traceInformationModal">Trace Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="javascript:void(0);">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <p>Before Changes:</p>
+                        </div>
+                        <div class="col-6">
+                            <p>After Changes:</p>
+                        </div>
+                        <div id="traceContainer">
+                            <div id="beforeChangeContainer" class="json-container"></div>
+                            <div id="afterChangeContainer" class="json-container"></div>
+                        </div>
+                        <div class="col-12">
+                            <div class="hstack gap-2 justify-content-end">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+    <script src="../assets/js/pages/workOrderDetail.js"></script>
+}

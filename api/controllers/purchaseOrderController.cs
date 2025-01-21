@@ -94,7 +94,7 @@ public class purchaseOrderController : ControllerBase
         try
         {
             if(purchaseOrder == null || !new purchaseOrderFormHelper().isUpdateFormValid(purchaseOrder))
-                return BadRequest("The Purchase Order was not modified.");
+                return BadRequest("The Purchase order was not modified.");
 
             if (!_facadePurchaseOrder.updatePurchaseOrder(purchaseOrder))
                 return BadRequest("Purchase order not updated.");

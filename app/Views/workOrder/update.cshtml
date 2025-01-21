@@ -1,5 +1,6 @@
+@using Newtonsoft.Json
 @{
-    ViewData["title"] = "Add Work Order | Also Design";
+    ViewData["title"] = "Update Work Order | Also Design";
 }
 @section styles
 {
@@ -10,11 +11,11 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">Add Work Order</h4>
+                    <h4 class="mb-sm-0">Update Work Order</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item color-495057">Work Order</li>
-                            <li class="breadcrumb-item color-495057">Add Work Order</li>
+                            <li class="breadcrumb-item color-495057">Update Work Order</li>
                         </ol>
                     </div>
                 </div>
@@ -29,48 +30,49 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-2">
-                                <input id="inUserId" hidden value="@ViewData["user.id"]">
-                                <input id="inQuotationId" hidden>
+                                <input id="inWorkOrderId" value="@ViewData["workOrder.id"]" hidden>
+                                <input id="inUserId" value="@ViewData["user.id"]" hidden>
+                                <input id="inQuotationId" value="@ViewData["quotation.id"]" hidden>
                                 <label for="inQuotationCode" class="form-label">QUOTATION</label>
-                                <input type="text" class="form-control uppercase-input" id="inQuotationCode" placeholder="SEARCH QUOTATION CODE...">
+                                <input type="text" class="form-control uppercase-input" id="inQuotationCode" placeholder="SEARCH QUOTATION CODE..." value="@ViewData["quotation.code"]">
                             </div>
                             <div class="col-1">
                                 <label for="pCode" class="form-label fw-bold">CODE</label>
-                                <p class="form-control bg-light border-0" id="pCode">&nbsp;</p>
+                                <p class="form-control bg-light border-0" id="pCode">@ViewData["quotation.code"]</p>
                             </div>
                             <div class="col-3">
                                 <label for="pClient" class="form-label fw-bold">CLIENT</label>
-                                <p class="form-control bg-light border-0" id="pClient">&nbsp;</p>
+                                <p class="form-control bg-light border-0" id="pClient">@ViewData["client.name"]</p>
                             </div>
                             <div class="col-3">
                                 <label for="pProjectName" class="form-label fw-bold">PROJECT</label>
-                                <p class="form-control bg-light border-0" id="pProjectName">&nbsp;</p>
+                                <p class="form-control bg-light border-0" id="pProjectName">@ViewData["project.name"]</p>
                             </div>
                             <div class="col-3">
                                 <label for="pCreationDate" class="form-label fw-bold">CREATION DATE</label>
-                                <p class="form-control bg-light border-0" id="pCreationDate">&nbsp;</p>
+                                <p class="form-control bg-light border-0" id="pCreationDate">@ViewData["workOrder.creationDateAsString"]</p>
                             </div>
                         </div>
                         <div class="row pt-27px">
                             <div class="col-2">
                                 <label for="pPaymentType" class="form-label fw-bold">PAYMENT TYPE</label>
-                                <p class="form-control bg-light border-0" id="pPaymentType">&nbsp;</p>
+                                <p class="form-control bg-light border-0" id="pPaymentType">@ViewData["payment.description"]</p>
                             </div>
                             <div class="col-1">
                                 <label for="pCurrencyType" class="form-label fw-bold">CURRENCY</label>
-                                <p class="form-control bg-light border-0" id="pCurrencyType">&nbsp;</p>
+                                <p class="form-control bg-light border-0" id="pCurrencyType">@ViewData["currency.description"]</p>
                             </div>
                             <div class="col-3">
                                 <label for="pSubtotal" class="form-label fw-bold">SUB TOTAL</label>
-                                <p class="form-control bg-light border-0" id="pSubtotal">&nbsp;</p>
+                                <p class="form-control bg-light border-0" id="pSubtotal">@ViewData["quotation.subtotal"]</p>
                             </div>
                             <div class="col-3">
                                 <label for="pTax" class="form-label fw-bold">TAX</label>
-                                <p class="form-control bg-light border-0" id="pTax">&nbsp;</p>
+                                <p class="form-control bg-light border-0" id="pTax">@ViewData["quotation.tax"]</p>
                             </div>
                             <div class="col-3">
                                 <label for="pTotal" class="form-label fw-bold">TOTAL</label>
-                                <p class="form-control bg-light border-0" id="pTotal">&nbsp;</p>
+                                <p class="form-control bg-light border-0" id="pTotal">@ViewData["quotation.total"]</p>
                             </div>
                         </div>
                         <div class="row pt-27px">
@@ -88,7 +90,36 @@
                                         </tr>
                                     </thead>
                                     <tbody id="tbQuotationItems">
-                                        <tr><td colspan="7">Nothing to show.</td></tr>
+                                        @if (ViewData["quotation.items"] != null)
+                                        {
+                                            var quotationItems = ViewData["quotation.items"] as List<entities.models.quotationItemsModel>;
+                                            if (quotationItems != null)
+                                            {
+                                                var index = 1;
+                                                foreach (var item in quotationItems)
+                                                {
+                                                    <tr>
+                                                        <td class="width-0per"></td>
+                                                        <td>@index</td>
+                                                        <td class="text-start">
+                                                            <p class="form-control fw-medium mb-1 bg-light border-0">@item.description</p>
+                                                            <p class="form-control fw-medium mb-1 bg-light border-0">@item.material</p>
+                                                            <p class="form-control fw-medium mb-1 bg-light border-0">@item.details</p>
+                                                            <p class="form-control fw-medium bg-light border-0">@item.notes</p>
+                                                        </td>
+                                                        <td>@item.quantity.ToString("F2")</td>
+                                                        <td>@item.unitDescription</td>
+                                                        <td class="text-end">@item.unitValue.ToString("F2")</td>
+                                                        <td class="text-end">@item.totalValue.ToString("F2")</td>
+                                                    </tr>
+                                                    index++;
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr><td colspan="7">Nothing to show.</td></tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -118,33 +149,50 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tbWorkOrderItems">
-                                    <tr>
-                                        <td class="width-0per">
-                                            <button id="addItem" type="button" class="btn btn-success btn-sm btn-icon waves-effect waves-light"><i class="ri-add-circle-fill"></i></button>
-                                        </td>
-                                        <td scope="row">
-                                            <span id="rowCount">1</span>
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control uppercase-input toolNumber" maxlength="200" placeholder="Enter tool number">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control uppercase-input workorder-item" maxlength="200" placeholder="Search material...">
-                                        </td>
-                                        <td>
-                                            <div class="input-step">
-                                                <button type="button" class="minus_1">–</button>
-                                                <input type="number" class="product-quantity" value="1" min="1" max="100">
-                                                <button type="button" class="plus_1">+</button>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <button id="btAddRoute_1" type="button" class="btn btn-secondary waves-effect waves-light route-modal route"><i class="ri-list-ordered"></i></button>
-                                        </td>
-                                        <td>
-                                            <button id="btAddComment_1" type="button" class="btn btn-secondary waves-effect waves-light comment-modal comment"><i class="ri-sticky-note-fill"></i></button>
-                                        </td>
-                                    </tr>
+                                    @if (ViewData["workOrder.items"] != null)
+                                        {
+                                            var workOrderItems = ViewData["workOrder.items"] as List<entities.models.workOrderItemModel>;
+                                            if (workOrderItems != null)
+                                            {
+                                                var index = 1;
+                                                foreach (var item in workOrderItems)
+                                                {
+                                                    <tr>
+                                                        <td class="width-0per">
+                                                            <input class="item-id" hidden value="@item.id">
+                                                            <button id="addItem" type="button" class="btn btn-success btn-sm btn-icon waves-effect waves-light"><i class="ri-add-circle-fill"></i></button>
+                                                        </td>
+                                                        <td scope="row">
+                                                            <span id="rowCount">@index</span>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control uppercase-input toolNumber" maxlength="200" placeholder="Enter tool number" value="@item.toolNumber">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control uppercase-input workorder-item" maxlength="200" placeholder="Search material..." inventoryitemid="@item.inventoryItemId" inventoryitemquantity="@item.quantityInStock" value="@item.inventoryItemDescription">
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-step">
+                                                                <button type="button" class="minus_1">–</button>
+                                                                <input type="number" class="product-quantity" value="@item.quantity" min="1" max="100">
+                                                                <button type="button" class="plus_1">+</button>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <button id="btAddRoute_1" type="button" class="btn btn-secondary waves-effect waves-light route-modal route" data-routes='@Html.Raw(JsonConvert.SerializeObject(item.routes!.Select(r => int.Parse(r))))'><i class="ri-list-ordered"></i></button>
+                                                        </td>
+                                                        <td>
+                                                            <button id="btAddComment_1" type="button" class="btn btn-secondary waves-effect waves-light comment-modal comment" data-comment="@item.comments"><i class="ri-sticky-note-fill"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                    index++;
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr><td colspan="7">Nothing to show.</td></tr>
+                                        }
                                 </tbody>
                             </table>
                         </div>
@@ -160,17 +208,21 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-3">
+                                <label class="form-label">STATUS</label>
+                                <select id="seStatus" option-selected="@ViewData["workOrder.status"]" class="form-select"></select>
+                            </div>
+                            <div class="col-3">
                                 <label class="form-label">PRIORITY</label>
-                                <select id="sePriority" class="form-select"></select>
+                                <select id="sePriority" option-selected="@ViewData["workOrder.priority"]" class="form-select"></select>
                             </div>
-                            <div class="col-4">
+                            <div class="col-3">
                                 <label class="form-label"># RFQ</label>
-                                <input type="text" class="form-control" id="inRfq" placeholder="RFQ">
+                                <input type="text" class="form-control" id="inRfq" placeholder="RFQ" value="@ViewData["workOrder.rfq"]">
                             </div>
-                            <div class="col-4">
+                            <div class="col-3">
                                 <label class="form-label">DELIVERY DATE</label>
-                                <input type="date" class="form-control" id="inDeliveryDate">
+                                <input type="date" class="form-control" id="inDeliveryDate" value="@ViewData["workOrder.deliveryDateAsString"]">
                             </div>
                         </div>
                         <div class="row pt-27px">
@@ -178,7 +230,7 @@
                                 <button type="button" class="btn btn-warning w-100per" onclick="window.location.reload(true)">Refresh</button>
                             </div>
                             <div class="col-6">
-                                <button type="button" class="btn btn-success w-100per" onclick="add()">Add</button>
+                                <button type="button" class="btn btn-success w-100per" onclick="update()">Update</button>
                             </div>
                         </div>
                     </div>
@@ -321,5 +373,5 @@
 @section scripts
 {
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <script src="../assets/js/pages/workOrderAdd.js"></script>
+    <script src="../assets/js/pages/workOrderUpdate.js"></script>
 }

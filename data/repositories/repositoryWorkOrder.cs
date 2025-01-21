@@ -30,8 +30,9 @@ public class repositoryWorkOrder : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB,"@quotationId", DbType.Int32, workOrder.quotationId!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@priorityId", DbType.Int32, workOrder.priorityId!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@rfq", DbType.String, workOrder.rfq!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@endDate", DbType.DateTime, workOrder.deliveryDate!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@deliveryDate", DbType.DateTime, workOrder.deliveryDate!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@creationDate", DbType.DateTime, workOrder.creationDate!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@userId", DbType.DateTime, workOrder.userId!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@status", DbType.Int32, workOrder.status!)
             });
             return Convert.ToInt32(workOrderIdAdded.Value);
@@ -59,7 +60,7 @@ public class repositoryWorkOrder : baseRepository
                 dataFactory.getObjParameter(configurationManager.providerDB,"@toolNumber", DbType.String, workOrderItem.toolNumber!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@inventoryId", DbType.Int32, workOrderItem.inventoryItemId!),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@quantity", DbType.Decimal, workOrderItem.quantity!),
-                dataFactory.getObjParameter(configurationManager.providerDB,"@routes", DbType.String, workOrderItem.routes!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@routes", DbType.String, JsonConvert.SerializeObject(workOrderItem.routes)),
                 dataFactory.getObjParameter(configurationManager.providerDB,"@comments", DbType.String, workOrderItem.comments!)
             });
             return Convert.ToInt32(workOrderItemIdAdded.Value);
@@ -81,8 +82,46 @@ public class repositoryWorkOrder : baseRepository
         try
         {
             return factoryGetWorkOrderById.get((DbDataReader)_providerDB.GetDataReader("sp_getWorkOrderById", new DbParameter[] {
-                dataFactory.getObjParameter(configurationManager.providerDB,"@clientId", DbType.Int32, id)
+                dataFactory.getObjParameter(configurationManager.providerDB,"@workOrderId", DbType.Int32, id)
             }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<workOrderItemModel> getWorkOrderItemsByWorkOrderId(int id)
+    {
+        try
+        {
+            return factoryGetWorkOrderItemsByWorkOrderId.getList((DbDataReader)_providerDB.GetDataReader("sp_getWorkOrderItemsByWorkOrderId", new DbParameter[] {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@workOrderId", DbType.Int32, id)
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<catalogModel> getStatusTypesCatalog()
+    {
+        try
+        {
+            return factoryGetCatalog.getList((DbDataReader)_providerDB.GetDataReader("sp_getStatusTypesCatalog", new DbParameter[] {}));
         }
         catch (SqlException SqlException)
         {
@@ -101,6 +140,145 @@ public class repositoryWorkOrder : baseRepository
         try
         {
             return factoryGetCatalog.getList((DbDataReader)_providerDB.GetDataReader("sp_getPriorityTypesCatalog", new DbParameter[] {}));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<workOrderModel> getWorkOrders()
+    {
+        try
+        {
+            return factoryGetWorkOrders.getList((DbDataReader)_providerDB.GetDataReader("sp_getWorkOrders", new DbParameter[] {}));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public bool deleteWorkOrderById(int id)
+    {
+        try
+        {
+            base._providerDB.ExecuteNonQuery("sp_deleteWorkOrderById", new DbParameter[] {
+                dataFactory.getObjParameter(configurationManager.providerDB,"@workOrderId", DbType.Int32, id)
+            });
+            return true;
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public int updateWorkOrder(workOrderModel workOrder)
+    {
+        try
+        {
+            var workOrderIdUpdated = dataFactory.getObjParameter(configurationManager.providerDB, "@workOrderIdUpdated", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+            base._providerDB.ExecuteNonQuery("sp_updateWorkOrder", new DbParameter[] {
+                workOrderIdUpdated,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@workOrderId", DbType.Int32, workOrder.id!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@quotationId", DbType.Int32, workOrder.quotationId!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@priorityId", DbType.Int32, workOrder.priorityId!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@rfq", DbType.String, workOrder.rfq!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@deliveryDate", DbType.DateTime, workOrder.deliveryDate!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@userId", DbType.Int32, workOrder.userId!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@modificationDate", DbType.DateTime, workOrder.modificationDate!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@status", DbType.Int32, workOrder.status!)
+            });
+            return Convert.ToInt32(workOrderIdUpdated.Value);
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public int updateWorkOrderItem(workOrderItemModel workOrderItem)
+    {
+        try
+        {
+            var workOrderItemIdUpdated = dataFactory.getObjParameter(configurationManager.providerDB, "@workOrderItemIdUpdated", DbType.Int32, DBNull.Value, -1, ParameterDirection.Output);
+            base._providerDB.ExecuteNonQuery("sp_updateWorkOrderItem", new DbParameter[] {
+                workOrderItemIdUpdated,
+                dataFactory.getObjParameter(configurationManager.providerDB,"@workOrderItemId", DbType.Int32, workOrderItem.id!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@toolNumber", DbType.String, workOrderItem.toolNumber!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@inventoryId", DbType.Int32, workOrderItem.inventoryItemId!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@quantity", DbType.Decimal, workOrderItem.quantity!),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@routes", DbType.String, JsonConvert.SerializeObject(workOrderItem.routes)),
+                dataFactory.getObjParameter(configurationManager.providerDB,"@comments", DbType.String, workOrderItem.comments!)
+            });
+            return Convert.ToInt32(workOrderItemIdUpdated.Value);
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public List<traceModel> getWorkOrderTracesByWorkOrderId(int id)
+    {
+        try
+        {
+            return factoryGetUserTracesByUserId.getList((DbDataReader)_providerDB.GetDataReader("sp_getLastWorkOrderTracesByWorkOrderId", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB, "@workOrderId", DbType.Int32, id)
+            }));
+        }
+        catch (SqlException SqlException)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(SqlException)}");
+            throw SqlException;
+        }
+        catch (Exception exception)
+        {
+            _logger.logError($"{JsonConvert.SerializeObject(exception)}");
+            throw exception;
+        }
+    }
+
+    public traceModel getWorkOrderTraceById(int id)
+    {
+        try
+        {
+            return factoryGetClientTraceById.get((DbDataReader)_providerDB.GetDataReader("sp_getWorkOrderTraceById", new DbParameter[]
+            {
+                dataFactory.getObjParameter(configurationManager.providerDB, "@traceId", DbType.Int32, id)
+            }));
         }
         catch (SqlException SqlException)
         {

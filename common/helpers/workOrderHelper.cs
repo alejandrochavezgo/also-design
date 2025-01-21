@@ -20,7 +20,7 @@ public class workOrderFormHelper
     {
         try
         {
-            if (workOrder.quotationId <= 0 || workOrder.priorityId <= 0 || workOrder.deliveryDate!.Value.Date < _dateTime.Date ||
+            if (workOrder.userId <= 0 || workOrder.quotationId <= 0 || workOrder.priorityId <= 0 || workOrder.deliveryDate!.Date < _dateTime.Date ||
                 workOrder.items!.Count == 0)
                 return false;
 
@@ -39,34 +39,32 @@ public class workOrderFormHelper
         }
     }
 
-    // public bool isUpdateFormValid(projectModel project)
-    // {
-    //     try
-    //     {
-    //         if (string.IsNullOrEmpty(project.name) || project.client == null || project.client.id <= 0 ||
-    //             string.IsNullOrEmpty(project.description) || project.startDate == null || project.startDate.Value.Date < _dateTime.Date ||
-    //             project.endDate == null || project.endDate.Value.Date < _dateTime.Date ||
-    //             project.endDate.Value.Date < project.startDate.Value.Date || project.status <= 0 || project.id <= 0)
-    //             return false;
-    //         return true;
-    //     }
-    //     catch (Exception exception)
-    //     {
-    //         throw exception;
-    //     }
-    // }
+    public bool isUpdateFormValid(workOrderModel workOrder)
+    {
+        try
+        {
+            if (workOrder.id <= 0 || workOrder.userId <= 0 || workOrder.quotationId <= 0 || workOrder.priorityId <= 0 || workOrder.deliveryDate!.Date < _dateTime.Date ||
+                workOrder.items!.Count == 0)
+                return false;
+            return true;
+        }
+        catch (Exception exception)
+        {
+            throw exception;
+        }
+    }
 
-    // public bool isUpdateFormValid(projectModel project, bool isStatusChange)
-    // {
-    //     try
-    //     {
-    //         if (project == null || project.id <= 0 || project.status != (int)statusType.ACTIVE)
-    //             return false;
-    //         return true;
-    //     }
-    //     catch (Exception exception)
-    //     {
-    //         throw exception;
-    //     }
-    // }
+    public bool isUpdateFormValid(workOrderModel workOrder, bool isStatusChange)
+    {
+        try
+        {
+            if (workOrder == null || workOrder.id <= 0 || workOrder.status != (int)statusType.CANCELLED)
+                return false;
+            return true;
+        }
+        catch (Exception exception)
+        {
+            throw exception;
+        }
+    }
 }

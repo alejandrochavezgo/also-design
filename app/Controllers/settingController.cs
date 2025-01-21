@@ -45,7 +45,7 @@ public class settingController : Controller
             {
                 var errorMessage = await responsePost.Content.ReadAsStringAsync();
                 var message = string.IsNullOrEmpty(errorMessage) ? responsePost.ReasonPhrase : errorMessage;
-                return RedirectToAction("error", "error", new { errorCode = 0, errorMessage = message });
+                return RedirectToAction("errorWithParams", "error", new { errorCode = 0, errorMessage = message });
             }
 
             var responsePostAsJson = await responsePost.Content.ReadAsStringAsync();
